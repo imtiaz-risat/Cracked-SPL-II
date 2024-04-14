@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
+import { useNavigate } from 'react-router-dom';
+
 
 export default function TeacherLogin() {
   const {
@@ -7,9 +9,30 @@ export default function TeacherLogin() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  
+  const navigate = useNavigate();
+  const onSubmit = async (data) => {
+   
+    await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Submission was successful');
+      console.log(data);
+      
+       navigate('/teacher/dashboard');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  };
 
-  const onSubmit = (data) => console.log(data);
-
+  
   return (
     <section className="bg-gray-50 ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

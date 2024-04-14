@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
 import crackEdLogo from "../Assets/CrackEd-logo.png";
 
 export default function TeacherRegister() {
@@ -8,26 +10,65 @@ export default function TeacherRegister() {
     formState: { errors },
     setError,
   } = useForm();
+  
 
-  const onSubmit = (data) => {
+  const navigate = useNavigate();
+
+  const onSubmit = async(data) => {
     if (!(data.password === data.confirmPassword)) {
-      setError("root.confirmPassword", {
-        type: "invalid",
-        message: "Confirm Password doesn't match",
-      });
-      return;
+        setError("root.confirmPassword", {
+            type: "invalid",
+            message: "Confirm Password doesn't match",
+        });
+        return;
     }
     if (data.termAndConditions === false) {
-      setError("root.termAndConditions", {
-        type: "required",
-        message: "You must accept the term and conditions to signup",
-      });
-      return;
+        setError("root.termAndConditions", {
+            type: "required",
+            message: "You must accept the term and conditions to signup",
+        });
+        return;
     }
+
+    await fetch('http://localhost:8000/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Email or username already exists');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Submission was successful');
+      console.log(data);
+      
+       navigate('/teacher/dashboard');
+    })
+    .catch((error) => {
+      setError("root.email", {
+        type: "invalid",
+        message: error.message,
+      });
+      setError("root.username", {
+        type: "invalid",
+        message: error.message,
+      });
+      if (error.message === 'Email or username already exists') {
+        window.alert('You already have an account with this email or username.');
+      }
+    });
+
     console.log(data);
-  };
+};
   return (
     <section className="bg-gray-50 ">
+     
+
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="/"
@@ -132,8 +173,7 @@ export default function TeacherRegister() {
                 <div className="ml-3 text-sm">
                   <label htmlFor="terms" className="font-light text-gray-500">
                     I accept the{" "}
-                    <a
-                      className="font-medium text-primary-600 hover:underline"
+                    <a className="font-medium text-primary-600 hover:underline"
                       href="#"
                     >
                       Terms and Conditions
