@@ -57,13 +57,11 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">
-                Legal
-              </h2>
+              <h2 class="mb-6 text-sm font-semibold text-gray-900">Career</h2>
               <ul class="text-gray-600 ">
                 <li class="mb-4">
-                  <a href="#" class="hover:underline">
-                    Privacy Policy
+                  <a href="/tutor-register" class="hover:underline">
+                    Become a Tutor
                   </a>
                 </li>
                 <li>
