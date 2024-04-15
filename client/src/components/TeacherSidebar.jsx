@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import crackEdWhiteLogo from "../Assets/CrackEd-white-logo.png";
 
-export default function Sidebar() {
+export default function TeacherSidebar() {
   return (
     <>
       <aside
