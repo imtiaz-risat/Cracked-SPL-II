@@ -9,7 +9,7 @@ export default function Sidebar() {
         className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidenav"
       >
-        <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+        <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-cyan-200 dark:bg-cyan-900 dark:border-cyan-700">
           <a href="/">
             <img
               src={crackEdWhiteLogo}
@@ -20,12 +20,12 @@ export default function Sidebar() {
           <ul className="space-y-2">
             <li>
               <Link
-                to="/teacher/dashboard"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/tutor/dashboard"
+                className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >
                 <svg
                   aria-hidden="true"
-                  className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-6 h-6 text-cyan-400 transition duration-75 dark:text-cyan-400 group-hover:text-cyan-900 dark:group-hover:text-white"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
@@ -39,8 +39,8 @@ export default function Sidebar() {
 
             <li>
               <Link
-                to="/teacher/database"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/tutor/database"
+                className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@ export default function Sidebar() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-6 h-6 text-cyan-400 transition duration-75 dark:text-cyan-400 group-hover:text-cyan-900 dark:group-hover:text-white"
                 >
                   <path
                     stroke-linecap="round"
@@ -62,8 +62,8 @@ export default function Sidebar() {
 
             <li>
               <Link
-                to="/teacher/reviews"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/tutor/reviews"
+                className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +71,7 @@ export default function Sidebar() {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-6 h-6 text-cyan-400 transition duration-75 dark:text-cyan-400 group-hover:text-cyan-900 dark:group-hover:text-white"
                 >
                   <path
                     stroke-linecap="round"
@@ -85,8 +85,8 @@ export default function Sidebar() {
 
             <li>
               <Link
-                to="/teacher/profile"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/tutor/profile"
+                className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +94,7 @@ export default function Sidebar() {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-6 h-6 text-cyan-400 transition duration-75 dark:text-cyan-400 group-hover:text-cyan-900 dark:group-hover:text-white"
                 >
                   <path
                     strokeLinecap="round"
@@ -109,7 +109,7 @@ export default function Sidebar() {
             <li>
               <Link
                 to="/login"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +117,7 @@ export default function Sidebar() {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-6 h-6 text-cyan-400 transition duration-75 dark:text-cyan-400 group-hover:text-cyan-900 dark:group-hover:text-white"
                 >
                   <path
                     strokeLinecap="round"

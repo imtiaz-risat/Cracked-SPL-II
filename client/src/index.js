@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     element: <TeacherRegister />,
   },
   {
-    path: "/teacher",
+    path: "/tutor",
     element: <TeacherSection />,
     children: [
       {
