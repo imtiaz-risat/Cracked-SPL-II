@@ -12,6 +12,8 @@ import TeacherReviews from "./components/TeacherSections/TeacherReviews";
 import TeacherDatabase from "./components/TeacherSections/TeacherDatabase";
 import TeacherProfile from "./components/TeacherSections/TeacherProfile";
 import AddNewQuestion from "./components/TeacherSections/AddNewQuestion";
+import StudentLogin from "./Pages/StudentLogin";
+import StudentRegister from "./Pages/StudentRegister";
 
 const router = createBrowserRouter([
   {
@@ -20,10 +22,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <TeacherLogin />,
+    element: <StudentLogin />,
   },
   {
     path: "/register",
+    element: <StudentRegister />,
+  },
+  {
+    path: "/tutor-login",
+    element: <TeacherLogin />,
+  },
+  {
+    path: "/tutor-register",
     element: <TeacherRegister />,
   },
   {
