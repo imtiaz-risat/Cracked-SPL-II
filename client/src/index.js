@@ -14,6 +14,13 @@ import TeacherProfile from "./components/TeacherSections/TeacherProfile";
 import AddNewQuestion from "./components/TeacherSections/AddNewQuestion";
 import StudentLogin from "./Pages/StudentLogin";
 import StudentRegister from "./Pages/StudentRegister";
+import StudentSection from "./Pages/StudentSection";
+import StudentDashboard from "./components/StudentSections/StudentDashboard";
+import StudentMockTest from "./components/StudentSections/StudentMockTest";
+import StudentModelTest from "./components/StudentSections/StudentModelTest";
+import StudentDoubts from "./components/StudentSections/StudentDoubts";
+import StudentQuestionBank from "./components/StudentSections/StudentQuestionBank";
+import StudentProfile from "./components/StudentSections/StudentProfile";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +42,36 @@ const router = createBrowserRouter([
   {
     path: "/tutor-register",
     element: <TeacherRegister />,
+  },
+  {
+    path: "/student",
+    element: <StudentSection />,
+    children: [
+      {
+        path: "dashboard",
+        element: <StudentDashboard />,
+      },
+      {
+        path: "mock-test",
+        element: <StudentMockTest />,
+      },
+      {
+        path: "model-test",
+        element: <StudentModelTest />,
+      },
+      {
+        path: "doubts",
+        element: <StudentDoubts />,
+      },
+      {
+        path: "question-bank",
+        element: <StudentQuestionBank />,
+      },
+      {
+        path: "profile",
+        element: <StudentProfile />,
+      },
+    ],
   },
   {
     path: "/tutor",
