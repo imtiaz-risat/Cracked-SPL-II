@@ -1,5 +1,10 @@
 import React from "react";
+import AskDoubtCard from "../Doubts/AskDoubtCard";
 
 export default function StudentDoubts() {
-  return <div>StudentDoubts</div>;
+  return (
+    <div>
+      <AskDoubtCard />
+    </div>
+  );
 }

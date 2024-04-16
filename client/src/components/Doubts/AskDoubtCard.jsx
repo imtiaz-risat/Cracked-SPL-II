@@ -103,7 +103,7 @@ export default function AskDoubtCard() {
         </div>
         {errors.doubt && <p className="text-red-500">Field is empty</p>}
         <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
           onClick={handleSubmit(onSubmit)}
         >
           Submit
