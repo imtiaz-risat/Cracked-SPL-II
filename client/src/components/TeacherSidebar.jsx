@@ -108,7 +108,7 @@ export default function TeacherSidebar() {
 
             <li>
               <Link
-                to="/login"
+                to="/tutor-login"
                 className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >
                 <svg

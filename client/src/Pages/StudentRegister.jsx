@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentRegister() {
   const {
@@ -9,7 +10,10 @@ export default function StudentRegister() {
     setError,
   } = useForm();
 
-  const onSubmit = (data) => {
+  
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
     if (!(data.password === data.confirmPassword)) {
       setError("root.confirmPassword", {
         type: "invalid",
@@ -24,6 +28,42 @@ export default function StudentRegister() {
       });
       return;
     }
+
+    await fetch("http://localhost:8000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Email or username already exists");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Submission was successful");
+        console.log(data);
+
+        navigate("/student/dashboard");
+      })
+      .catch((error) => {
+        setError("root.email", {
+          type: "invalid",
+          message: error.message,
+        });
+        setError("root.username", {
+          type: "invalid",
+          message: error.message,
+        });
+        if (error.message === "Email or username already exists") {
+          window.alert(
+            "You already have an account with this email or username."
+          );
+        }
+      });
+
     console.log(data);
   };
   return (

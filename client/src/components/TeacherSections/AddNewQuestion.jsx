@@ -12,7 +12,7 @@ const AddNewQuestion = () => {
   const options = watch("options", []);
 
   const onSubmit = async (data) => {
-    await fetch("http://localhost:8000/teacher/add-question", {
+    await fetch("http://localhost:8000/tutor/add-question", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

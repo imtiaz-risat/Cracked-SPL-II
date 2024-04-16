@@ -11,7 +11,7 @@ export default function TeacherLogin() {
 
   const navigate = useNavigate();
   const onSubmit = async (data) => {
-    await fetch("http://localhost:8000/login", {
+    await fetch("http://localhost:8000/tutor-login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export default function TeacherLogin() {
         console.log("Submission was successful");
         console.log(data);
 
-        navigate("/teacher/dashboard");
+        navigate("/tutor/dashboard");
       })
       .catch((error) => {
         console.error("Error:", error);

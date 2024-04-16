@@ -29,7 +29,7 @@ export default function TeacherRegister() {
       return;
     }
 
-    await fetch("http://localhost:8000/register", {
+    await fetch("http://localhost:8000/tutor-register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default function TeacherRegister() {
         console.log("Submission was successful");
         console.log(data);
 
-        navigate("/teacher/dashboard");
+        navigate("/tutor/dashboard");
       })
       .catch((error) => {
         setError("root.email", {
