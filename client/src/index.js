@@ -21,6 +21,7 @@ import StudentModelTest from "./components/StudentSections/StudentModelTest";
 import StudentDoubts from "./components/StudentSections/StudentDoubts";
 import StudentQuestionBank from "./components/StudentSections/StudentQuestionBank";
 import StudentProfile from "./components/StudentSections/StudentProfile";
+import Leaderboard from "./components/StudentSections/Leaderboard";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "doubts",
         element: <StudentDoubts />,
+      },
+      {
+        path: "leaderboard",
+        element: <Leaderboard />,
       },
       {
         path: "question-bank",
