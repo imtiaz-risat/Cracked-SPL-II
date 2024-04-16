@@ -186,5 +186,4 @@ const AddNewQuestion = () => {
     </div>
   );
 };
-
 export default AddNewQuestion;
