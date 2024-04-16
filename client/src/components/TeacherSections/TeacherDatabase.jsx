@@ -4,7 +4,7 @@ export default function TeacherDatabase() {
       <h1 className="text-2xl font-bold mb-4 text-black">Questions Database</h1>
       <a
         href="/teacher/add-question"
-        className="flex items-center max-w-40 bg-gray-700 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors duration-300 hover:bg-gray-900"
+        className="flex items-center max-w-40 bg-cyan-700 text-gray-200 font-semibold py-2 px-4 rounded-lg transition-colors duration-300 hover:bg-cyan-900"
       >
         <svg
           className="h-4 w-4 mr-2"
