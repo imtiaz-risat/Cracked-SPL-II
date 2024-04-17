@@ -18,15 +18,21 @@ export default function StudentLogin() {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Login failed');
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Submission was successful");
         console.log(data);
-
+  
         navigate("/student/dashboard");
       })
       .catch((error) => {
         console.error("Error:", error);
+        // Show an error message to the user
       });
   };
 

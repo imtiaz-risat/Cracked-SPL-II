@@ -18,18 +18,23 @@ export default function TeacherLogin() {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Login failed');
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Submission was successful");
         console.log(data);
-
+  
         navigate("/tutor/dashboard");
       })
       .catch((error) => {
         console.error("Error:", error);
+        // Show an error message to the user
       });
   };
-
   return (
     <section className="bg-gray-50 ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

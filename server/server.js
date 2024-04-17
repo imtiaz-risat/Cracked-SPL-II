@@ -183,7 +183,7 @@ app.post("/register", (req, res) => {
       } else {
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) {
-            console.error('Error comparing passwords:', err);
+            console.error('Error comparing passwords:', err); 
             res.status(500).json({ message: 'Internal server error' });
           } else if (!isMatch) {
             res.status(400).json({ message: 'Incorrect password' });
