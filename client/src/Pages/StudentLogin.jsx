@@ -32,6 +32,7 @@ export default function StudentLogin() {
       })
       .catch((error) => {
         console.error("Error:", error);
+        alert("login failed: email or password not matched.");
         // Show an error message to the user
       });
   };
