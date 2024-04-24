@@ -1,4 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const AddNewQuestion = () => {
   const {
@@ -21,8 +22,8 @@ const AddNewQuestion = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Submission was successful");
         console.log(data);
+        toast.success("Question added successfully");
       })
       .catch((error) => {
         console.error("Error:", error);
