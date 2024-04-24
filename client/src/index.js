@@ -22,6 +22,8 @@ import StudentDoubts from "./components/StudentSections/StudentDoubts";
 import StudentQuestionBank from "./components/StudentSections/StudentQuestionBank";
 import StudentProfile from "./components/StudentSections/StudentProfile";
 import Leaderboard from "./components/StudentSections/Leaderboard";
+import ExamStartPage from "./components/Exams/ExamStartPage";
+import ExamQuestionsPage from "./components/Exams/ExamQuestionsPage";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +57,12 @@ const router = createBrowserRouter([
       {
         path: "mock-test",
         element: <StudentMockTest />,
+        // children: [
+        //   {
+        //     path: "start-exam",
+        //     element: <ExamStartPage />,
+        //   },
+        // ],
       },
       {
         path: "model-test",
@@ -77,6 +85,14 @@ const router = createBrowserRouter([
         element: <StudentProfile />,
       },
     ],
+  },
+  {
+    path: "student/start-exam",
+    element: <ExamStartPage />,
+  },
+  {
+    path: "student/exam-questions",
+    element: <ExamQuestionsPage />,
   },
   {
     path: "/tutor",
