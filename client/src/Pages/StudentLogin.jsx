@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function StudentLogin() {
   const {
@@ -11,30 +12,32 @@ export default function StudentLogin() {
 
   const navigate = useNavigate();
   const onSubmit = async (data) => {
-    await fetch("http://localhost:8000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Login failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Submission was successful");
-        console.log(data);
-
-        navigate("/student/dashboard");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("login failed: email or password not matched.");
-        // Show an error message to the user
+    try {
+      const response = await fetch("http://localhost:5050/student/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+
+      if (!response.ok) {
+        // toastify not working here
+        toast.error("Login failed");
+        throw new Error("Login failed");
+      }
+
+      const responseData = await response.json();
+      console.log("Submission was successful");
+      console.log(responseData);
+
+      navigate("/tutor/dashboard");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Login failed: email or password not matched.");
+      // toastify not working
+      toast.error("Login failed: email or password not matched.");
+    }
   };
 
   return (

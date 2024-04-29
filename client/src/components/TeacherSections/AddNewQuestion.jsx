@@ -7,13 +7,14 @@ const AddNewQuestion = () => {
     handleSubmit,
     register,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
   const options = watch("options", []);
 
   const onSubmit = async (data) => {
-    await fetch("http://localhost:8000/tutor/add-question", {
+    await fetch("http://localhost:5050/question/add-question", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +24,9 @@ const AddNewQuestion = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        alert("Question added successfully!");
         toast.success("Question added successfully");
+        reset(); // Reset the form here
       })
       .catch((error) => {
         console.error("Error:", error);

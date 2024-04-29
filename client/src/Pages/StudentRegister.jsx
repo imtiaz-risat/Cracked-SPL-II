@@ -10,7 +10,6 @@ export default function StudentRegister() {
     setError,
   } = useForm();
 
-  
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -29,7 +28,7 @@ export default function StudentRegister() {
       return;
     }
 
-    await fetch("http://localhost:8000/register", {
+    await fetch("http://localhost:5050/student/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import crackEdLogo from "../Assets/CrackEd-cyan-dark-logo.png";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function TeacherLogin() {
   const {
@@ -11,31 +12,34 @@ export default function TeacherLogin() {
 
   const navigate = useNavigate();
   const onSubmit = async (data) => {
-    await fetch("http://localhost:8000/tutor-login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Login failed');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Submission was successful");
-        console.log(data);
-  
-        navigate("/tutor/dashboard");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("login failed: email or password not matched.");
-        // Show an error message to the user
+    try {
+      const response = await fetch("http://localhost:5050/tutor/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
+
+      if (!response.ok) {
+        // toastify not working here
+        toast.error("Login failed");
+        throw new Error("Login failed");
+      }
+
+      const responseData = await response.json();
+      console.log("Submission was successful");
+      console.log(responseData);
+
+      navigate("/tutor/dashboard");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Login failed: email or password not matched.");
+      // toastify not working
+      toast.error("Login failed: email or password not matched.");
+    }
   };
+
   return (
     <section className="bg-gray-50 ">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -45,9 +49,9 @@ export default function TeacherLogin() {
         >
           <img className="w-auto h-12 mr-2" src={crackEdLogo} alt="logo" />
         </a>
-        <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0 ">
+        <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 ">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-cyan-800 md:text-2xl ">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-cyan-800 md:text-2xl">
               Sign in to your account
             </h1>
             <form
@@ -57,13 +61,13 @@ export default function TeacherLogin() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-cyan-700 "
+                  className="block mb-2 text-sm font-medium text-cyan-700"
                 >
                   Your email
                 </label>
                 <input
                   type="email"
-                  className="bg-gray-50 border border-cyan-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
+                  className="bg-gray-50 border border-cyan-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="name@company.com"
                   {...register("email", { required: true })}
                 />
@@ -105,14 +109,14 @@ export default function TeacherLogin() {
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="remember" className="text-cyan-500 ">
+                    <label htmlFor="remember" className="text-cyan-500">
                       Remember me
                     </label>
                   </div>
                 </div>
                 <a
                   href="#"
-                  className="text-sm font-medium text-cyan-600 hover:underline "
+                  className="text-sm font-medium text-cyan-600 hover:underline"
                 >
                   Forgot password?
                 </a>

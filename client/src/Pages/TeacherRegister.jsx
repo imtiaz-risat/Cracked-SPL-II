@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import crackEdLogo from "../Assets/CrackEd-cyan-dark-logo.png";
@@ -29,7 +29,7 @@ export default function TeacherRegister() {
       return;
     }
 
-    await fetch("http://localhost:8000/tutor-register", {
+    await fetch("http://localhost:5050/tutor/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
