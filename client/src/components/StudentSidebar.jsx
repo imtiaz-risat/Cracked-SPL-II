@@ -1,7 +1,32 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import crackEdWhiteLogo from "../Assets/CrackEd-white-logo.png";
 
 export default function StudentSidebar() {
+  // Logout method
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/student/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        // Clear user data from local storage
+        localStorage.removeItem("userData");
+
+        // Redirect to the login page or any other desired page
+        window.location.href = "/login";
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <>
       <aside
@@ -175,6 +200,7 @@ export default function StudentSidebar() {
             <li>
               <Link
                 to="/login"
+                onClick={handleLogout}
                 className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg

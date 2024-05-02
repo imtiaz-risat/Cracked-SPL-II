@@ -1,12 +1,12 @@
 import express from "express";
-import bcrypt from "bcrypt";
 import db from "../db/connection.js";
 import { ObjectId } from "mongodb";
+import { isUserAStudent } from "../controller/roles.controller.js";
 
 const router = express.Router();
 
 // Add a new question to the appropriate collection based on the subject
-router.post("/add-question", async (req, res) => {
+router.post("/add-question", isUserAStudent, async (req, res) => {
   try {
     const { question, subject, options, correctAnswer } = req.body;
     if (!question || !subject || !options || !correctAnswer) {

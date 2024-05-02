@@ -6,12 +6,14 @@
 // const TeacherModel = require("../server/Model/teacherModel.js");
 // const QuestionModel = require("../server/Model/questionModel.js");
 // const StudentModel = require("./Model/studentModel.js");
-
+// require("dotenv").config();
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import tutorRouter from "./routes/tutor.js";
 import studentRouter from "./routes/student.js";
 import questionRouter from "./routes/question.js";
+// import session from "express-session";
 
 // Define the connection PORT
 const PORT = process.env.PORT || 5050;
@@ -22,8 +24,21 @@ const app = express();
 // Use cors middleware to enable CORS
 app.use(cors());
 
+app.use(express.urlencoded({ extended: true }));
 // Use JSON middleware to automatically parse JSON
 app.use(express.json());
+
+//
+app.use(cookieParser());
+
+// // Session
+// app.use(
+//   session({
+//     secret: "UwoZatxBBtdt4yAN5GFsiO",
+//     resave: true,
+//     saveUninitialized: true,
+//   })
+// );
 
 // Use tutorRouter for tutor endpoints
 app.use("/tutor", tutorRouter);

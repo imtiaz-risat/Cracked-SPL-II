@@ -27,10 +27,20 @@ export default function TeacherLogin() {
         throw new Error("Login failed");
       }
 
+      // After successful submission
       const responseData = await response.json();
-      console.log("Submission was successful");
-      console.log(responseData);
 
+      // Create an object with the required data
+      const userData = {
+        jwtoken: responseData.jwtoken,
+        tutorId: responseData.tutorId,
+        isTutor: responseData.isTutor,
+      };
+
+      // Store the object in local storage as a single item
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      // Redirect to student dashboard
       navigate("/tutor/dashboard");
     } catch (error) {
       console.error("Error:", error);

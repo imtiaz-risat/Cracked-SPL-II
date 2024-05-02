@@ -27,11 +27,21 @@ export default function StudentLogin() {
         throw new Error("Login failed");
       }
 
+      // After successful submission
       const responseData = await response.json();
-      console.log("Submission was successful");
-      console.log(responseData);
 
-      navigate("/tutor/dashboard");
+      // Create an object with the required data
+      const userData = {
+        jwtoken: responseData.jwtoken,
+        studentId: responseData.studentId,
+        isStudent: responseData.isStudent,
+      };
+
+      // Store the object in local storage as a single item
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      // Redirect to student dashboard
+      navigate("/student/dashboard");
     } catch (error) {
       console.error("Error:", error);
       alert("Login failed: email or password not matched.");

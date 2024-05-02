@@ -13,57 +13,64 @@ export default function StudentRegister() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    if (!(data.password === data.confirmPassword)) {
-      setError("root.confirmPassword", {
+    try {
+      if (!(data.password === data.confirmPassword)) {
+        setError("root.confirmPassword", {
+          type: "invalid",
+          message: "Confirm Password doesn't match",
+        });
+        return;
+      }
+      if (data.termAndConditions === false) {
+        setError("root.termAndConditions", {
+          type: "required",
+          message: "You must accept the term and conditions to signup",
+        });
+        return;
+      }
+
+      const response = await fetch("http://localhost:5050/student/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Email or username already exists");
+      }
+
+      // After successful submission
+      const responseData = await response.json();
+
+      // Create an object with the required data
+      const userData = {
+        jwtoken: responseData.jwtoken,
+        studentId: responseData.studentId,
+        isStudent: responseData.isStudent,
+      };
+
+      // Store the object in local storage as a single item
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      // Redirect to student dashboard
+      navigate("/student/dashboard");
+    } catch (error) {
+      setError("root.email", {
         type: "invalid",
-        message: "Confirm Password doesn't match",
+        message: error.message,
       });
-      return;
+      setError("root.username", {
+        type: "invalid",
+        message: error.message,
+      });
+      if (error.message === "Email or username already exists") {
+        window.alert(
+          "You already have an account with this email or username."
+        );
+      }
     }
-    if (data.termAndConditions === false) {
-      setError("root.termAndConditions", {
-        type: "required",
-        message: "You must accept the term and conditions to signup",
-      });
-      return;
-    }
-
-    await fetch("http://localhost:5050/student/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Email or username already exists");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Submission was successful");
-        console.log(data);
-
-        navigate("/student/dashboard");
-      })
-      .catch((error) => {
-        setError("root.email", {
-          type: "invalid",
-          message: error.message,
-        });
-        setError("root.username", {
-          type: "invalid",
-          message: error.message,
-        });
-        if (error.message === "Email or username already exists") {
-          window.alert(
-            "You already have an account with this email or username."
-          );
-        }
-      });
-
-    console.log(data);
   };
   return (
     <section className="bg-gray-50 ">
