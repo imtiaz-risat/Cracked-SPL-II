@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 
 const router = express.Router();
 
+// const { ObjectId } = require("mongodb");
+
 // api routes here
 router.get("/", async (req, res) => {
   let collection = await db.collection("Students");
@@ -134,6 +136,139 @@ router.post("/logout", async (req, res) => {
   } catch (error) {
     res.status(500).send({ message: "Server error", error: error.message });
   }
+});
+
+// Fetch student profile data
+router.get("/profile/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  // Validate the studentId
+  if (!ObjectId.isValid(studentId)) {
+    return res.status(400).send({ message: "Invalid student ID format" });
+  }
+
+  let objectId = new ObjectId(studentId);
+  let collection = await db.collection("Students");
+
+  try {
+    const studentData = await collection.findOne({ _id: objectId });
+    if (!studentData) {
+      return res.status(404).send({ message: "Student not found" });
+    }
+    res.status(200).send(studentData);
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// Update student profile
+router.put("/profile/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  // Check if the studentId is a valid ObjectId
+  if (!ObjectId.isValid(studentId)) {
+    return res.status(400).send({ message: "Invalid student ID format" });
+  }
+
+  let objectId;
+
+  try {
+    objectId = new ObjectId(studentId);
+  } catch (error) {
+    return res.status(400).send({ message: "Invalid student ID format" });
+  }
+
+  const { fullName, institute, batch, phone, email, username } = req.body;
+  let collection = await db.collection("Students");
+
+  // Check if the username is already taken by another student
+  if (username) {
+    const existingUser = await collection.findOne({
+      username: username,
+      _id: { $ne: objectId },
+    });
+    if (existingUser) {
+      return res.status(409).send({ message: "Username already taken" });
+    }
+  }
+
+  try {
+    const updatedData = {
+      ...(fullName && { fullName }),
+      ...(institute && { institute }),
+      ...(batch && { batch }),
+      ...(phone && { phone }),
+      ...(email && { email }),
+      ...(username && { username }),
+    };
+    const result = await collection.updateOne(
+      { _id: objectId },
+      { $set: updatedData }
+    );
+    if (result.modifiedCount === 0) {
+      return res.status(404).send({ message: "Data unchanged" });
+    }
+    res.status(200).send({ message: "Profile updated successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// Update student password
+router.post("/update-password/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+  const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+  // Validate student ID
+  if (!ObjectId.isValid(studentId)) {
+    return res.status(400).send({ message: "Invalid student ID format" });
+  }
+
+  // Check password length
+  if (!newPassword || newPassword.length < 6) {
+    return res
+      .status(400)
+      .send({ message: "Password must be at least 6 characters long" });
+  }
+
+  // Check if new password and confirm new password match
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).send({ message: "New passwords do not match" });
+  }
+
+  let collection = await db.collection("Students");
+  let objectId = new ObjectId(studentId);
+
+  // Fetch the existing user
+  const student = await collection.findOne({ _id: objectId });
+  if (!student) {
+    return res.status(404).send({ message: "Student not found" });
+  }
+
+  // Verify old password
+  const isOldPasswordValid = await bcrypt.compare(
+    oldPassword,
+    student.hashedPassword
+  );
+  if (!isOldPasswordValid) {
+    return res.status(401).send({ message: "Invalid old password" });
+  }
+
+  // Hash new password
+  const saltRounds = 10;
+  const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+  // Update password in the database
+  const result = await collection.updateOne(
+    { _id: objectId },
+    { $set: { hashedPassword: hashedNewPassword } }
+  );
+
+  if (result.modifiedCount === 0) {
+    return res.status(500).send({ message: "Failed to update password" });
+  }
+
+  res.status(200).send({ message: "Password updated successfully" });
 });
 
 export default router;

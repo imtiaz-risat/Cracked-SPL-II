@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <>
       <NavBar isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-      <button onClick={() => toast.success("Hello")}>Click me</button>
+      {/* <button onClick={() => toast.success("Hello")}>Click me</button> */}
       <HeroSection />
       <OurTutors />
       <Footer />
