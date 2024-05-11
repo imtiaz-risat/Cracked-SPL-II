@@ -1,8 +1,8 @@
-import tutorSani from "../Assets/Tutors/sani.jpg";
-import tutorShefayet from "../Assets/Tutors/shefayet.jpg";
-import tutorTaki from "../Assets/Tutors/taki.jpeg";
-import tutorNiaz from "../Assets/Tutors/niaz.jpg";
-import tutorTaaha from "../Assets/Tutors/taaha.jpg";
+import tutorSani from "../../Assets/Tutors/sani.jpg";
+import tutorShefayet from "../../Assets/Tutors/shefayet.jpg";
+import tutorTaki from "../../Assets/Tutors/taki.jpeg";
+import tutorNiaz from "../../Assets/Tutors/niaz.jpg";
+import tutorTaaha from "../../Assets/Tutors/taaha.jpg";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

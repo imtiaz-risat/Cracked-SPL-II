@@ -1,7 +1,7 @@
-import physicsIcon from "../Assets/physics-icon.png";
-import chemistryIcon from "../Assets/chemistry-icon.png";
-import mathIcon from "../Assets/math-icon.png";
-import englishIcon from "../Assets/english-icon.png";
+import physicsIcon from "../../Assets/physics-icon.png";
+import chemistryIcon from "../../Assets/chemistry-icon.png";
+import mathIcon from "../../Assets/math-icon.png";
+import englishIcon from "../../Assets/english-icon.png";
 
 export default function HeroSection() {
   return (
@@ -20,7 +20,7 @@ export default function HeroSection() {
               <div class="flex justify-center">
                 <img
                   src={physicsIcon}
-                  alt="Image"
+                  alt="physicsIcon"
                   class="w-24 h-24 rounded-lg mb-4"
                 />
               </div>
@@ -31,7 +31,7 @@ export default function HeroSection() {
               <div class="flex justify-center">
                 <img
                   src={chemistryIcon}
-                  alt="Image"
+                  alt="chemistryIcon"
                   class="w-24 h-24 rounded-lg mb-4"
                 />
               </div>
@@ -42,7 +42,7 @@ export default function HeroSection() {
               <div class="flex justify-center">
                 <img
                   src={mathIcon}
-                  alt="Image"
+                  alt="mathIcon"
                   class="w-24 h-24 rounded-lg mb-4"
                 />
               </div>
@@ -53,7 +53,7 @@ export default function HeroSection() {
               <div class="flex justify-center">
                 <img
                   src={englishIcon}
-                  alt="Image"
+                  alt="englishIcon"
                   class="w-24 h-24 rounded-lg mb-4"
                 />
               </div>
