@@ -87,8 +87,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "student/start-exam",
+    path: "student/start-exam/:id",
     element: <ExamStartPage />,
+  },
+  {
+    path: "student/mockTest/:mockTestId",
+    element: <></>,
   },
   {
     path: "student/exam-questions",

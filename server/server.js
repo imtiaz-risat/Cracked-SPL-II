@@ -13,6 +13,8 @@ import cookieParser from "cookie-parser";
 import tutorRouter from "./routes/tutor.js";
 import studentRouter from "./routes/student.js";
 import questionRouter from "./routes/question.js";
+import mockTestRouter from "./routes/mockTest.js";
+
 // import session from "express-session";
 
 // Define the connection PORT
@@ -46,6 +48,7 @@ app.use("/tutor", tutorRouter);
 app.use("/student", studentRouter);
 // Use studentRouter for student endpoints
 app.use("/question", questionRouter);
+app.use("/mockTest", mockTestRouter);
 
 // start the Express server
 app.listen(PORT, () => {
