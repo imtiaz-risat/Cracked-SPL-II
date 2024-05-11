@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function StudentMockTest() {
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -7,6 +8,8 @@ export default function StudentMockTest() {
   const [errorSubject, setErrorSubject] = useState(false);
   const [errorMarks, setErrorMarks] = useState(false);
   const [errorTime, setErrorTime] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubjectChange = (event) => {
     setSelectedSubject(event.target.value);
@@ -23,7 +26,7 @@ export default function StudentMockTest() {
     setErrorTime(false); // Reset error on change
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent form submission from reloading the page
     let isValid = true;
     if (!selectedSubject) {
@@ -38,12 +41,44 @@ export default function StudentMockTest() {
       setErrorTime(true);
       isValid = false;
     }
+
+    let marksInt = Number.parseInt(selectedMarks);
+    let timeInt = Number.parseInt(selectedTime);
+
     if (isValid) {
-      console.log({
-        selectedSubject,
-        selectedMarks,
-        selectedTime,
-      });
+      const studentId = JSON.parse(localStorage.getItem("userData")).studentId; // Assuming studentId is stored in localStorage
+      const mockTestData = {
+        studentId,
+        subject: selectedSubject,
+        marks: marksInt,
+        time: timeInt,
+      };
+
+      console.log(mockTestData);
+
+      try {
+        const response = await fetch(
+          "http://localhost:5050/mockTest/generateMockTest",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(mockTestData),
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          alert("Mock test created successfully!");
+          console.log(data);
+          navigate(`/student/start-exam/${data.mockTestId}`);
+        } else {
+          throw new Error(data.message || "Failed to create mock test");
+        }
+      } catch (error) {
+        console.error("Error creating mock test:", error);
+        alert(error.message);
+      }
     }
   };
 
@@ -67,7 +102,7 @@ export default function StudentMockTest() {
             )}
             <label
               className={`bg-gray-100 ${
-                selectedSubject === "physics"
+                selectedSubject === "Physics"
                   ? "bg-green-300"
                   : "hover:bg-gray-200"
               } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
@@ -75,7 +110,7 @@ export default function StudentMockTest() {
               <input
                 type="radio"
                 name="subject"
-                value="physics"
+                value="Physics"
                 onChange={handleSubjectChange}
                 className="hidden"
               />
@@ -83,7 +118,7 @@ export default function StudentMockTest() {
             </label>
             <label
               className={`bg-gray-100 ${
-                selectedSubject === "chemistry"
+                selectedSubject === "Chemistry"
                   ? "bg-green-300"
                   : "hover:bg-gray-200"
               } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
@@ -91,7 +126,7 @@ export default function StudentMockTest() {
               <input
                 type="radio"
                 name="subject"
-                value="chemistry"
+                value="Chemistry"
                 onChange={handleSubjectChange}
                 className="hidden"
               />
@@ -99,7 +134,7 @@ export default function StudentMockTest() {
             </label>
             <label
               className={`bg-gray-100 ${
-                selectedSubject === "math"
+                selectedSubject === "Math"
                   ? "bg-green-300"
                   : "hover:bg-gray-200"
               } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
@@ -107,7 +142,7 @@ export default function StudentMockTest() {
               <input
                 type="radio"
                 name="subject"
-                value="math"
+                value="Math"
                 onChange={handleSubjectChange}
                 className="hidden"
               />
@@ -115,7 +150,7 @@ export default function StudentMockTest() {
             </label>
             <label
               className={`bg-gray-100 ${
-                selectedSubject === "english"
+                selectedSubject === "English"
                   ? "bg-green-300"
                   : "hover:bg-gray-200"
               } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
@@ -123,7 +158,7 @@ export default function StudentMockTest() {
               <input
                 type="radio"
                 name="subject"
-                value="english"
+                value="English"
                 onChange={handleSubjectChange}
                 className="hidden"
               />
@@ -168,7 +203,7 @@ export default function StudentMockTest() {
                 Please select a time limit.
               </p>
             )}
-            {["10 min", "20 min", "30 min", "60 min"].map((time) => (
+            {["10", "20", "30", "60"].map((time) => (
               <label
                 key={time}
                 className={`bg-gray-100 ${
@@ -182,7 +217,7 @@ export default function StudentMockTest() {
                   onChange={handleTimeChange}
                   className="hidden"
                 />
-                <p className="text-gray-800 font-semibold">{time}</p>
+                <p className="text-gray-800 font-semibold">{time} min</p>
               </label>
             ))}
           </div>

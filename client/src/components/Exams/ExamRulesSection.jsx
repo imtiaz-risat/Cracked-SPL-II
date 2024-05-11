@@ -1,6 +1,7 @@
 import React from "react";
 
-export default function ExamRulesSection() {
+export default function ExamRulesSection({ mockTest }) {
+  console.log(mockTest);
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
       <div className="col-span-2 flex justify-center">
