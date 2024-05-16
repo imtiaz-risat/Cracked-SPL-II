@@ -126,11 +126,17 @@ export default function ExamQuestionsSection({ mockTest }) {
             {question.options.map((option) => (
               <div
                 key={option}
-                className={`bg-gray-100 ${
-                  selectedOptions[question._id] === option
-                    ? "bg-yellow-200"
+                className={`bg-gray-100 shadow-md rounded-lg p-4 cursor-pointer ${
+                  submitted
+                    ? selectedOptions[question._id] === option
+                      ? question.correctAnswers.includes(option)
+                        ? "bg-green-300" // Correct answer chosen
+                        : "bg-red-300" // Incorrect answer chosen
+                      : question.correctAnswers.includes(option)
+                      ? "bg-green-300" // Correct answer not chosen
+                      : "bg-gray-100" // Neutral for unchosen options
                     : "hover:bg-gray-200"
-                } shadow-md rounded-lg p-4 cursor-pointer`}
+                }`}
                 onClick={() => handleOptionChange(question._id, option)}
               >
                 <p className="text-gray-800 font-semibold text-left">
