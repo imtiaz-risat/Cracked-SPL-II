@@ -90,12 +90,12 @@ const router = createBrowserRouter([
     path: "student/start-exam/:id",
     element: <ExamStartPage />,
   },
+  // {
+  //   path: "student/mockTest/:mockTestId",
+  //   element: <></>,
+  // },
   {
-    path: "student/mockTest/:mockTestId",
-    element: <></>,
-  },
-  {
-    path: "student/exam-questions",
+    path: "student/exam-questions/:id",
     element: <ExamQuestionsPage />,
   },
   {

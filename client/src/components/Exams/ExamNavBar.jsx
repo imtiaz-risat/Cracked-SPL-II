@@ -5,7 +5,7 @@ export default function ExamNavBar({ mockTestId }) {
   console.log(mockTestId);
   return (
     <nav className="bg-gray-800 p-4 px-8 text-white flex justify-between items-center">
-      <h1 className="text-xl font-bold">Model Test</h1>
+      <h1 className="text-xl font-bold">Mock Test</h1>
       <a href="/">
         <img src={Logo} alt="Logo" className="h-10" />
       </a>

@@ -1,19 +1,25 @@
 import React from "react";
 
 export default function ExamRulesSection({ mockTest }) {
-  console.log(mockTest);
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
       <div className="col-span-2 flex justify-center">
         <h2 className="text-2xl w-auto font-bold text-center bg-green-200 rounded-sm py-2 px-4">
-          Model Test 03 {/* {it will be exam name here} */}
+          {mockTest ? mockTest.name : "Loading..."}{" "}
+          {/* Dynamically display the exam name */}
         </h2>
       </div>
       <div className="grid gap-2 justify-center col-span-2 font-semibold mb-5">
-        <p className="col-span-2 flex justify-center">Subject: Physics</p>
+        <p className="col-span-2 flex justify-center">
+          Subject: {mockTest ? mockTest.subject : "Loading..."}
+        </p>
         <div className="flex justify-center">
-          <p className="px-4">Marks: 50</p>
-          <p className="px-4">Time: 30 mins</p>
+          <p className="px-4">
+            Marks: {mockTest ? mockTest.marks : "Loading..."}
+          </p>
+          <p className="px-4">
+            Time: {mockTest ? `${mockTest.time} mins` : "Loading..."}
+          </p>
         </div>
       </div>
       <div className="col-span-2 flex justify-center">
@@ -29,7 +35,7 @@ export default function ExamRulesSection({ mockTest }) {
         </ul>
       </div>
       <div className="col-span-2 flex justify-center mt-4">
-        <a href="/student/exam-questions">
+        <a href={mockTest ? `/student/exam-questions/${mockTest._id}` : "#"}>
           <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
             Start Exam
           </button>

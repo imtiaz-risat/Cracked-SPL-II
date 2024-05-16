@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ExamNavBar from "./ExamNavBar";
 import ExamRulesSection from "./ExamRulesSection";
 import { useParams } from "react-router-dom";
 
 export default function ExamStartPage() {
   const { id } = useParams();
-  let mockTest;
+  const [mockTest, setMockTest] = useState(null); // Use useState to manage mockTest
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,10 +18,9 @@ export default function ExamStartPage() {
         });
 
         if (response.ok) {
-          mockTest = await response.json();
-          console.log(mockTest);
-
-          console.log(mockTest._id);
+          const data = await response.json();
+          setMockTest(data); // Update state with fetched data
+          console.log(data);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -34,7 +33,6 @@ export default function ExamStartPage() {
     fetchData();
   }, [id]);
 
-  // console.log(mockTest.id);
   return (
     <>
       <ExamNavBar mockTestId={mockTest ? mockTest._id : null} />

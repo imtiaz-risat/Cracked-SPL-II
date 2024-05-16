@@ -16,6 +16,7 @@ router.post("/generateMockTest", async (req, res) => {
     const questionsIds = questions.map((question) => question._id);
 
     const newMockTest = {
+      name: "Mock Test",
       studentId: studentId,
       subject: subject,
       marks: marks,
@@ -52,6 +53,32 @@ router.get("/:mockTestId", async (req, res) => {
     res
       .status(500)
       .send({ message: "Failed to fetch mock test", error: error.message });
+  }
+});
+
+// Fetch all questions using questionIds[] and subject
+router.post("/questions", async (req, res) => {
+  try {
+    const { questionIds, subject } = req.body;
+    const questionsCollection = `Questions_${subject}`;
+    // Convert string IDs to ObjectId directly without $oid key
+    const objectIds = questionIds.map((id) => new ObjectId(String(id)));
+    const questions = await db
+      .collection(questionsCollection)
+      .find({
+        _id: { $in: objectIds },
+      })
+      .toArray();
+
+    if (questions.length) {
+      res.status(200).send(questions);
+    } else {
+      res.status(404).send({ message: "No questions found" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Failed to fetch questions", error: error.message });
   }
 });
 
