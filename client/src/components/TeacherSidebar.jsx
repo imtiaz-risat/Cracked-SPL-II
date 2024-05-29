@@ -86,6 +86,28 @@ export default function TeacherSidebar() {
 
             <li>
               <Link
+                to="/tutor/model-test"
+                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  width={20}
+                  height={20}
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6 text-cyan-400 transition duration-75 dark:text-cyan-400 group-hover:text-cyan-900 dark:group-hover:text-white"
+                >
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                <span className="ml-3">Model Test</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 to="/tutor/reviews"
                 className="flex items-center p-2 text-base font-normal text-cyan-900 rounded-lg dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-700 group"
               >

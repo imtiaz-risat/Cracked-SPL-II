@@ -51,12 +51,15 @@ export default function ExamQuestionsSection({ mockTest }) {
 
   const handleSubmit = () => {
     if (!submitted) {
+      console.log(selectedOptions);
+
       let correct = 0;
       let incorrect = 0;
       let skipped = 0;
       let status = {};
 
       questions.forEach((question) => {
+        console.log(question.correctAnswers);
         if (selectedOptions[question._id]) {
           if (selectedOptions[question._id] === question.correctAnswers[0]) {
             correct++;

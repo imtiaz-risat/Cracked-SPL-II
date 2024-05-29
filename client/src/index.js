@@ -24,6 +24,8 @@ import StudentProfile from "./components/StudentSections/StudentProfile";
 import Leaderboard from "./components/StudentSections/Leaderboard";
 import ExamStartPage from "./components/Exams/ExamStartPage";
 import ExamQuestionsPage from "./components/Exams/ExamQuestionsPage";
+import TeacherModelTest from "./components/TeacherSections/TeacherModelTest";
+import CreateModelTest from "./components/TeacherSections/ModelTest/CreateModelTest";
 
 const router = createBrowserRouter([
   {
@@ -110,6 +112,15 @@ const router = createBrowserRouter([
         path: "database",
         element: <TeacherDatabase />,
       },
+      {
+        path: "model-test",
+        element: <TeacherModelTest />,
+      },
+      {
+        path: "create-modeltest",
+        element: <CreateModelTest />,
+      },
+
       {
         path: "reviews",
         element: <TeacherReviews />,

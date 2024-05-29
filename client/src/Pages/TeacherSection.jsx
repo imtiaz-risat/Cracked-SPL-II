@@ -18,7 +18,7 @@ export default function TeacherSection() {
   return (
     <div className="flex">
       <Sidebar />
-      <div id="content" className="px-0 py-6 sm:pl-72">
+      <div id="content" className="w-full px-6 py-6 sm:pl-72">
         <Outlet />
       </div>
     </div>

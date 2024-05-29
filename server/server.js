@@ -14,6 +14,7 @@ import tutorRouter from "./routes/tutor.js";
 import studentRouter from "./routes/student.js";
 import questionRouter from "./routes/question.js";
 import mockTestRouter from "./routes/mockTest.js";
+import modelTestRouter from "./routes/modelTest.js";
 
 // import session from "express-session";
 
@@ -49,7 +50,7 @@ app.use("/student", studentRouter);
 // Use studentRouter for student endpoints
 app.use("/question", questionRouter);
 app.use("/mockTest", mockTestRouter);
-
+app.use("/modelTest", modelTestRouter);
 // start the Express server
 app.listen(PORT, () => {
   console.log(`Server listening on PORT ${PORT}`);
