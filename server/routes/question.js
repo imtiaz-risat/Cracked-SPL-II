@@ -137,6 +137,27 @@ router.put("/update-question/:questionId", async (req, res) => {
   }
 });
 
+// Delete a question based on questionId and subject
+router.delete("/delete-question/:subject/:questionId", async (req, res) => {
+  try {
+    const { questionId, subject } = req.params;
+
+    const collectionName = determineCollectionName(subject);
+    let collection = await db.collection(collectionName);
+
+    const query = { _id: new ObjectId(questionId) };
+    const result = await collection.deleteOne(query);
+
+    if (result.deletedCount > 0) {
+      res.status(200).send({ message: "Question deleted successfully" });
+    } else {
+      res.status(404).send({ message: "Question not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
 function determineCollectionName(subject) {
   switch (subject) {
     case "Physics":

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function DatabaseQuestionsList() {
   const { subject } = useParams();
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
+  // Add a state to manage the visibility of the delete confirmation modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [questionToDelete, setQuestionToDelete] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,13 +32,29 @@ export default function DatabaseQuestionsList() {
     navigate(`/tutor/edit-question/${subject}/${questionId}`);
   };
 
-  const handleDelete = (questionId) => {
-    // Handle delete functionality here
-    console.log("Deleting question with ID:", questionId);
+  // Update handleDelete function to set the question to delete and show the modal
+  const handleDelete = (subject, questionId) => {
+    setQuestionToDelete(questionId);
+    console.log(subject, questionId);
+    setShowDeleteModal(true);
   };
-
+  // Function to delete a question
+  const deleteQuestion = async (subject, questionId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5050/question/delete-question/${subject}/${questionId}`
+      );
+      console.log(response.data.message); // Log the deletion message
+      toast.warning("Question deleted!");
+      // Update the list of questions after successful deletion
+      setQuestions(questions.filter((question) => question._id !== questionId));
+    } catch (error) {
+      console.error("Failed to delete question:", error);
+    }
+  };
   return (
     <div className="max-w-4xl p-6">
+      <ToastContainer theme="colored" />
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold text-gray-800">
           {subject} Questions
@@ -97,7 +117,7 @@ export default function DatabaseQuestionsList() {
                   </svg>
                 </button>
                 <button
-                  onClick={() => handleDelete(question._id)}
+                  onClick={() => handleDelete(subject, question._id)}
                   className="py-2 rounded"
                 >
                   <svg
@@ -120,6 +140,35 @@ export default function DatabaseQuestionsList() {
         </ul>
       ) : (
         <p>No questions available for the selected subject.</p>
+      )}
+      {showDeleteModal && (
+        <div
+          onClick={() => setShowDeleteModal(false)}
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75"
+        >
+          <div className="bg-white p-6 rounded shadow-lg">
+            <p>Are you sure you want to delete this question?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="mr-2 bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                onClick={() => {
+                  // Add delete functionality here
+                  console.log("Deleting question with ID:", questionToDelete);
+                  deleteQuestion(subject, questionToDelete);
+                  setShowDeleteModal(false);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
