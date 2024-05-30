@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function StudentModelTest() {
+export default function TeacherModelTest() {
+  const [modelTests, setModelTests] = useState([]);
+
+  useEffect(() => {
+    const fetchModelTests = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5050/modelTest/allModelTests"
+        );
+        setModelTests(response.data);
+      } catch (error) {
+        console.error("Failed to fetch Model Tests:", error);
+      }
+    };
+
+    fetchModelTests();
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -34,57 +52,19 @@ export default function StudentModelTest() {
         </button>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Model Test-15</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">Chemistry</h2>
-            <p className="text-zinc-600">50 marks</p>
-          </div>
-        </a>
-
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Model Test-14</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">Math</h2>
-            <p className="text-zinc-600">50 marks</p>
-          </div>
-        </a>
-
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Weekly Test-3</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">All</h2>
-            <p className="text-zinc-600">200 marks</p>
-          </div>
-        </a>
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Model Test-13</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">Physics</h2>
-            <p className="text-zinc-600">50 marks</p>
-          </div>
-        </a>
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Model Test-12</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">English</h2>
-            <p className="text-zinc-600">30 marks</p>
-          </div>
-        </a>
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Model Test-11</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">Physics</h2>
-            <p className="text-zinc-600">50 marks</p>
-          </div>
-        </a>
-        <a href="/student/model-test">
-          <div className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-bold text-zinc-800">Model Test-10</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">Math</h2>
-            <p className="text-zinc-600">50 marks</p>
-          </div>
-        </a>
+        {modelTests.map((test) => (
+          <a
+            key={test._id}
+            href="#"
+            className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
+          >
+            <h2 className="text-3xl font-bold text-zinc-800">{test.Name}</h2>
+            <h2 className="text-xl font-semibold text-zinc-800">
+              {test.Subject}
+            </h2>
+            <p className="text-zinc-600">{test.Marks} marks</p>
+          </a>
+        ))}
       </div>
     </div>
   );
