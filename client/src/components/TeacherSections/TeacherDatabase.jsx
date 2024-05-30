@@ -1,4 +1,24 @@
+import React, { useEffect, useState } from "react";
+
 export default function TeacherDatabase() {
+  const [questionCounts, setQuestionCounts] = useState({});
+
+  useEffect(() => {
+    const fetchQuestionCounts = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5050/question/count-questions"
+        );
+        const data = await response.json();
+        setQuestionCounts(data);
+      } catch (error) {
+        console.error("Error fetching question counts:", error);
+      }
+    };
+
+    fetchQuestionCounts();
+  }, []);
+
   return (
     <div className="min-w-full p-6">
       <div className="flex justify-between items-center mb-2">
@@ -25,17 +45,12 @@ export default function TeacherDatabase() {
       </div>
       <hr className="my-2 h-0.5 border-t-0 bg-gray-200 opacity-100" />
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {dummyDatabases.map((question, index) => (
-          <a href={question.path}>
-            <div
-              key={index}
-              className="bg-white border text-center rounded-lg shadow-md py-4 px-4 transition-all duration-300 hover:border-gray-800 md:px-12"
-            >
-              <p className="text-lg font-semibold text-black mb-2">
-                {question.title}
-              </p>
+        {Object.keys(questionCounts).map((subject) => (
+          <a href={`/tutor/database/${subject}`} key={subject}>
+            <div className="bg-white border text-center rounded-lg shadow-md py-4 px-4 transition-all duration-300 hover:border-gray-800 md:px-12">
+              <p className="text-lg font-semibold text-black mb-2">{subject}</p>
               <p className="text-gray-600 whitespace-nowrap">
-                {question.questionCount} Questions
+                {questionCounts[subject]} Questions
               </p>
             </div>
           </a>
@@ -44,26 +59,3 @@ export default function TeacherDatabase() {
     </div>
   );
 }
-
-const dummyDatabases = [
-  {
-    title: "Physics",
-    questionCount: 145,
-    path: "/tutor/database/Physics",
-  },
-  {
-    title: "Chemistry",
-    questionCount: 176,
-    path: "/tutor/database/Chemistry",
-  },
-  {
-    title: "Math",
-    questionCount: 105,
-    path: "/tutor/database/Math",
-  },
-  {
-    title: "English",
-    questionCount: 98,
-    path: "/tutor/database/English",
-  },
-];

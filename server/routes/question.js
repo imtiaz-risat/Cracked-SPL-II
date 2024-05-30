@@ -173,4 +173,23 @@ function determineCollectionName(subject) {
   }
 }
 
+// Get the count of questions in each Question_Collection
+router.get("/count-questions", async (req, res) => {
+  try {
+    const questionCounts = {};
+    const subjects = ["Physics", "Chemistry", "Math", "English"];
+
+    for (const subject of subjects) {
+      const collectionName = `Questions_${subject}`;
+      const collection = await db.collection(collectionName);
+      const count = await collection.countDocuments();
+      questionCounts[subject] = count;
+    }
+
+    res.status(200).send(questionCounts);
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
 export default router;
