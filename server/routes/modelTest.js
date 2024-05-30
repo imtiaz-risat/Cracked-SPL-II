@@ -28,6 +28,7 @@ router.get("/questions", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch questions" });
   }
 });
+
 // Route to fetch all questions from multiple collections with subject field
 router.get("/allQuestions", async (req, res) => {
   try {
@@ -68,6 +69,29 @@ router.get("/allQuestions", async (req, res) => {
   } catch (error) {
     console.error("Failed to fetch all questions:", error);
     res.status(500).json({ message: "Failed to fetch all questions" });
+  }
+});
+
+// Route to store a ModelTest in the ModelTests collection
+router.post("/storeModelTest", async (req, res) => {
+  const { Name, Marks, Time, Subject, QuestionIds } = req.body;
+
+  try {
+    const result = await db.collection("ModelTests").insertOne({
+      Name,
+      Marks,
+      Time,
+      Subject,
+      QuestionIds,
+    });
+
+    res.status(201).json({
+      message: "ModelTest stored successfully",
+      id: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Failed to store ModelTest:", error);
+    res.status(500).json({ message: "Failed to store ModelTest" });
   }
 });
 

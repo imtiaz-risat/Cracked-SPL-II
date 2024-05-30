@@ -1,6 +1,6 @@
 export default function TeacherDatabase() {
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl p-6">
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold text-gray-800">Question Database</h1>
         <a
@@ -49,21 +49,21 @@ const dummyDatabases = [
   {
     title: "Physics",
     questionCount: 145,
-    path: "/teacher/database/physics",
+    path: "/tutor/database/Physics",
   },
   {
     title: "Chemistry",
     questionCount: 176,
-    path: "/teacher/database/chemistry",
+    path: "/tutor/database/Chemistry",
   },
   {
     title: "Math",
     questionCount: 105,
-    path: "/teacher/database/math",
+    path: "/tutor/database/Math",
   },
   {
     title: "English",
     questionCount: 98,
-    path: "/teacher/database/english",
+    path: "/tutor/database/English",
   },
 ];

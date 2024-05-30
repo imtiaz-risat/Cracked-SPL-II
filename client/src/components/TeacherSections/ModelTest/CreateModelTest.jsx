@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export default function CreateModelTest() {
@@ -101,8 +103,53 @@ export default function CreateModelTest() {
     indexOfLastQuestion
   );
 
+  const handlePublish = async (e) => {
+    e.preventDefault();
+    if (!testName || !marks || !time || !subject) {
+      toast.warning("Please fill in all fields.");
+      return;
+    }
+
+    if (selectedQuestionIds.length !== parseInt(marks)) {
+      toast.warning("Number of selected questions must match the total marks.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5050/modelTest/storeModelTest",
+        {
+          Name: testName,
+          Marks: parseInt(marks),
+          Time: parseInt(time),
+          Subject: subject,
+          QuestionIds: selectedQuestionIds,
+        }
+      );
+
+      console.log("Model Test stored successfully with ID:", response.data.id);
+      toast.success("Model Test stored successfully");
+      setTestName("");
+      setMarks("");
+      setTime("");
+      setSubject("");
+      setQuestions([]);
+      setSelectedQuestionIds([]);
+      setShowSelectedQuestions(false);
+      setSelectedQuestions([]);
+      setFilteredSubject(null);
+      setFilteredQuestions([]);
+      setCurrentPage(1);
+      setPageNumbers([]);
+    } catch (error) {
+      console.error("Failed to store ModelTest:", error);
+      toast.error("Failed to store ModelTest");
+    }
+  };
+
   return (
     <div className="w-full">
+      <ToastContainer />
       <div className="w-full flex justify-around mb-2">
         <button
           className={`flex-1 py-2 border border-gray-300 rounded-l-lg shadow cursor-pointer ${
@@ -179,7 +226,10 @@ export default function CreateModelTest() {
                 <option value="Combined">Combined</option>
               </select>
             </div>
-            <button className="w-full mt-4 bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded">
+            <button
+              onClick={handlePublish}
+              className="w-full mt-4 bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded"
+            >
               Publish
             </button>
           </form>

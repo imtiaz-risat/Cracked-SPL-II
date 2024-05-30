@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddNewQuestion = () => {
   const {
@@ -35,6 +35,7 @@ const AddNewQuestion = () => {
 
   return (
     <div className="w-full p-4">
+      <ToastContainer />
       <div className="flex items-center mb-4">
         <a className="mr-2" href="/teacher/database">
           <svg

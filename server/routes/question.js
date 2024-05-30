@@ -56,4 +56,100 @@ router.post("/add-question", async (req, res) => {
   }
 });
 
+// Get all questions from a specific Subject
+router.get("/get-questions", async (req, res) => {
+  const { subject } = req.query; // Get subject from query parameters
+
+  if (!subject) {
+    return res.status(400).json({ message: "Subject is required" });
+  }
+
+  // Determine the collection name based on the subject
+  const collectionName = `Questions_${subject}`;
+
+  try {
+    const questions = await db.collection(collectionName).find({}).toArray();
+    const questionsWithSubject = questions.map((question) => ({
+      ...question,
+      subject: subject,
+    }));
+
+    res.json(questionsWithSubject);
+  } catch (error) {
+    console.error("Failed to fetch questions from", collectionName, ":", error);
+    res.status(500).json({ message: "Failed to fetch questions" });
+  }
+});
+
+// Get a question based on questionId and subject
+router.get("/get-question/:subject/:questionId", async (req, res) => {
+  try {
+    const { questionId, subject } = req.params;
+
+    const collectionName = determineCollectionName(subject);
+    let collection = await db.collection(collectionName);
+
+    const query = { _id: new ObjectId(questionId) };
+    const question = await collection.findOne(query);
+
+    if (question) {
+      res.status(200).send(question);
+    } else {
+      res.status(404).send({ message: "Question not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// Update a question in the database based on questionId and subject
+router.put("/update-question/:questionId", async (req, res) => {
+  try {
+    const { question, subject, options, correctAnswer } = req.body;
+    if (!question || !subject || !options || !correctAnswer) {
+      return res.status(400).send({ message: "All fields are required" });
+    }
+
+    const collectionName = determineCollectionName(subject);
+
+    let collection = await db.collection(collectionName);
+
+    const updatedQuestion = {
+      question,
+      subject,
+      options,
+      correctAnswer,
+      updated_at: new Date(),
+    };
+
+    const result = await collection.updateOne(
+      { _id: new ObjectId(req.params.questionId) },
+      { $set: updatedQuestion }
+    );
+
+    if (result.modifiedCount > 0) {
+      res.status(200).send({ message: "Question updated successfully" });
+    } else {
+      res.status(404).send({ message: "Question not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+function determineCollectionName(subject) {
+  switch (subject) {
+    case "Physics":
+      return "Questions_Physics";
+    case "Chemistry":
+      return "Questions_Chemistry";
+    case "Math":
+      return "Questions_Math";
+    case "English":
+      return "Questions_English";
+    default:
+      throw new Error("Invalid subject");
+  }
+}
+
 export default router;
