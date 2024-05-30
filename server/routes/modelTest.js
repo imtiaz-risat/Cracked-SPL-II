@@ -95,4 +95,15 @@ router.post("/storeModelTest", async (req, res) => {
   }
 });
 
+// route to get All ModelTest Data (Name, Subject and Marks)
+router.get("/allModelTests", async (req, res) => {
+  try {
+    const allModelTests = await db.collection("ModelTests").find({}).toArray();
+    res.json(allModelTests);
+  } catch (error) {
+    console.error("Failed to fetch all ModelTests:", error);
+    res.status(500).json({ message: "Failed to fetch all ModelTests" });
+  }
+});
+
 export default router;
