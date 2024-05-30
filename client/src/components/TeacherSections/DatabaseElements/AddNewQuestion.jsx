@@ -34,10 +34,10 @@ const AddNewQuestion = () => {
   };
 
   return (
-    <div className="w-full p-4">
+    <div className="min-w-full p-4">
       <ToastContainer />
       <div className="flex items-center mb-4">
-        <a className="mr-2" href="/teacher/database">
+        <a className="mr-2" href="/tutor/database">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

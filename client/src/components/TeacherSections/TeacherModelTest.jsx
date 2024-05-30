@@ -2,7 +2,7 @@ import React from "react";
 
 export default function TeacherModelTest() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container min-w-full mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold text-gray-800">Model Tests</h1>
         <a

@@ -53,7 +53,7 @@ export default function DatabaseQuestionsList() {
     }
   };
   return (
-    <div className="max-w-4xl p-6">
+    <div className="min-w-full p-6">
       <ToastContainer theme="colored" />
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-3xl font-bold text-gray-800">

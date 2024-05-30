@@ -69,7 +69,9 @@ export default function EditQuestionPage() {
   };
 
   return (
-    <div className="w-full p-4">
+    <div className="min-w-full p-4">
+      <h1 className="text-2xl font-bold">Edit Question</h1>
+      <hr className="my-2 h-0.5 border-t-0 bg-gray-200 opacity-100" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <label className="block mb-1" htmlFor="question">
