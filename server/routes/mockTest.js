@@ -61,7 +61,6 @@ router.post("/questions", async (req, res) => {
   try {
     const { questionIds, subject } = req.body;
     const questionsCollection = `Questions_${subject}`;
-    // Convert string IDs to ObjectId directly without $oid key
     const objectIds = questionIds.map((id) => new ObjectId(String(id)));
     const questions = await db
       .collection(questionsCollection)
@@ -79,6 +78,33 @@ router.post("/questions", async (req, res) => {
     res
       .status(500)
       .send({ message: "Failed to fetch questions", error: error.message });
+  }
+});
+
+// New route to save exam results
+router.post("/saveExamResult", async (req, res) => {
+  try {
+    const { examId, totalQuestions, correct, incorrect, skipped, accuracy } = req.body;
+
+    const newExamResult = {
+      examId,
+      totalQuestions,
+      correct,
+      incorrect,
+      skipped,
+      accuracy,
+    };
+
+    const result = await db.collection("ExamResults").insertOne(newExamResult);
+
+    res.status(201).send({
+      message: "Exam result saved successfully",
+      resultId: result.insertedId,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Failed to save exam result", error: error.message });
   }
 });
 

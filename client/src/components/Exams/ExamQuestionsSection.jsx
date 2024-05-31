@@ -49,7 +49,7 @@ export default function ExamQuestionsSection({ mockTest }) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!submitted) {
       console.log(selectedOptions);
 
@@ -74,8 +74,11 @@ export default function ExamQuestionsSection({ mockTest }) {
         }
       });
 
+      const totalQuestions = questions.length;
+      const accuracy = (correct / totalQuestions) * 100;
+
       const newScore = {
-        TotalQuestions: questions.length,
+        TotalQuestions: totalQuestions,
         Correct: correct,
         Incorrect: incorrect,
         Skipped: skipped,
@@ -87,6 +90,35 @@ export default function ExamQuestionsSection({ mockTest }) {
 
       // Scroll to the top of the page
       window.scrollTo(0, 0);
+
+      // Send result data to the backend
+      try {
+        const response = await fetch('http://localhost:5050/mockTest/saveExamResult', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            examId: mockTest._id,
+            totalQuestions,
+            correct,
+            incorrect,
+            skipped,
+            accuracy,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Failed to save exam result:', errorText);
+          alert('Failed to save exam result');
+        } else {
+          console.log('Exam result saved successfully');
+        }
+      } catch (error) {
+        console.error('Error saving exam result:', error);
+        alert('Error saving exam result');
+      }
     }
   };
 
