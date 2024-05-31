@@ -5,6 +5,11 @@ const examResultSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Student', // Assuming you have a Student model
+    required: true
+  },
   totalQuestions: {
     type: Number,
     required: true

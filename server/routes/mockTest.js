@@ -84,10 +84,11 @@ router.post("/questions", async (req, res) => {
 // New route to save exam results
 router.post("/saveExamResult", async (req, res) => {
   try {
-    const { examId, totalQuestions, correct, incorrect, skipped, accuracy } = req.body;
+    const { examId, studentId, totalQuestions, correct, incorrect, skipped, accuracy } = req.body;
 
     const newExamResult = {
       examId,
+      studentId, // Include studentId in the exam result
       totalQuestions,
       correct,
       incorrect,
@@ -107,5 +108,6 @@ router.post("/saveExamResult", async (req, res) => {
       .send({ message: "Failed to save exam result", error: error.message });
   }
 });
+
 
 export default router;
