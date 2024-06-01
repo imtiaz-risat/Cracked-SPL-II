@@ -49,6 +49,10 @@ export default function ExamQuestionsSection({ mockTest }) {
     }
   };
 
+  const calculateScore = (correct, incorrect, totalMarks) => {
+    return ((correct - 0.25 * incorrect) / totalMarks).toFixed(2);
+  };
+
   const handleSubmit = () => {
     if (!submitted) {
       console.log(selectedOptions);
@@ -85,6 +89,33 @@ export default function ExamQuestionsSection({ mockTest }) {
       setScore(newScore);
       setSubmitted(true);
 
+      const calculatedScore = calculateScore(
+        newScore.Correct,
+        newScore.Incorrect,
+        newScore.TotalQuestions
+      );
+
+      // Store the score in the Scores Collection
+      fetch("http://localhost:5050/score/store-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          studentId: mockTest.studentId,
+          type: "MockTest",
+          examId: mockTest._id,
+          score: parseFloat(calculatedScore),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Score stored successfully:", data);
+        })
+        .catch((error) => {
+          console.error("Failed to store score:", error);
+        });
+
       // Scroll to the top of the page
       window.scrollTo(0, 0);
     }
@@ -99,7 +130,7 @@ export default function ExamQuestionsSection({ mockTest }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 m-4">
+    <div className="max-w-4xl grid grid-cols-1 gap-4 m-4">
       {submitted && (
         <div className="shadow-lg rounded-lg p-6 mb-4 bg-white flex justify-between">
           <h4 className="text-lg font-bold">Score Summary</h4>

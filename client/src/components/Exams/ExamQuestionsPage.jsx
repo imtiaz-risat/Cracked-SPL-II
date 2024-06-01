@@ -36,7 +36,9 @@ export default function ExamQuestionsPage() {
   return (
     <>
       <ExamNavBar mockTestId={mockTest ? mockTest._id : null} />
-      <ExamQuestionsSection mockTest={mockTest} />
+      <div className="flex justify-center items-center min-h-screen">
+        <ExamQuestionsSection mockTest={mockTest} />
+      </div>
     </>
   );
 }
