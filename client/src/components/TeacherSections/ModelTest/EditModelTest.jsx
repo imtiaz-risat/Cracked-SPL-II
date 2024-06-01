@@ -31,6 +31,8 @@ export default function CreateModelTest() {
 
   // Add state to manage the visibility of the delete confirmation modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [isDeleteEnabled, setIsDeleteEnabled] = useState(false);
 
   useEffect(() => {
     const fetchModelTestData = async () => {
@@ -198,6 +200,12 @@ export default function CreateModelTest() {
   const handleShowDeleteModal = (e) => {
     e.preventDefault();
     setShowDeleteModal(true);
+  };
+
+  // Function to handle input change and enable delete button if modelTest name matches
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    setIsDeleteEnabled(e.target.value === testName);
   };
 
   return (
@@ -420,11 +428,21 @@ export default function CreateModelTest() {
       )}
       {showDeleteModal && (
         <div
-          onClick={() => setShowDeleteModal(false)}
+          // onClick={() => setShowDeleteModal(false)}
           className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75"
         >
           <div className="bg-white p-6 rounded shadow-lg">
             <p>Are you sure you want to delete this model test?</p>
+            <p className="text-xs mt-1 font-semibold">
+              Type '{testName}' to confirm
+            </p>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Enter Model Test Name"
+              className="border border-gray-300 rounded w-full py-2 px-3 mt-1"
+            />
             <div className="mt-4 flex justify-end">
               <button
                 className="mr-2 bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg"
@@ -433,10 +451,14 @@ export default function CreateModelTest() {
                 Cancel
               </button>
               <button
-                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                className={`bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg ${
+                  isDeleteEnabled ? "" : "opacity-50"
+                }`}
                 onClick={() => {
-                  handleDelete();
-                  setShowDeleteModal(false);
+                  if (isDeleteEnabled) {
+                    handleDelete();
+                    setShowDeleteModal(false);
+                  }
                 }}
               >
                 Delete
