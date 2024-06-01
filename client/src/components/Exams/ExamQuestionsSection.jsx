@@ -45,7 +45,7 @@ export default function ExamQuestionsSection({ mockTest }) {
 
   const handleOptionChange = (questionId, option) => {
     if (!submitted) {
-      setSelectedOptions((prev) => ({ ...prev, [questionId]: option }));
+      setSelectedOptions((prev) => ({ ...prev, [questionId]: option || undefined }));
     }
   };
 
@@ -63,7 +63,6 @@ export default function ExamQuestionsSection({ mockTest }) {
       let status = {};
 
       questions.forEach((question) => {
-        console.log(question.correctAnswers);
         if (selectedOptions[question._id]) {
           if (selectedOptions[question._id] === question.correctAnswers[0]) {
             correct++;
@@ -196,6 +195,14 @@ export default function ExamQuestionsSection({ mockTest }) {
               </div>
             ))}
           </div>
+          {!submitted && (
+            <button
+              className="mt-2 bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700"
+              onClick={() => handleOptionChange(question._id, null)}
+            >
+              Clear Selection
+            </button>
+          )}
         </div>
       ))}
       <button
