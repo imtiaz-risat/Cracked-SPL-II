@@ -80,4 +80,33 @@ router.get("/leaderboard", async (req, res) => {
   }
 });
 
+router.get("/student-stats/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const stats = await db
+      .collection("Scores")
+      .aggregate([
+        { $match: { studentId } },
+        {
+          $group: {
+            _id: null,
+            totalCorrect: { $sum: "$correct" },
+            totalIncorrect: { $sum: "$incorrect" },
+            totalSkipped: { $sum: "$skipped" },
+          },
+        },
+      ])
+      .toArray();
+
+    if (stats.length === 0) {
+      res.status(404).json({ message: "No data found for the student" });
+    } else {
+      res.status(200).json(stats[0]);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;

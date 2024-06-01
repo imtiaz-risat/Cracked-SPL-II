@@ -5,7 +5,16 @@ import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 import axios from "axios";
 
 export default function StudentDashboard() {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const { studentId } = userData;
+  console.log(studentId);
+
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const [studentStats, setStudentStats] = useState({
+    totalCorrect: 0,
+    totalIncorrect: 0,
+    totalSkipped: 0,
+  });
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -19,8 +28,21 @@ export default function StudentDashboard() {
       }
     };
 
+    const fetchStudentStats = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5050/score/student-stats/${studentId}`
+        );
+        setStudentStats(response.data);
+        console.log(studentStats);
+      } catch (error) {
+        console.error("Error fetching student statistics: ", error);
+      }
+    };
+
     fetchLeaderboardData();
-  }, []);
+    fetchStudentStats();
+  }, [studentId]);
 
   return (
     <div className="content">
@@ -62,19 +84,36 @@ export default function StudentDashboard() {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div class="bg-white shadow rounded-lg p-4">
             <div class="flex justify-center">
-              <PieChart
-                data={[
-                  { title: "Correct", value: 84, color: "#4CBB17" },
-                  { title: "Skipped", value: 9, color: "#FFC300" },
-                  { title: "Incorrect", value: 27, color: "#D22B2B" },
-                ]}
-                radius={40}
-              />
+              {studentStats && (
+                <PieChart
+                  data={[
+                    {
+                      title: "Correct",
+                      value: studentStats.totalCorrect,
+                      color: "#4CBB17",
+                    },
+                    {
+                      title: "Skipped",
+                      value: studentStats.totalSkipped || 0, // Add a default value of 0 if totalSkipped is null
+                      color: "#FFC300",
+                    },
+                    {
+                      title: "Incorrect",
+                      value: studentStats.totalIncorrect || 0, // Add a default value of 0 if totalIncorrect is null
+                      color: "#D22B2B",
+                    },
+                  ]}
+                  radius={40}
+                />
+              )}
             </div>
-            <div class="text-center mt-2 text-gray-500 ">
-              <span class="text-green-500"> •</span> 84 Correct
-              <span class="text-yellow-500"> •</span> 9 Skipped
-              <span class="text-red-500"> •</span> 27 Incorrect
+            <div className="text-center mt-2 text-gray-500">
+              <span className="text-green-500">•</span>
+              {studentStats.totalCorrect || 0} Correct{" "}
+              <span className="text-yellow-500">•</span>
+              {studentStats.totalSkipped || 0} Skipped
+              <span className="text-red-500">•</span>
+              {studentStats.totalIncorrect || 0} Incorrect
             </div>
           </div>
 
