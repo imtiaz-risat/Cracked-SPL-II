@@ -11,7 +11,11 @@ export default function ExamNavBar({ modelTestId }) {
           <img src={Logo} alt="Logo" className="h-10" />
         </a>
       </div>
-      <span className="flex-1 text-right">Exam Id: {modelTestId}</span>
+      <div className="flex-1 text-right">
+        <a href="/student/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Home
+        </a>
+      </div>
     </nav>
   );
 }
