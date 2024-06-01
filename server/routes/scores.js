@@ -64,7 +64,17 @@ router.get("/leaderboard", async (req, res) => {
       })
     );
 
-    res.status(200).json(leaderboardWithFullname);
+    // Add slNo field to the returned data
+    const leaderboardWithSlNo = leaderboardWithFullname.map(
+      (student, index) => ({
+        slNo: index + 1,
+        studentId: student.studentId,
+        fullname: student.fullname,
+        Point: student.Point,
+      })
+    );
+
+    res.status(200).json(leaderboardWithSlNo);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
