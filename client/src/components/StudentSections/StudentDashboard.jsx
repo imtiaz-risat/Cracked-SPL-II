@@ -7,7 +7,6 @@ import axios from "axios";
 export default function StudentDashboard() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const { studentId } = userData;
-  console.log(studentId);
 
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [studentStats, setStudentStats] = useState({
@@ -15,6 +14,7 @@ export default function StudentDashboard() {
     totalIncorrect: 0,
     totalSkipped: 0,
   });
+  const [username, setusername] = useState("");
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -34,14 +34,23 @@ export default function StudentDashboard() {
           `http://localhost:5050/score/student-stats/${studentId}`
         );
         setStudentStats(response.data);
-        console.log(studentStats);
       } catch (error) {
         console.error("Error fetching student statistics: ", error);
       }
     };
 
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5050/student/profile/${studentId}`);
+        setusername(response.data.username);
+      } catch (error) {
+        console.error("Error fetching student data: ", error);
+      }
+    };
+
     fetchLeaderboardData();
     fetchStudentStats();
+    fetchStudentData();
   }, [studentId]);
 
   return (
@@ -54,36 +63,36 @@ export default function StudentDashboard() {
             alt=""
           />
           <div>
-            {/* Add logged in username here */}
-            <h1 className="text-2xl font-semibold">Hello, Alfey Sani</h1>
+            {/* Use the full name fetched from the database */}
+            <h1 className="text-2xl font-semibold">Hello, {username}</h1>
             <div className="small">Welcome back!</div>
           </div>
         </div>
       </div>
-      <div class="container">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a href="/student/model-test">
-            <div class="bg-white w-96 shadow rounded-lg p-4 flex flex-col items-center justify-center">
-              <div class="text-yellow-500 text-3xl">⚡</div>
-              <div class="mt-2 text-gray-600">Model Tests</div>
+            <div className="bg-white w-96 shadow rounded-lg p-4 flex flex-col items-center justify-center">
+              <div className="text-yellow-500 text-3xl">⚡</div>
+              <div className="mt-2 text-gray-600">Model Tests</div>
             </div>
           </a>
           <a href="/student/mock-test">
-            <div class="bg-white w-96 shadow rounded-lg p-4 flex flex-col items-center justify-center">
-              <div class="text-red-500 text-3xl">🖊️</div>
-              <div class="mt-2 text-gray-600">Mock Tests</div>
+            <div className="bg-white w-96 shadow rounded-lg p-4 flex flex-col items-center justify-center">
+              <div className="text-red-500 text-3xl">🖊️</div>
+              <div className="mt-2 text-gray-600">Mock Tests</div>
             </div>
           </a>
           <a href="/student/question-bank">
-            <div class="bg-white w-96 shadow rounded-lg p-4 flex flex-col items-center justify-center">
-              <div class="text-orange-500 text-3xl">🎓</div>
-              <div class="mt-2 text-gray-600">Question Bank</div>
+            <div className="bg-white w-96 shadow rounded-lg p-4 flex flex-col items-center justify-center">
+              <div className="text-orange-500 text-3xl">🎓</div>
+              <div className="mt-2 text-gray-600">Question Bank</div>
             </div>
           </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div class="bg-white shadow rounded-lg p-4">
-            <div class="flex justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="flex justify-center">
               {studentStats && (
                 <PieChart
                   data={[
@@ -117,11 +126,11 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          <div class="bg-white shadow rounded-lg p-4">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold text-gray-700">Leaderboard</h3>
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-700">Leaderboard</h3>
               <a href="/student/leaderboard">
-                <div class="text-base text-gray-800 bg-gray-300 hover:bg-gray-400 px-4 py-1 rounded-md text-nowrap">
+                <div className="text-base text-gray-800 bg-gray-300 hover:bg-gray-400 px-4 py-1 rounded-md text-nowrap">
                   See All
                 </div>
               </a>
