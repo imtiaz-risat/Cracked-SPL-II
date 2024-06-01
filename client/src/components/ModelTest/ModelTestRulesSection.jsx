@@ -34,7 +34,7 @@ export default function ExamRulesSection({ modelTest }) {
       <div className="col-span-2 flex justify-center">
         <h3 className="text-xl font-semibold mb-2 px-4">Note:</h3>
         <ul className="list-decimal list-inside">
-          <li>A Mock Test carries less weight than a Model Test in reflecting leaderboard rankings.</li>
+          <li>A Model Test carries more weight than a Mock Test in reflecting leaderboard rankings.</li>
           <li>There will be negative marking for each incorrect submission.</li>
         </ul>
       </div>

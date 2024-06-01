@@ -80,7 +80,7 @@ export default function ExamQuestionsSection({ modelTest }) {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="max-w-4xl w-full grid grid-cols-1 gap-4 m-4">
+      <div style={{ minWidth: '48rem' }} className="w-full grid grid-cols-1 gap-4 m-4">
         {submitted && (
           <div className="shadow-lg rounded-lg p-6 mb-4 bg-white flex justify-between">
             <h4 className="text-lg font-bold">Score Summary</h4>
