@@ -24,10 +24,13 @@ import StudentProfile from "./components/StudentSections/StudentProfile";
 import Leaderboard from "./components/StudentSections/Leaderboard";
 import ExamStartPage from "./components/Exams/ExamStartPage";
 import ExamQuestionsPage from "./components/Exams/ExamQuestionsPage";
+import ModelTestStartPage from "./components/ModelTest/ModelTestStartPage";
+import ModelTestQuestionPage from "./components/ModelTest/ModelTestQuestionsPage";
 import TeacherModelTest from "./components/TeacherSections/TeacherModelTest";
 import CreateModelTest from "./components/TeacherSections/ModelTest/CreateModelTest";
 import DatabaseQuestionsList from "./components/TeacherSections/DatabaseElements/DatabaseQuestionsList";
 import EditQuestionPage from "./components/TeacherSections/DatabaseElements/EditQuestionPage";
+import EditModelTest from "./components/TeacherSections/ModelTest/EditModelTest";
 
 const router = createBrowserRouter([
   {
@@ -91,16 +94,20 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "student/start-exam/:id",
+    path: "student/start-exam/:id", // for mockTest
     element: <ExamStartPage />,
   },
-  // {
-  //   path: "student/mockTest/:mockTestId",
-  //   element: <></>,
-  // },
   {
-    path: "student/exam-questions/:id",
+    path: "student/exam-questions/:id", // for MockTest
     element: <ExamQuestionsPage />,
+  },
+  {
+    path: "student/start-modeltest/:id", // for MockTest
+    element: <ModelTestStartPage />,
+  },
+  {
+    path: "student/modeltest-questions/:id", // for MockTest
+    element: <ModelTestQuestionPage />,
   },
   {
     path: "/tutor",
@@ -123,7 +130,10 @@ const router = createBrowserRouter([
         path: "create-modeltest",
         element: <CreateModelTest />,
       },
-
+      {
+        path: "edit-modeltest/:modelTestId",
+        element: <EditModelTest />,
+      },
       {
         path: "reviews",
         element: <TeacherReviews />,

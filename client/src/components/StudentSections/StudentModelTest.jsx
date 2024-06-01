@@ -55,7 +55,7 @@ export default function TeacherModelTest() {
         {modelTests.map((test) => (
           <a
             key={test._id}
-            href="#"
+            href={`start-modeltest/${test._id}`}
             className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
           >
             <h2 className="text-3xl font-bold text-zinc-800">{test.Name}</h2>
