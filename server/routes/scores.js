@@ -5,12 +5,21 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.post("/store-score", async (req, res) => {
-  const { studentId, type, examId, score } = req.body;
+  const { studentId, type, examId, score, correct, incorrect, skipped } =
+    req.body;
 
   try {
     const result = await db
       .collection("Scores")
-      .insertOne({ studentId, type, examId, score });
+      .insertOne({
+        studentId,
+        type,
+        examId,
+        score,
+        correct,
+        incorrect,
+        skipped,
+      });
     res.status(200).json({
       message: "Score stored successfully",
     });

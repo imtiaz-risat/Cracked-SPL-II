@@ -1,6 +1,26 @@
+import React, { useEffect, useState } from "react";
 import profileImage from "../../Assets/Tutors/sani.jpg";
+import axios from "axios";
 
 export default function TeacherDashboard() {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const { tutorId } = userData;
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchTutorData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5050/tutor/profile/${tutorId}`);
+        setUsername(response.data.username);
+      } catch (error) {
+        console.error("Error fetching tutor data: ", error);
+      }
+    };
+
+    fetchTutorData();
+  }, [tutorId]);
+
   return (
     <div className="content flex-grow">
       <div className="flex justify-start items-center mb-4">
@@ -11,8 +31,8 @@ export default function TeacherDashboard() {
             alt=""
           />
           <div>
-            {/* Add logged in username here */}
-            <h1 className="text-2xl font-semibold">Hello, Alfey Sani</h1>
+            {/* Use the username fetched from the database */}
+            <h1 className="text-2xl font-semibold">Hello, {username}</h1>
             <div className="small">Welcome back!</div>
           </div>
         </div>
