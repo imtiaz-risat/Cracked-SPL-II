@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateModelTest() {
+  const { modelTestId } = useParams();
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("form");
   const [testName, setTestName] = useState("");
   const [marks, setMarks] = useState("");
@@ -13,6 +16,47 @@ export default function CreateModelTest() {
   const [scheduleDate, setScheduleDate] = useState("");
   const [scheduleTime, setScheduleTime] = useState("");
   const [scheduleDays, setScheduleDays] = useState("");
+  // Stores the selected QuestionIds
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
+  // State to show Selected Questions
+  const [showSelectedQuestions, setShowSelectedQuestions] = useState(false);
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  // stores the filter subject
+  const [filteredSubject, setFilteredSubject] = useState(null);
+  // stores the questions to be displayed
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 50;
+  const [pageNumbers, setPageNumbers] = useState([]);
+
+  // Add state to manage the visibility of the delete confirmation modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    const fetchModelTestData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5050/modelTest/${modelTestId}`
+        );
+        const modelTestData = response.data;
+
+        setTestName(modelTestData.Name);
+        setMarks(modelTestData.Marks.toString());
+        setTime(modelTestData.Time.toString());
+        setSubject(modelTestData.Subject);
+        // setQuestions(modelTestData.QuestionIds);
+        setSelectedQuestionIds(modelTestData.QuestionIds);
+        setSelectedQuestions(modelTestData.QuestionIds);
+        setScheduleDate(modelTestData.ScheduleDate);
+        setScheduleTime(modelTestData.ScheduleTime);
+        setScheduleDays(modelTestData.ExpiryDays.toString());
+      } catch (error) {
+        console.error("Failed to fetch ModelTestData:", error);
+      }
+    };
+
+    fetchModelTestData();
+  }, [modelTestId]);
 
   // Fetch question whenever subject is changed in dropdown
   useEffect(() => {
@@ -34,20 +78,6 @@ export default function CreateModelTest() {
       console.error("Failed to fetch questions", error);
     }
   };
-
-  // Stores the selected QuestionIds
-  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
-  // State to show Selected Questions
-  const [showSelectedQuestions, setShowSelectedQuestions] = useState(false);
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
-  // stores the filter subject
-  const [filteredSubject, setFilteredSubject] = useState(null);
-  // stores the questions to be displayed
-  const [filteredQuestions, setFilteredQuestions] = useState([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 50;
-  const [pageNumbers, setPageNumbers] = useState([]);
 
   useEffect(() => {
     handleFilterQuestion();
@@ -106,7 +136,7 @@ export default function CreateModelTest() {
     indexOfLastQuestion
   );
 
-  const handlePublish = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     if (
       !testName ||
@@ -127,8 +157,8 @@ export default function CreateModelTest() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5050/modelTest/storeModelTest",
+      const response = await axios.put(
+        `http://localhost:5050/modelTest/updateModelTest/${modelTestId}`,
         {
           Name: testName,
           Marks: parseInt(marks),
@@ -141,27 +171,33 @@ export default function CreateModelTest() {
         }
       );
 
-      console.log("Model Test stored successfully with ID:", response.data.id);
-      toast.success("Model Test stored successfully");
-      setTestName("");
-      setMarks("");
-      setTime("");
-      setSubject("");
-      setScheduleDate("");
-      setScheduleTime("");
-      setScheduleDays("");
-      setQuestions([]);
-      setSelectedQuestionIds([]);
-      setShowSelectedQuestions(false);
-      setSelectedQuestions([]);
-      setFilteredSubject(null);
-      setFilteredQuestions([]);
-      setCurrentPage(1);
-      setPageNumbers([]);
+      console.log("Model Test updated successfully with ID:", response.data.id);
+      toast.success("Model Test updated successfully");
     } catch (error) {
-      console.error("Failed to store ModelTest:", error);
-      toast.error("Failed to store ModelTest");
+      console.error("Failed to update ModelTest:", error);
+      toast.error("Failed to update ModelTest");
     }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5050/modelTest/deleteModelTest/${modelTestId}`
+      );
+      console.log("Model Test deleted successfully");
+      toast.success("Model Test deleted successfully");
+      navigate("/tutor/model-test");
+      // You can add additional logic here after successful deletion
+    } catch (error) {
+      console.error("Failed to delete ModelTest:", error);
+      toast.error("Failed to delete ModelTest");
+    }
+  };
+
+  // Function to handle showing the delete modal
+  const handleShowDeleteModal = (e) => {
+    e.preventDefault();
+    setShowDeleteModal(true);
   };
 
   return (
@@ -280,10 +316,16 @@ export default function CreateModelTest() {
               </div>
             </div>
             <button
-              onClick={handlePublish}
-              className="w-full mt-4 bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded"
+              onClick={handleUpdate}
+              className="w-full mt-2 bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-2 px-4 rounded"
             >
-              Publish
+              Save Changes
+            </button>
+            <button
+              onClick={handleShowDeleteModal}
+              className="w-full mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Delete Model Test
             </button>
           </form>
         </div>
@@ -374,6 +416,33 @@ export default function CreateModelTest() {
               &gt;
             </li>
           </ul>
+        </div>
+      )}
+      {showDeleteModal && (
+        <div
+          onClick={() => setShowDeleteModal(false)}
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75"
+        >
+          <div className="bg-white p-6 rounded shadow-lg">
+            <p>Are you sure you want to delete this model test?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="mr-2 bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                onClick={() => {
+                  handleDelete();
+                  setShowDeleteModal(false);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
