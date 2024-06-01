@@ -16,6 +16,7 @@ import questionRouter from "./routes/question.js";
 import mockTestRouter from "./routes/mockTest.js";
 import modelTestRouter from "./routes/modelTest.js";
 import scoreRouter from "./routes/scores.js";
+import adminRouter from "./routes/admin.js";
 
 // import session from "express-session";
 
@@ -44,15 +45,13 @@ app.use(cookieParser());
 //   })
 // );
 
-// Use tutorRouter for tutor endpoints
 app.use("/tutor", tutorRouter);
-// Use studentRouter for student endpoints
 app.use("/student", studentRouter);
-// Use studentRouter for student endpoints
 app.use("/question", questionRouter);
 app.use("/mockTest", mockTestRouter);
 app.use("/modelTest", modelTestRouter);
 app.use("/score", scoreRouter);
+app.use("/admin", adminRouter);
 // start the Express server
 app.listen(PORT, () => {
   console.log(`Server listening on PORT ${PORT}`);
