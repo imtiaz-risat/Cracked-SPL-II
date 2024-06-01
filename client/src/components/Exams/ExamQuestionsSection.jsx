@@ -106,6 +106,9 @@ export default function ExamQuestionsSection({ mockTest }) {
           type: "MockTest",
           examId: mockTest._id,
           score: parseFloat(calculatedScore),
+          correct: newScore.Correct,
+          incorrect: newScore.Incorrect,
+          skipped: newScore.Skipped,
         }),
       })
         .then((response) => response.json())
