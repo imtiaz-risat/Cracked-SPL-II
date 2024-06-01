@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
   const newTutor = {
     email,
     username,
-    hashedPassword, // Note: Store hashed passwords in production for security
+    hashedPassword,
     created_at: new Date(),
   };
 
@@ -117,6 +117,136 @@ router.post("/logout", async (req, res) => {
   } catch (error) {
     res.status(500).send({ message: "Server error", error: error.message });
   }
+});
+
+// route to fetch tutor profile data
+router.get("/profile/:tutorId", async (req, res) => {
+  const tutorId = req.params.tutorId;
+
+  try {
+    let collection = await db.collection("Tutors");
+    const tutor = await collection.findOne({ _id: new ObjectId(tutorId) });
+
+    if (!tutor) {
+      return res.status(404).send({ message: "Tutor not found" });
+    }
+
+    res.status(200).send(tutor);
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// route to update tutor profile data
+router.put("/profile/:tutorId", async (req, res) => {
+  const { tutorId } = req.params;
+
+  // Check if the studentId is a valid ObjectId
+  if (!ObjectId.isValid(tutorId)) {
+    return res.status(400).send({ message: "Invalid tutor ID" });
+  }
+
+  let objectId;
+
+  try {
+    objectId = new ObjectId(tutorId);
+  } catch (error) {
+    return res.status(400).send({ message: "Invalid tutor ID format" });
+  }
+
+  const { fullname, institute, phone, email, address, username, cvLink } =
+    req.body;
+  let collection = await db.collection("Tutors");
+
+  // Check if the username is already taken by another student
+  if (username) {
+    const existingUser = await collection.findOne({
+      username: username,
+      _id: { $ne: objectId },
+    });
+    if (existingUser) {
+      return res.status(409).send({ message: "Username already taken" });
+    }
+  }
+
+  try {
+    const updatedData = {
+      ...(fullname && { fullname }),
+      ...(institute && { institute }),
+      ...(phone && { phone }),
+      ...(email && { email }),
+      ...(username && { username }),
+      ...(address && { address }),
+      ...(cvLink && { cvLink }),
+    };
+    const result = await collection.updateOne(
+      { _id: objectId },
+      { $set: updatedData }
+    );
+    if (result.modifiedCount === 0) {
+      return res.status(404).send({ message: "Data unchanged" });
+    }
+    res.status(200).send({ message: "Profile updated successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// route to Update Tutor Password
+router.post("/update-password/:tutorId", async (req, res) => {
+  const { tutorId } = req.params;
+  const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+  // Validate student ID
+  if (!ObjectId.isValid(tutorId)) {
+    return res.status(400).send({ message: "Invalid tutor ID" });
+  }
+
+  // Check password length
+  if (!newPassword || newPassword.length < 6) {
+    return res
+      .status(400)
+      .send({ message: "Password must be at least 6 characters long" });
+  }
+
+  // Check if new password and confirm new password match
+  if (newPassword !== confirmNewPassword) {
+    return res.status(400).send({ message: "New passwords do not match" });
+  }
+
+  let collection = await db.collection("Tutors");
+  let objectId = new ObjectId(tutorId);
+
+  // Fetch the existing user
+  const tutor = await collection.findOne({ _id: objectId });
+  if (!tutor) {
+    return res.status(404).send({ message: "Tutor not found" });
+  }
+
+  // Verify old password
+  const isOldPasswordValid = await bcrypt.compare(
+    oldPassword,
+    student.hashedPassword
+  );
+  if (!isOldPasswordValid) {
+    return res.status(401).send({ message: "Invalid old password" });
+  }
+
+  // Hash new password
+  const saltRounds = 10;
+  const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+  // Update password in the database
+  const result = await collection.updateOne(
+    { _id: objectId },
+    { $set: { hashedPassword: hashedNewPassword } }
+  );
+
+  if (result.modifiedCount === 0) {
+    return res.status(500).send({ message: "Failed to update password" });
+  }
+
+  res.status(200).send({ message: "Password updated successfully" });
 });
 
 export default router;

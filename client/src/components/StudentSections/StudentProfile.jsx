@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import avatar1 from "../../Assets/Avatars/1.jpg";
+import avatar2 from "../../Assets/Avatars/2.jpg";
+import avatar3 from "../../Assets/Avatars/3.jpg";
+import avatar4 from "../../Assets/Avatars/4.jpg";
+import avatar5 from "../../Assets/Avatars/5.jpg";
+import avatar6 from "../../Assets/Avatars/6.jpg";
 
 export default function StudentProfile() {
   const [fullname, setFullname] = useState("");
@@ -10,6 +16,8 @@ export default function StudentProfile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -36,6 +44,19 @@ export default function StudentProfile() {
 
     fetchProfileData();
   }, []);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const selectAvatar = (avatar) => {
+    setSelectedAvatar(avatar);
+  };
+
+  const saveAvatar = () => {
+    // Add logic here to save the selected avatar
+    setShowModal(false);
+  };
 
   const handleProfileSubmit = async (event) => {
     event.preventDefault();
@@ -113,7 +134,7 @@ export default function StudentProfile() {
   };
 
   return (
-    <>
+    <div>
       <div className="p-4 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="p-4 shadow-md rounded-lg grid grid-cols-1 md:grid-cols-1 gap-4">
           {/* Profile Information Section */}
@@ -141,6 +162,51 @@ export default function StudentProfile() {
                 />
               </svg>
               <h2 className="text-lg font-semibold">Profile Information</h2>
+            </div>
+            <div className="w-full flex flex-col">
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Profile Avatar
+              </label>
+              <div className="flex flex-row">
+                <img
+                  src={avatar4}
+                  alt="Profile Picture"
+                  className="w-20 h-20 rounded-full object-cover mb-3"
+                />
+                <button className=" bg-white rounded-full p-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width={15}
+                    height={15}
+                    color={"#000000"}
+                    fill={"none"}
+                  >
+                    <path
+                      d="M14.0737 3.88545C14.8189 3.07808 15.1915 2.6744 15.5874 2.43893C16.5427 1.87076 17.7191 1.85309 18.6904 2.39232C19.0929 2.6158 19.4769 3.00812 20.245 3.79276C21.0131 4.5774 21.3972 4.96972 21.6159 5.38093C22.1438 6.37312 22.1265 7.57479 21.5703 8.5507C21.3398 8.95516 20.9446 9.33578 20.1543 10.097L10.7506 19.1543C9.25288 20.5969 8.504 21.3182 7.56806 21.6837C6.63212 22.0493 5.6032 22.0224 3.54536 21.9686L3.26538 21.9613C2.63891 21.9449 2.32567 21.9367 2.14359 21.73C1.9615 21.5234 1.98636 21.2043 2.03608 20.5662L2.06308 20.2197C2.20301 18.4235 2.27297 17.5255 2.62371 16.7182C2.97444 15.9109 3.57944 15.2555 4.78943 13.9445L14.0737 3.88545Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M13 4L20 11"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M14 22L22 22"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
             <form className="space-y-4" onSubmit={handleProfileSubmit}>
               <div className="w-full">
@@ -341,6 +407,16 @@ export default function StudentProfile() {
           </div>
         </div>
       </div>
-    </>
+      {showModal && (
+        <div
+          onClick={() => setShowModal(false)}
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75"
+        >
+          <div className="modal">
+            <button onClick={saveAvatar}>Save</button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
