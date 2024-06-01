@@ -4,6 +4,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AdminLogin from "./Pages/AdminLogin";
+import AdminSection from "./Pages/AdminSection";
+import AdminDashboard from "./components/AdminSections/AdminDashboard";
+import AdminStudentList from "./components/AdminSections/AdminStudentList";
+import AdminTutorList from "./components/AdminSections/AdminTutorList";
+import AdminAddTutor from "./components/AdminSections/AdminAddTutor";
 import TeacherLogin from "./Pages/TeacherLogin";
 import TeacherRegister from "./Pages/TeacherRegister";
 import TeacherSection from "./Pages/TeacherSection";
@@ -90,6 +96,32 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <StudentProfile />,
+      },
+    ],
+  },
+  {
+    path: "/admin-login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin",
+    element: <AdminSection />,
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "students-list",
+        element: <AdminStudentList />,
+      },
+      {
+        path: "tutors-list",
+        element: <AdminTutorList />,
+      },
+      {
+        path: "add-tutor",
+        element: <AdminAddTutor />,
       },
     ],
   },

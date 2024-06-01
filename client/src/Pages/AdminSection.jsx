@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import Sidebar from "../components/TeacherSidebar";
+import Sidebar from "../components/AdminSidebar";
 import { useEffect } from "react";
 
 export default function TeacherSection() {
@@ -10,8 +10,8 @@ export default function TeacherSection() {
 
   // we have use navigate inside useEffect
   useEffect(() => {
-    if (!jsonUserData || !jsonUserData.isTutor) {
-      navigate("/tutor-login");
+    if (!jsonUserData || !jsonUserData.isAdmin) {
+      navigate("/admin-login");
       console.log("Not logged in, userData missing");
     }
   }, [jsonUserData]);
