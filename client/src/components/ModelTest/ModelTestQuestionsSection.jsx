@@ -64,13 +64,11 @@ export default function ExamQuestionsSection({ modelTest }) {
       setQuestionStatus(status);
       setScore({ TotalQuestions: questions.length, Correct: correct, Incorrect: incorrect, Skipped: skipped });
       setSubmitted(true);
+
+      // Scroll to the top of the page after submitting
+      window.scrollTo(0, 0);
     }
   };
-
-
-   // Scroll to the top of the page
-  window.scrollTo(0, 0);
-
 
   if (loading) {
     return <div>Loading questions...</div>;
@@ -171,5 +169,3 @@ export default function ExamQuestionsSection({ modelTest }) {
     </div>
   );
 }
-
-
