@@ -178,7 +178,7 @@ router.put("/profile/:studentId", async (req, res) => {
     return res.status(400).send({ message: "Invalid student ID format" });
   }
 
-  const { fullName, institute, batch, phone, email, username } = req.body;
+  const { fullname, institute, batch, phone, email, username } = req.body;
   let collection = await db.collection("Students");
 
   // Check if the username is already taken by another student
@@ -194,7 +194,7 @@ router.put("/profile/:studentId", async (req, res) => {
 
   try {
     const updatedData = {
-      ...(fullName && { fullName }),
+      ...(fullname && { fullname }),
       ...(institute && { institute }),
       ...(batch && { batch }),
       ...(phone && { phone }),

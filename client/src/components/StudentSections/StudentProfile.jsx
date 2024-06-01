@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function StudentProfile() {
-  const [fullName, setFullName] = useState("");
+  const [fullname, setFullname] = useState("");
   const [institute, setInstitute] = useState("");
   const [batch, setBatch] = useState("");
   const [phone, setPhone] = useState("");
@@ -20,7 +20,7 @@ export default function StudentProfile() {
         );
         const data = await response.json();
         if (response.ok) {
-          setFullName(data.fullName);
+          setFullname(data.fullname);
           setInstitute(data.institute);
           setBatch(data.batch);
           setPhone(data.phone);
@@ -41,7 +41,7 @@ export default function StudentProfile() {
     event.preventDefault();
     const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
     const profileData = {
-      fullName,
+      fullname,
       institute,
       batch,
       phone,
@@ -154,8 +154,8 @@ export default function StudentProfile() {
                   type="text"
                   id="fullName"
                   name="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
