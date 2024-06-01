@@ -1,23 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import profileImage from "../../Assets/Tutors/sani.jpg";
 import { PieChart } from "react-minimal-pie-chart";
 import LeaderboardTable from "./StudentComponents/LeaderboardTable";
+import axios from "axios";
 
 export default function StudentDashboard() {
-  const DemoData = React.useMemo(
-    () => [
-      { slNo: 1, name: "Imtiaz Risat", points: 340 },
-      { slNo: 2, name: "Taki Tajwaruzamman Khan", points: 250 },
-      { slNo: 3, name: "Tasnim Ashraf", points: 190 },
-      { slNo: 4, name: "Shefayet Shams", points: 165 },
-      { slNo: 5, name: "Mahtab Alvee", points: 150 },
-      { slNo: 6, name: "Alfey Sani", points: 20 },
-    ],
-    []
-  );
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
-  // Only take the first four items for the leaderboard
-  const leaderboardData = React.useMemo(() => DemoData.slice(0, 4), [DemoData]);
+  useEffect(() => {
+    const fetchLeaderboardData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5050/score/leaderboard"
+        ); // Fetch data using the /leaderboard route
+        setLeaderboardData(response.data.slice(0, 5));
+      } catch (error) {
+        console.error("Error fetching leaderboard data: ", error);
+      }
+    };
+
+    fetchLeaderboardData();
+  }, []);
 
   return (
     <div className="content">
