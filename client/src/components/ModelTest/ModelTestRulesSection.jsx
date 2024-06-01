@@ -28,11 +28,14 @@ export default function ExamRulesSection({ modelTest }) {
         <ul className="list-decimal list-inside">
           <li>You can select only a single option for each question.</li>
           <li>You have to submit all your answers within the given time.</li>
-          <li>
-            However you can not skip a question if you have already selected an
-            option.
-          </li>
           <li>But you can change your selection as many times as you want</li>
+        </ul>
+      </div>
+      <div className="col-span-2 flex justify-center">
+        <h3 className="text-xl font-semibold mb-2 px-4">Note:</h3>
+        <ul className="list-decimal list-inside">
+          <li>A Mock Test carries less weight than a Model Test in reflecting leaderboard rankings.</li>
+          <li>There will be negative marking for each incorrect submission.</li>
         </ul>
       </div>
       <div className="col-span-2 flex justify-center mt-4">

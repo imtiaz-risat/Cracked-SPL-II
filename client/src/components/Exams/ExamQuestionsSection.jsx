@@ -88,6 +88,7 @@ export default function ExamQuestionsSection({ mockTest }) {
       setScore(newScore);
       setSubmitted(true);
 
+
       const calculatedScore = calculateScore(
         newScore.Correct,
         newScore.Incorrect,
@@ -129,7 +130,7 @@ export default function ExamQuestionsSection({ mockTest }) {
   }
 
   return (
-    <div className="max-w-4xl grid grid-cols-1 gap-4 m-4">
+    <div className="max-w-3xl mx-auto grid grid-cols-1 gap-4 m-4">
       {submitted && (
         <div className="shadow-lg rounded-lg p-6 mb-4 bg-white flex justify-between">
           <h4 className="text-lg font-bold">Score Summary</h4>
@@ -180,12 +181,12 @@ export default function ExamQuestionsSection({ mockTest }) {
                     : selectedOptions[question._id] === option
                     ? question.correctAnswers &&
                       question.correctAnswers.includes(option)
-                      ? "bg-green-300" // Correct answer chosen
-                      : "bg-red-300" // Incorrect answer chosen
+                      ? "bg-green-300"
+                      : "bg-red-300"
                     : question.correctAnswers &&
                       question.correctAnswers.includes(option)
-                    ? "bg-green-300" // Correct answer not chosen
-                    : "bg-gray-100" // Neutral for unchosen options
+                    ? "bg-green-300"
+                    : "bg-gray-100"
                 } shadow-md rounded-lg p-4 cursor-pointer`}
                 onClick={() => handleOptionChange(question._id, option)}
               >
