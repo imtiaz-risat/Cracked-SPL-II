@@ -119,4 +119,11 @@ router.post("/logout", async (req, res) => {
   }
 });
 
+// fetch data of all students
+router.get("/student-list", async (req, res) => {
+  let collection = await db.collection("Students");
+  let results = await collection.find({}).toArray();
+  res.send(results).status(200);
+});
+
 export default router;
