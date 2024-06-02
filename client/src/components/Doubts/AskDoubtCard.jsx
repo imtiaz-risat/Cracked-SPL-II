@@ -75,7 +75,7 @@ export default function AskDoubtCard() {
   };
 
   return (
-    <div className="max-w-[450px] mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="max-w-[450px] max-h-auto mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
       <ToastContainer />
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-8">Ask any doubt you have?</h2>

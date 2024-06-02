@@ -350,6 +350,29 @@ router.get("/doubts/:studentId", async (req, res) => {
   }
 });
 
+// Delete a doubt
+router.delete("/delete-doubt/:doubtId", async (req, res) => {
+  const { doubtId } = req.params;
+
+  if (!doubtId) {
+    return res.status(400).send({ message: "Doubt ID is required" });
+  }
+
+  let collection = await db.collection("Doubts");
+
+  try {
+    const result = await collection.deleteOne({ _id: new ObjectId(doubtId) });
+
+    if (result.deletedCount === 1) {
+      res.status(200).send({ message: "Doubt deleted successfully" });
+    } else {
+      res.status(404).send({ message: "Doubt not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
 router.post("/update-profile", (req, res) => {
   const { date_of_birth, gender } = req.body;
   // Logic to update the student profile
