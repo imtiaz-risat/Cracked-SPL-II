@@ -47,7 +47,9 @@ export default function StudentDoubts() {
           >
             <div className="col-span-11 flex flex-col gap-0.5">
               <p className="text-lg font-semibold">{doubt.doubt}</p>
-              <p className="text-gray-600">{doubt.answer}</p>
+              <p className="text-gray-600">
+                {doubt.answer || "Not yet answered"}
+              </p>
             </div>
             <button
               className="delete col-span-1 text-red-400 hover:text-red-600 flex justify-end"

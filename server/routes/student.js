@@ -335,7 +335,7 @@ router.get("/doubts/:studentId", async (req, res) => {
   try {
     // Find doubts for the specific studentId
     const studentDoubts = await collection
-      .find({ studentId: studentId, answered: true })
+      .find({ studentId: studentId })
       .toArray();
 
     if (studentDoubts.length === 0) {
