@@ -180,7 +180,7 @@ export default function StudentRegister() {
                     I accept the{" "}
                     <a
                       className="font-medium text-primary-600 hover:underline"
-                      href="#"
+                      href="/termsandconditions"
                     >
                       Terms and Conditions
                     </a>
