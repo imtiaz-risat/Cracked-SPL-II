@@ -168,4 +168,105 @@ router.get("/count-students-tutors", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
+
+router.delete("/delete-tutor/:tutorId", async (req, res) => {
+  const tutorId = req.params.tutorId;
+
+  try {
+    let collection = await db.collection("Tutors");
+    const result = await collection.deleteOne({ _id: new ObjectId(tutorId) });
+
+    if (result.deletedCount === 1) {
+      res.status(200).send({ message: "Tutor deleted successfully" });
+    } else {
+      res.status(404).send({ message: "Tutor not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+router.put("/ban-toggle-tutor/:tutorId", async (req, res) => {
+  const tutorId = req.params.tutorId;
+
+  try {
+    let collection = await db.collection("Tutors");
+    const tutor = await collection.findOne({ _id: new ObjectId(tutorId) });
+
+    if (!tutor) {
+      return res.status(404).send({ message: "Tutor not found" });
+    }
+
+    let isBanned = tutor.isBanned || false; // Set isBanned to false if it doesn't exist
+
+    const result = await collection.updateOne(
+      { _id: new ObjectId(tutorId) },
+      { $set: { isBanned: !isBanned } }
+    );
+
+    if (result.modifiedCount === 1) {
+      res.status(200).send({
+        message:
+          tutor.isBanned === true
+            ? "Tutor banned successfully"
+            : "Tutor unbanned",
+      });
+    } else {
+      res.status(404).send({ message: "Tutor not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+router.delete("/delete-student/:studentId", async (req, res) => {
+  const studentId = req.params.studentId;
+
+  try {
+    let collection = await db.collection("Students");
+    const result = await collection.deleteOne({ _id: new ObjectId(studentId) });
+
+    if (result.deletedCount === 1) {
+      res.status(200).send({ message: "Student deleted successfully" });
+    } else {
+      res.status(404).send({ message: "Student not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+router.put("/ban-toggle-student/:studentId", async (req, res) => {
+  const studentId = req.params.studentId;
+
+  try {
+    let collection = await db.collection("Students");
+    const student = await collection.findOne({ _id: new ObjectId(studentId) });
+
+    if (!student) {
+      return res.status(404).send({ message: "Student not found" });
+    }
+
+    let isBanned = student.isBanned || false; // Set isBanned to false if it doesn't exist
+
+    const result = await collection.updateOne(
+      { _id: new ObjectId(studentId) },
+      { $set: { isBanned: !isBanned } }
+    );
+
+    if (result.modifiedCount === 1) {
+      res.status(200).send({
+        message:
+          student.isBanned === true
+            ? "Student banned successfully"
+            : "Student unbanned",
+      });
+    } else {
+      res.status(404).send({ message: "Student not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
 export default router;
