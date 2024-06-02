@@ -6,6 +6,15 @@ import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
 
+const avatars = [
+  { src: avatar1, id: 1 },
+  { src: avatar2, id: 2 },
+  { src: avatar3, id: 3 },
+  { src: avatar4, id: 4 },
+  { src: avatar5, id: 5 },
+  { src: avatar6, id: 6 }
+];
+
 export default function StudentProfile() {
   const [fullname, setFullname] = useState("");
   const [institute, setInstitute] = useState("");
@@ -19,7 +28,7 @@ export default function StudentProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(1);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -38,6 +47,7 @@ export default function StudentProfile() {
           setUsername(data.username);
           setAddress(data.address);
           setCvLink(data.cvLink);
+          setSelectedAvatar(data.avatar); 
         } else {
           throw new Error(data.message || "Failed to fetch profile");
         }
@@ -53,12 +63,12 @@ export default function StudentProfile() {
     setShowModal(true);
   };
 
-  const selectAvatar = (avatar) => {
-    setSelectedAvatar(avatar);
+  const selectAvatar = (avatarId) => {
+    setSelectedAvatar(avatarId);
   };
 
   const saveAvatar = () => {
-    // Add logic here to save the selected avatar
+    // Save avatar logic here
     setShowModal(false);
   };
 
@@ -74,6 +84,7 @@ export default function StudentProfile() {
       username,
       address,
       cvLink,
+      avatar: selectedAvatar
     };
 
     try {
@@ -139,6 +150,11 @@ export default function StudentProfile() {
     }
   };
 
+  const getAvatarSrc = (avatarId) => {
+    const avatar = avatars.find(avatar => avatar.id === avatarId);
+    return avatar ? avatar.src : avatar1; // Default to avatar1 if not found
+  };
+
   return (
     <div>
       <div className="p-4 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -178,11 +194,11 @@ export default function StudentProfile() {
               </label>
               <div className="flex flex-row">
                 <img
-                  src={avatar2}
+                  src={getAvatarSrc(selectedAvatar)}
                   alt="Profile Picture"
                   className="w-20 h-20 rounded-full object-cover mb-3"
                 />
-                <button className=" bg-white rounded-full p-1">
+                <button onClick={openModal} className=" bg-white rounded-full p-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -291,7 +307,7 @@ export default function StudentProfile() {
                   type="text"
                   id="address"
                   name="address"
-                  value={email}
+                  value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
@@ -431,8 +447,30 @@ export default function StudentProfile() {
           onClick={() => setShowModal(false)}
           className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75"
         >
-          <div className="modal">
-            <button onClick={saveAvatar}>Save</button>
+          <div
+            className="bg-white p-6 rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-semibold mb-4">Select an Avatar</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {avatars.map((avatar) => (
+                <img
+                  key={avatar.id}
+                  src={avatar.src}
+                  alt={`Avatar ${avatar.id}`}
+                  className={`w-24 h-24 rounded-full object-cover cursor-pointer ${
+                    selectedAvatar === avatar.id ? "ring-4 ring-indigo-500" : ""
+                  }`}
+                  onClick={() => selectAvatar(avatar.id)}
+                />
+              ))}
+            </div>
+            <button
+              className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600"
+              onClick={saveAvatar}
+            >
+              Save
+            </button>
           </div>
         </div>
       )}

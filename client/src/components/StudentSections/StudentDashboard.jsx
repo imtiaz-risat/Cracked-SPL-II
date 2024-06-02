@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from "react";
-import profileImage from "../../Assets/Tutors/sani.jpg";
 import { PieChart } from "react-minimal-pie-chart";
 import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import avatar1 from "../../Assets/Avatars/1.jpg";
+import avatar2 from "../../Assets/Avatars/2.jpg";
+import avatar3 from "../../Assets/Avatars/3.jpg";
+import avatar4 from "../../Assets/Avatars/4.jpg";
+import avatar5 from "../../Assets/Avatars/5.jpg";
+import avatar6 from "../../Assets/Avatars/6.jpg";
+
+const avatars = [
+  { src: avatar1, id: 1 },
+  { src: avatar2, id: 2 },
+  { src: avatar3, id: 3 },
+  { src: avatar4, id: 4 },
+  { src: avatar5, id: 5 },
+  { src: avatar6, id: 6 }
+];
+
 export default function StudentDashboard() {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
 
   const { studentId } = userData || {}; // Use empty object as default if userData is null
@@ -17,7 +32,8 @@ export default function StudentDashboard() {
     totalIncorrect: 0,
     totalSkipped: 0,
   });
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
+  const [avatar, setAvatar] = useState(1); // Default avatar
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -47,7 +63,8 @@ export default function StudentDashboard() {
         const response = await axios.get(
           `http://localhost:5050/student/profile/${studentId}`
         );
-        setusername(response.data.username);
+        setUsername(response.data.username);
+        setAvatar(response.data.avatar);
       } catch (error) {
         console.error("Error fetching student data: ", error);
       }
@@ -58,14 +75,19 @@ export default function StudentDashboard() {
     fetchStudentData();
   }, [studentId]);
 
+  const getAvatarSrc = (avatarId) => {
+    const avatar = avatars.find(avatar => avatar.id === avatarId);
+    return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
+  };
+
   return (
     <div className="content">
       <div className="flex justify-start items-center mb-4">
         <div className="flex justify-center items-center gap-4">
           <img
-            src={profileImage}
+            src={getAvatarSrc(avatar)}
             className="inline-block h-14 w-14 rounded-full shadow"
-            alt=""
+            alt="Profile Avatar"
           />
           <div>
             {/* Use the full name fetched from the database */}
