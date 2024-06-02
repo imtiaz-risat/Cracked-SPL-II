@@ -18,6 +18,8 @@ export default function StudentProfile() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [date_of_birth, setDateOfBirth] = useState("");
+  const [gender, setGender] = useState("");
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -34,6 +36,8 @@ export default function StudentProfile() {
           setPhone(data.phone);
           setEmail(data.email);
           setUsername(data.username);
+          setDateOfBirth(data.date_of_birth); // Set Date of Birth from fetched data
+          setGender(data.gender); // Set Gender from fetched data
         } else {
           throw new Error(data.message || "Failed to fetch profile");
         }
@@ -61,6 +65,21 @@ export default function StudentProfile() {
   const handleProfileSubmit = async (event) => {
     event.preventDefault();
     const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
+
+    // Calculate age to ensure the user is at least 16 years old
+    const birthDate = new Date(date_of_birth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    if (age < 16) {
+      alert("You must be at least 16 years old.");
+      return;
+    }
+
     const profileData = {
       fullname,
       institute,
@@ -68,6 +87,8 @@ export default function StudentProfile() {
       phone,
       email,
       username,
+      date_of_birth,    // Include Date of Birth
+      gender  // Include Gender
     };
 
     try {
@@ -308,6 +329,41 @@ export default function StudentProfile() {
                   onChange={(e) => setUsername(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
+              </div>
+              <div>
+                <label
+                  htmlFor="date_of_birth"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Date of Birth
+                </label>
+                <input
+                  type="date"
+                  id="date_of_birth"
+                  name="date_of_birth"
+                  value={date_of_birth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
               </div>
               <button
                 type="submit"
