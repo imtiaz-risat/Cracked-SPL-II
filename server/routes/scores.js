@@ -118,4 +118,24 @@ router.get("/student-stats/:studentId", async (req, res) => {
   }
 });
 
+
+router.get("/has-participated", async (req, res) => {
+  const { studentId, modelTestId } = req.query;
+  console.log(studentId,modelTestId);
+  try {
+    const result = await db.collection("Scores").findOne({
+      studentId: studentId,
+      examId: modelTestId,
+      type: "ModelTest" // Assuming you store the type of test
+    });
+    console.log(result)
+    if (result) {
+      res.json({ hasParticipated: true });
+    } else {
+      res.json({ hasParticipated: false });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 export default router;
