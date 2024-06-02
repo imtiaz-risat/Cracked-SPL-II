@@ -271,4 +271,38 @@ router.post("/update-password/:studentId", async (req, res) => {
   res.status(200).send({ message: "Password updated successfully" });
 });
 
+router.post("/doubts/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+  const { subject, doubt } = req.body;
+
+  if (!studentId || !doubt) {
+    return res.status(400).send({ message: "All fields are required" });
+  }
+
+  let collection = await db.collection("Doubts");
+
+  const newDoubt = {
+    studentId,
+    subject,
+    doubt,
+    answered: false,
+    created_at: new Date(),
+  };
+
+  try {
+    const result = await collection.insertOne(newDoubt);
+    if (result.acknowledged) {
+      res.status(201).send({
+        message: "Doubt submitted successfully",
+        doubtId: result.insertedId,
+      });
+    } else {
+      throw new Error("Insert failed");
+    }
+  } catch (error) {
+    console.error('Error in submitting doubt:', error);
+    res.status(500).send({ message: "Failed to submit doubt", error: error.message });
+  }
+});
+
 export default router;

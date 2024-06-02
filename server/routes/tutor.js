@@ -249,4 +249,53 @@ router.post("/update-password/:tutorId", async (req, res) => {
   res.status(200).send({ message: "Password updated successfully" });
 });
 
+router.get('/reviews', async (req, res) => {
+  try {
+    //await client.connect();
+    const collection =db.collection("Doubts"); // replace "test" with your database name
+    const reviews = await collection.find().toArray();
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error('Failed to fetch reviews:', error);
+    res.status(500).json({ message: 'Failed to fetch reviews' });
+  } finally {
+    await client.close();
+  }
+});
+
+router.put('/reviews/:id', async (req, res) => {
+  const { id } = req.params;
+  const { answer } = req.body;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({ message: "Invalid review ID" });
+  }
+
+  let objectId;
+
+  try {
+    objectId = new ObjectId(id);
+  } catch (error) {
+    return res.status(400).send({ message: "Invalid review ID format" });
+  }
+
+//   try {
+//     //await client.connect();
+//     const collection = db.collection("Doubts"); // replace "test" with your database name
+//     const result = await collection.updateOne(
+//       { _id: objectId },
+//       { $set: { answer } }
+//     );
+//     if (result.modifiedCount === 0) {
+//       return res.status(404).send({ message: "Review not found or answer unchanged" });
+//     }
+//     res.status(200).send({ message: "Answer updated successfully" });
+//   } catch (error) {
+//     console.error('Failed to update answer:', error);
+//     res.status(500).send({ message: "Server error", error: error.message });
+//   } finally {
+//     await client.close();
+//   }
+// });
+
 export default router;
