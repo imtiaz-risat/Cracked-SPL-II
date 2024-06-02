@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useTimer } from "../../Context/TimerContext";
 
 export default function ExamQuestionsSection({ mockTest }) {
-  const [selectedOptions, setSelectedOptions] = useState({});
+  const [selectedOptionsState, setSelectedOptionsState] = useState({});
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitted, setSubmitted] = useState(false); // State to track if the form has been submitted
   const [questionStatus, setQuestionStatus] = useState({}); // state to track the status of each question
   const [score, setScore] = useState({}); // state to store the score
+  const { timeLeft, isActive } = useTimer(); // Use the timer context
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -45,7 +47,10 @@ export default function ExamQuestionsSection({ mockTest }) {
 
   const handleOptionChange = (questionId, option) => {
     if (!submitted) {
-      setSelectedOptions((prev) => ({ ...prev, [questionId]: option || undefined }));
+      setSelectedOptionsState((prev) => ({
+        ...prev,
+        [questionId]: option || undefined,
+      }));
     }
   };
 
@@ -55,7 +60,7 @@ export default function ExamQuestionsSection({ mockTest }) {
 
   const handleSubmit = () => {
     if (!submitted) {
-      console.log(selectedOptions);
+      console.log(selectedOptionsState);
 
       let correct = 0;
       let incorrect = 0;
@@ -63,8 +68,10 @@ export default function ExamQuestionsSection({ mockTest }) {
       let status = {};
 
       questions.forEach((question) => {
-        if (selectedOptions[question._id]) {
-          if (selectedOptions[question._id] === question.correctAnswers[0]) {
+        if (selectedOptionsState[question._id]) {
+          if (
+            selectedOptionsState[question._id] === question.correctAnswers[0]
+          ) {
             correct++;
             status[question._id] = "Correct";
           } else {
@@ -87,7 +94,6 @@ export default function ExamQuestionsSection({ mockTest }) {
       setQuestionStatus(status);
       setScore(newScore);
       setSubmitted(true);
-
 
       const calculatedScore = calculateScore(
         newScore.Correct,
@@ -123,6 +129,12 @@ export default function ExamQuestionsSection({ mockTest }) {
       window.scrollTo(0, 0);
     }
   };
+
+  useEffect(() => {
+    if (timeLeft === 0 && isActive && !submitted) {
+      handleSubmit(); // Automatically submit when time runs out
+    }
+  }, [timeLeft, isActive, submitted, handleSubmit]);
 
   if (loading) {
     return <div>Loading questions...</div>;
@@ -178,10 +190,10 @@ export default function ExamQuestionsSection({ mockTest }) {
                 key={option}
                 className={`bg-gray-100 ${
                   !submitted
-                    ? selectedOptions[question._id] === option
+                    ? selectedOptionsState[question._id] === option
                       ? "bg-yellow-200"
                       : "hover:bg-gray-200"
-                    : selectedOptions[question._id] === option
+                    : selectedOptionsState[question._id] === option
                     ? question.correctAnswers &&
                       question.correctAnswers.includes(option)
                       ? "bg-green-300"
@@ -190,7 +202,7 @@ export default function ExamQuestionsSection({ mockTest }) {
                       question.correctAnswers.includes(option)
                     ? "bg-green-300"
                     : "bg-gray-100"
-                } shadow-md rounded-lg p-4 cursor-pointer`}
+                } shadow-md rounded-lg p-4                } shadow-md rounded-lg p-4 cursor-pointer`}
                 onClick={() => handleOptionChange(question._id, option)}
               >
                 <p className="text-gray-800 font-semibold text-left">
