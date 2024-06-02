@@ -22,7 +22,7 @@ export default function Leaderboard() {
 
   return (
     <div className="container max-w-full p-4 ml-16">
-      <h1 className="text-2xl font-bold mb-4 flex flex-col justify-center items-center">
+      <h1 className="text-3xl font-bold mb-4 flex flex-col justify-center items-center">
         Leaderboard
       </h1>
       <div className="w-[60rem]">
