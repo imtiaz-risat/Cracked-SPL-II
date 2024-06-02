@@ -1,15 +1,24 @@
-// Update NavBar.jsx to include isMenuOpen and toggleMenu props
 import crackEdLogo from "../Assets/CrackEd-logo.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const toggleMenu = () => {
-    isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(true);
+    setIsMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    const user = localStorage.getItem('userData'); // Change 'user' to the key you use to store user information
+    if (user) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
     <header>
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 ">
+      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <a href="/" className="flex items-center">
             <img
@@ -19,19 +28,30 @@ export default function NavBar() {
             />
           </a>
           <div className="flex items-center lg:order-2">
-            <a
-              href="/login"
-              className="text-gray-800 bg-gray-200 hover:text-gray-800 hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"
-            >
-              Log in
-            </a>
-            <a
-              href="/register"
-              className=" text-gray-200 bg-gray-600 hover:text-gray-100 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"
-            >
-              Register
-            </a>
-            {/* <button
+            {isLoggedIn ? (
+              <a
+                href="http://localhost:3000/student/dashboard"
+                className="text-white bg-gray-600 hover:text-gray-700 hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"
+              >
+                Dashboard
+              </a>
+            ) : (
+              <>
+                <a
+                  href="/login"
+                  className="text-gray-800 bg-gray-200 hover:text-gray-800 hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"
+                >
+                  Log in
+                </a>
+                <a
+                  href="/register"
+                  className=" text-gray-200 bg-gray-600 hover:text-gray-100 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"
+                >
+                  Register
+                </a>
+              </>
+            )}
+            <button
               onClick={toggleMenu}
               className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
             >
@@ -63,47 +83,41 @@ export default function NavBar() {
                   ></path>
                 </svg>
               )}
-            </button> */}
+            </button>
           </div>
-          {/* <div
-            className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
+          <div
+            className={`${
+              isMenuOpen ? 'block' : 'hidden'
+            } justify-between items-center w-full lg:flex lg:w-auto lg:order-1`}
             id="mobile-menu-2"
           >
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-14 lg:mt-0">
               <li>
                 <a
-                  href="#"
+                  href="http://localhost:3000/student/model-test"
                   className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 hover:border-b-2 hover:border-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0"
                 >
-                  Courses
+                  Model Test
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="http://localhost:3000/student/mock-test"
                   className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 hover:border-b-2 hover:border-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0"
                 >
-                  Tutors
+                  Mock Test
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="https://admission.iutoic-dhaka.edu/admission-roadmap"
                   className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 hover:border-b-2 hover:border-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0"
                 >
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 hover:border-b-2 hover:border-gray-700 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0"
-                >
-                  Contact
+                  Road Map
                 </a>
               </li>
             </ul>
-          </div> */}
+          </div>
         </div>
       </nav>
     </header>

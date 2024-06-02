@@ -137,15 +137,7 @@ export default function TeacherLogin() {
               >
                 Sign in
               </button>
-              <p className="text-sm font-light text-cyan-500 ">
-                Don’t have an account yet?{" "}
-                <a
-                  href="/tutor-register"
-                  className="font-medium text-primary-600 hover:underline "
-                >
-                  Sign up
-                </a>
-              </p>
+
             </form>
           </div>
         </div>
