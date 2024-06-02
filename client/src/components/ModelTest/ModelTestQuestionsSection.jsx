@@ -9,6 +9,9 @@ export default function ExamQuestionsSection({ modelTest }) {
     const [submitted, setSubmitted] = useState(false);
     const [questionStatus, setQuestionStatus] = useState({});
     const [score, setScore] = useState({});
+    const userData = localStorage.getItem("userData");
+    const jsonStudent = JSON.parse(userData);
+    const {studentId} = jsonStudent || {};
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -95,7 +98,7 @@ export default function ExamQuestionsSection({ modelTest }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          studentId: modelTest.studentId,
+          studentId: studentId,
           type: "ModelTest",
           examId: modelTest._id,
           score: parseFloat(finalScore.Score),
