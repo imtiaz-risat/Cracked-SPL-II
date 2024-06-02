@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import profileImage from "../../Assets/Tutors/sani.jpg";
+import avatar2 from "../../Assets/Avatars/2.jpg";
 import axios from "axios";
 
 export default function AdminDashboard() {
@@ -43,7 +44,7 @@ export default function AdminDashboard() {
       <div className="flex justify-start items-center mb-4">
         <div className="flex justify-center items-center gap-4">
           <img
-            src={profileImage}
+            src={avatar2}
             className="inline-block h-14 w-14 rounded-full shadow"
             alt=""
           />

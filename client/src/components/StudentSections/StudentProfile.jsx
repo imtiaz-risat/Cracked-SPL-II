@@ -6,6 +6,15 @@ import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
 
+const avatars = [
+  { src: avatar1, id: 1 },
+  { src: avatar2, id: 2 },
+  { src: avatar3, id: 3 },
+  { src: avatar4, id: 4 },
+  { src: avatar5, id: 5 },
+  { src: avatar6, id: 6 }
+];
+
 export default function StudentProfile() {
   const [fullname, setFullname] = useState("");
   const [institute, setInstitute] = useState("");
@@ -17,9 +26,9 @@ export default function StudentProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [date_of_birth, setDateOfBirth] = useState("");
   const [gender, setGender] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState(1);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -36,8 +45,9 @@ export default function StudentProfile() {
           setPhone(data.phone);
           setEmail(data.email);
           setUsername(data.username);
-          setDateOfBirth(data.date_of_birth); // Set Date of Birth from fetched data
-          setGender(data.gender); // Set Gender from fetched data
+          setDateOfBirth(data.date_of_birth);
+          setGender(data.gender);
+          setSelectedAvatar(data.avatar); // Set the avatar from fetched data
         } else {
           throw new Error(data.message || "Failed to fetch profile");
         }
@@ -53,12 +63,12 @@ export default function StudentProfile() {
     setShowModal(true);
   };
 
-  const selectAvatar = (avatar) => {
-    setSelectedAvatar(avatar);
+  const selectAvatar = (avatarId) => {
+    setSelectedAvatar(avatarId);
   };
 
   const saveAvatar = () => {
-    // Add logic here to save the selected avatar
+    // Handle saving logic here if needed
     setShowModal(false);
   };
 
@@ -66,7 +76,6 @@ export default function StudentProfile() {
     event.preventDefault();
     const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
 
-    // Calculate age to ensure the user is at least 16 years old
     const birthDate = new Date(date_of_birth);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -87,8 +96,9 @@ export default function StudentProfile() {
       phone,
       email,
       username,
-      date_of_birth,    // Include Date of Birth
-      gender  // Include Gender
+      date_of_birth,
+      gender,
+      avatar: selectedAvatar // Include selected avatar number
     };
 
     try {
@@ -108,10 +118,10 @@ export default function StudentProfile() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to update profile");
       }
-      alert(data.message); // Displaying the backend response message
+      alert(data.message);
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert(error.message); // Displaying the error message from the catch block
+      alert(error.message);
     }
   };
 
@@ -147,18 +157,22 @@ export default function StudentProfile() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to change password");
       }
-      alert(data.message); // Displaying the backend response message
+      alert(data.message);
     } catch (error) {
       console.error("Error changing password:", error);
-      alert(error.message); // Displaying the error message from the catch block
+      alert(error.message);
     }
+  };
+
+  const getAvatarSrc = (avatarId) => {
+    const avatar = avatars.find(avatar => avatar.id === avatarId);
+    return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
   };
 
   return (
     <div>
       <div className="p-4 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="p-4 shadow-md rounded-lg grid grid-cols-1 md:grid-cols-1 gap-4">
-          {/* Profile Information Section */}
           <div className="w-full mb-8">
             <div className="w-full flex items-center mb-4 gap-2">
               <svg
@@ -191,18 +205,21 @@ export default function StudentProfile() {
               >
                 Profile Avatar
               </label>
-              <div className="flex flex-row">
+              <div className="flex flex-row items-center mb-3">
                 <img
-                  src={avatar4}
+                  src={getAvatarSrc(selectedAvatar)}
                   alt="Profile Picture"
-                  className="w-20 h-20 rounded-full object-cover mb-3"
+                  className="w-20 h-20 rounded-full object-cover"
                 />
-                <button className=" bg-white rounded-full p-1">
+                <button
+                  className="bg-white rounded-full p-1 ml-3"
+                  onClick={openModal}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    width={15}
-                    height={15}
+                    width={24}
+                    height={24}
                     color={"#000000"}
                     fill={"none"}
                   >
@@ -230,7 +247,8 @@ export default function StudentProfile() {
               </div>
             </div>
             <form className="space-y-4" onSubmit={handleProfileSubmit}>
-              <div className="w-full">
+              {/* Other form fields */}
+              <div>
                 <label
                   htmlFor="fullName"
                   className="block text-sm font-medium text-gray-700"
@@ -375,7 +393,6 @@ export default function StudentProfile() {
           </div>
         </div>
 
-        {/* Password Change Section */}
         <div className="p-4 shadow-md rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="w-full">
             <div className="w-full flex items-center mb-4 gap-2">
@@ -468,8 +485,30 @@ export default function StudentProfile() {
           onClick={() => setShowModal(false)}
           className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75"
         >
-          <div className="modal">
-            <button onClick={saveAvatar}>Save</button>
+          <div
+            className="bg-white p-6 rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-semibold mb-4">Select an Avatar</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {avatars.map((avatar) => (
+                <img
+                  key={avatar.id}
+                  src={avatar.src}
+                  alt={`Avatar ${avatar.id}`}
+                  className={`w-24 h-24 rounded-full object-cover cursor-pointer ${
+                    selectedAvatar === avatar.id ? "ring-4 ring-indigo-500" : ""
+                  }`}
+                  onClick={() => selectAvatar(avatar.id)}
+                />
+              ))}
+            </div>
+            <button
+              className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600"
+              onClick={saveAvatar}
+            >
+              Save
+            </button>
           </div>
         </div>
       )}

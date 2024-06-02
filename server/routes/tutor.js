@@ -138,7 +138,7 @@ router.get("/profile/:tutorId", async (req, res) => {
   }
 });
 
-// route to update tutor profile data
+// Route to update tutor profile data
 router.put("/profile/:tutorId", async (req, res) => {
   const { tutorId } = req.params;
 
@@ -155,7 +155,7 @@ router.put("/profile/:tutorId", async (req, res) => {
     return res.status(400).send({ message: "Invalid tutor ID format" });
   }
 
-  const { fullname, institute, phone, email, address, username, cvLink } =
+  const { fullname, institute, phone, email, address, username, cvLink, avatar } =
     req.body;
   let collection = await db.collection("Tutors");
 
@@ -179,6 +179,7 @@ router.put("/profile/:tutorId", async (req, res) => {
       ...(username && { username }),
       ...(address && { address }),
       ...(cvLink && { cvLink }),
+      ...(avatar && { avatar }), // Add avatar to the update data
     };
     const result = await collection.updateOne(
       { _id: objectId },
@@ -332,5 +333,29 @@ router.get("/live-model-tests", async (req, res) => {
     res.status(500).send({ message: "Error fetching live model tests", error: error.message });
   }
 });
+
+// Fetch tutor's avatar by tutor ID
+router.get("/avatar/:tutorId", async (req, res) => {
+  const { tutorId } = req.params;
+
+  // Validate the tutorId
+  if (!ObjectId.isValid(tutorId)) {
+    return res.status(400).send({ message: "Invalid tutor ID format" });
+  }
+
+  let objectId = new ObjectId(tutorId);
+  let collection = await db.collection("Tutors");
+
+  try {
+    const tutorData = await collection.findOne({ _id: objectId }, { projection: { avatar: 1 } });
+    if (!tutorData) {
+      return res.status(404).send({ message: "Tutor not found" });
+    }
+    res.status(200).send({ avatar: tutorData.avatar });
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
 
 export default router;

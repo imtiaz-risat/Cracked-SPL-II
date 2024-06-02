@@ -162,6 +162,7 @@ router.get("/profile/:studentId", async (req, res) => {
 });
 
 // Update student profile
+// Update student profile
 router.put("/profile/:studentId", async (req, res) => {
   const { studentId } = req.params;
 
@@ -187,6 +188,7 @@ router.put("/profile/:studentId", async (req, res) => {
     username,
     date_of_birth,
     gender,
+    avatar  // Include avatar in destructuring
   } = req.body;
   let collection = await db.collection("Students");
 
@@ -211,6 +213,7 @@ router.put("/profile/:studentId", async (req, res) => {
       ...(username && { username }),
       ...(date_of_birth && { date_of_birth }),
       ...(gender && { gender }),
+      ...(avatar && { avatar })  // Include avatar in update data
     };
     const result = await collection.updateOne(
       { _id: objectId },
@@ -224,6 +227,7 @@ router.put("/profile/:studentId", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
+
 
 // Update student password
 router.post("/update-password/:studentId", async (req, res) => {
@@ -383,5 +387,30 @@ router.post("/update-profile", (req, res) => {
     .then(() => res.status(200).send("Profile updated successfully"))
     .catch((err) => res.status(500).send("Error updating profile"));
 });
+
+
+// Fetch student's avatar by student ID
+router.get("/avatar/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  // Validate the studentId
+  if (!ObjectId.isValid(studentId)) {
+    return res.status(400).send({ message: "Invalid student ID format" });
+  }
+
+  let objectId = new ObjectId(studentId);
+  let collection = await db.collection("Students");
+
+  try {
+    const studentData = await collection.findOne({ _id: objectId }, { projection: { avatar: 1 } });
+    if (!studentData) {
+      return res.status(404).send({ message: "Student not found" });
+    }
+    res.status(200).send({ avatar: studentData.avatar });
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
 
 export default router;

@@ -1,25 +1,46 @@
 import React, { useEffect, useState } from "react";
-import profileImage from "../../Assets/Tutors/sani.jpg";
 import axios from "axios";
 
-export default function TeacherDashboard() {
+// Import avatar images
+import avatar1 from "../../Assets/Avatars/1.jpg";
+import avatar2 from "../../Assets/Avatars/2.jpg";
+import avatar3 from "../../Assets/Avatars/3.jpg";
+import avatar4 from "../../Assets/Avatars/4.jpg";
+import avatar5 from "../../Assets/Avatars/5.jpg";
+import avatar6 from "../../Assets/Avatars/6.jpg";
+
+export default function TutorDashboard() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const { tutorId } = userData || {};
 
   const [username, setUsername] = useState("");
+  const [avatarIndex, setAvatarIndex] = useState(1); // Default to 1
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [pendingReviews, setPendingReviews] = useState(0);
   const [liveModelTests, setLiveModelTests] = useState(0);
 
+  // Array of avatar images to map index to image source
+  const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5, avatar6];
+
   useEffect(() => {
     const fetchTutorData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5050/tutor/profile/${tutorId}`
-        );
+        const response = await axios.get(`http://localhost:5050/tutor/profile/${tutorId}`);
         setUsername(response.data.username);
+        console.log("Tutor data:", response.data);
       } catch (error) {
         console.error("Error fetching tutor data: ", error);
+      }
+    };
+
+    const fetchTutorAvatar = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5050/tutor/avatar/${tutorId}`);
+        setAvatarIndex(response.data.avatar);  // Assuming this is an index 1-6
+        console.log("Tutor avatar index:", response.data.avatar);
+      } catch (error) {
+        console.error("Error fetching tutor avatar: ", error);
+        setAvatarIndex(1); // Default to avatar1 if fetch fails
       }
     };
 
@@ -50,20 +71,28 @@ export default function TeacherDashboard() {
       }
     };
 
+    // Execute all fetch functions on component mount
     fetchTutorData();
+    fetchTutorAvatar();
     fetchTotalQuestions();
     fetchPendingReviews();
     fetchLiveModelTests();
-  }, [tutorId]);
+  }, [tutorId]); // Dependency array includes tutorId
+
+  // Debugging logs for avatar selection
+  useEffect(() => {
+    console.log("Avatar index changed:", avatarIndex);
+    console.log("Selected avatar source:", avatars[avatarIndex - 1]);
+  }, [avatarIndex]);
 
   return (
     <div className="content flex-grow">
       <div className="flex justify-start items-center mb-4">
         <div className="flex justify-center items-center gap-4">
           <img
-            src={profileImage}
+            src={avatars[avatarIndex - 1]}  // Use the avatar index minus 1 to pick the image
             className="inline-block h-14 w-14 rounded-full shadow"
-            alt=""
+            alt={`Avatar for ${username}`}
           />
           <div>
             <h1 className="text-2xl font-semibold">Hello, {username}</h1>
