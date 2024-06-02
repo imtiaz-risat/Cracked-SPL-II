@@ -4,14 +4,16 @@ import axios from "axios";
 
 export default function TeacherDashboard() {
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const { tutorId } = userData;
+  const { tutorId } = userData || {};
 
   const [username, setUsername] = useState("");
 
   useEffect(() => {
     const fetchTutorData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5050/tutor/profile/${tutorId}`);
+        const response = await axios.get(
+          `http://localhost:5050/tutor/profile/${tutorId}`
+        );
         setUsername(response.data.username);
       } catch (error) {
         console.error("Error fetching tutor data: ", error);

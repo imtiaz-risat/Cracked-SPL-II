@@ -100,7 +100,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/admin-login",
+    path: "/sys-admin-cracked",
     element: <AdminLogin />,
   },
   {
