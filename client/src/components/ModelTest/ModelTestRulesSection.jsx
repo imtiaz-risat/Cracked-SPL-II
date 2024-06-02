@@ -1,7 +1,27 @@
 import React from "react";
+import { useTimer } from "../../Context/TimerContext";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function ExamRulesSection({ modelTest }) {
-  console.log(modelTest);
+  console.log("Model Test Data:", modelTest); // Log the entire modelTest object for debugging
+  const { startTimer } = useTimer();
+  const navigate = useNavigate(); // Hook for navigation
+
+  const handleStartExam = () => {
+    if (!modelTest) {
+      console.error("Model test data is not loaded.");
+      return;
+    }
+    // Check if the 'time' property exists and is a number
+    if (modelTest.Time === undefined || typeof modelTest.Time !== 'number') {
+      console.error("Invalid or missing 'time' property on model test data:", modelTest.time);
+      return;
+    }
+
+    startTimer(modelTest.Time * 60); // Start the timer, converting minutes to seconds
+    navigate(`/student/modeltest-questions/${modelTest._id}`); // Navigate to the exam questions page
+  };
+
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
       <div className="col-span-2 flex justify-center">
@@ -19,7 +39,7 @@ export default function ExamRulesSection({ modelTest }) {
             Marks: {modelTest ? modelTest.Marks : "Loading..."}
           </p>
           <p className="px-4">
-            Time: {modelTest ? `${modelTest.Time} mins` : "Loading..."}
+            Time: {modelTest ? `${modelTest.Time} mins` : "Loading..."} {/* Ensure this uses 'time' not 'Time' */}
           </p>
         </div>
       </div>
@@ -39,15 +59,9 @@ export default function ExamRulesSection({ modelTest }) {
         </ul>
       </div>
       <div className="col-span-2 flex justify-center mt-4">
-        <a
-          href={
-            modelTest ? `/student/modeltest-questions/${modelTest._id}` : "#"
-          }
-        >
-          <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleStartExam} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
             Start Exam
           </button>
-        </a>
       </div>
     </div>
   );
