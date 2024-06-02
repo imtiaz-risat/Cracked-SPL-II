@@ -34,7 +34,7 @@ export default function AdminTutorList() {
   return (
     <div className="w-[73rem] mx-auto p-6">
       <div className="flex">
-        <h1 className="text-2xl text-gray-900 font-bold mb-4 flex-1">
+        <h1 className="text-2xl text-lime-900 font-bold mb-4 flex-1">
           List of Tutors
         </h1>
         <input
@@ -42,12 +42,12 @@ export default function AdminTutorList() {
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1 text-sm h-8"
+          className="border border-lime-300 rounded px-2 py-1 text-sm h-8"
         />
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-100">
-          <thead className="bg-gray-200">
+          <thead className="bg-lime-200">
             <tr>
               <th
                 scope="col"
@@ -81,7 +81,7 @@ export default function AdminTutorList() {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-gray-100 divide-y divide-gray-500">
+          <tbody className="bg-gray-100 divide-y divide-lime-500">
             {tutors.map((tutor) => (
               <tr key={tutor._id} className="hover:bg-gray-200">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
