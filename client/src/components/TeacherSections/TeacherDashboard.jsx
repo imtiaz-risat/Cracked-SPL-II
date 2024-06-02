@@ -7,6 +7,9 @@ export default function TeacherDashboard() {
   const { tutorId } = userData || {};
 
   const [username, setUsername] = useState("");
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [pendingReviews, setPendingReviews] = useState(0);
+  const [liveModelTests, setLiveModelTests] = useState(0);
 
   useEffect(() => {
     const fetchTutorData = async () => {
@@ -20,7 +23,37 @@ export default function TeacherDashboard() {
       }
     };
 
+    const fetchTotalQuestions = async () => {
+      try {
+        const response = await axios.get("http://localhost:5050/tutor/total-questions");
+        setTotalQuestions(response.data.totalQuestions);
+      } catch (error) {
+        console.error("Error fetching total questions: ", error);
+      }
+    };
+
+    const fetchPendingReviews = async () => {
+      try {
+        const response = await axios.get("http://localhost:5050/tutor/pending-reviews");
+        setPendingReviews(response.data.pendingReviews);
+      } catch (error) {
+        console.error("Error fetching pending reviews: ", error);
+      }
+    };
+
+    const fetchLiveModelTests = async () => {
+      try {
+        const response = await axios.get("http://localhost:5050/tutor/live-model-tests");
+        setLiveModelTests(response.data.liveModelTests);
+      } catch (error) {
+        console.error("Error fetching live model tests: ", error);
+      }
+    };
+
     fetchTutorData();
+    fetchTotalQuestions();
+    fetchPendingReviews();
+    fetchLiveModelTests();
   }, [tutorId]);
 
   return (
@@ -33,7 +66,6 @@ export default function TeacherDashboard() {
             alt=""
           />
           <div>
-            {/* Use the username fetched from the database */}
             <h1 className="text-2xl font-semibold">Hello, {username}</h1>
             <div className="small">Welcome back!</div>
           </div>
@@ -45,21 +77,21 @@ export default function TeacherDashboard() {
             <dt className="text-sm font-medium text-gray-500 truncate">
               Total Questions
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">52</dd>
+            <dd className="mt-1 text-3xl font-semibold text-gray-900">{totalQuestions}</dd>
           </div>
 
           <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
             <dt className="text-sm font-medium text-gray-500 truncate">
               Pending Reviews
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">3</dd>
+            <dd className="mt-1 text-3xl font-semibold text-gray-900">{pendingReviews}</dd>
           </div>
 
           <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
             <dt className="text-sm font-medium text-gray-500 truncate">
-              Unsolved Doubts
+              Live Model Tests
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">0</dd>
+            <dd className="mt-1 text-3xl font-semibold text-gray-900">{liveModelTests}</dd>
           </div>
         </dl>
       </div>

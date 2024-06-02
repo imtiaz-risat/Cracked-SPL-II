@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import db from "../db/connection.js";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
+import dayjs from "dayjs";
 
 const router = express.Router();
 
@@ -283,6 +284,52 @@ router.post("/answer/:doubtId", async (req, res) => {
     res.status(200).send({ message: "Answer posted successfully" });
   } catch (error) {
     res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// Route to fetch total questions
+router.get("/total-questions", async (req, res) => {
+  try {
+    const questionsChemistry = await db.collection("Questions_Chemistry").countDocuments();
+    const questionsEnglish = await db.collection("Questions_English").countDocuments();
+    const questionsMath = await db.collection("Questions_Math").countDocuments();
+    const questionsPhysics = await db.collection("Questions_Physics").countDocuments();
+
+    const totalQuestions = questionsChemistry + questionsEnglish + questionsMath + questionsPhysics;
+    res.status(200).send({ totalQuestions });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching total questions", error: error.message });
+  }
+});
+
+// Route to fetch pending reviews
+router.get("/pending-reviews", async (req, res) => {
+  try {
+    const pendingReviews = await db.collection("Doubts").countDocuments({ answered: false });
+    res.status(200).send({ pendingReviews });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching pending reviews", error: error.message });
+  }
+});
+
+// Route to fetch live model tests
+// Route to fetch live model tests
+router.get("/live-model-tests", async (req, res) => {
+  try {
+    const currentDateTime = dayjs();
+
+    const modelTests = await db.collection("ModelTests").find({}).toArray();
+
+    const liveModelTests = modelTests.filter(test => {
+      const scheduleDateTime = dayjs(`${test.ScheduleDate} ${test.ScheduleTime}`);
+      const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, 'day');
+
+      return currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime);
+    });
+
+    res.status(200).send({ liveModelTests: liveModelTests.length });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching live model tests", error: error.message });
   }
 });
 
