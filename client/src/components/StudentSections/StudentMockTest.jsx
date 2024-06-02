@@ -69,7 +69,6 @@ export default function StudentMockTest() {
         );
         const data = await response.json();
         if (response.ok) {
-          alert("Mock test created successfully!");
           console.log(data);
           navigate(`/student/start-exam/${data.mockTestId}`);
         } else {
@@ -83,9 +82,9 @@ export default function StudentMockTest() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="min-w-60x mx-auto p-6">
       <div className="mb-6">
-        <h1 className="text-2xl text-black font-bold">Mock Test</h1>
+        <h1 className="text-3xl text-black font-bold">Mock Test</h1>
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-2"
