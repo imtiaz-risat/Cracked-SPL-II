@@ -22,30 +22,24 @@ export default function TeacherLogin() {
       });
 
       if (!response.ok) {
-        // toastify not working here
         toast.error("Login failed");
         throw new Error("Login failed");
       }
 
-      // After successful submission
       const responseData = await response.json();
 
-      // Create an object with the required data
       const userData = {
         jwtoken: responseData.jwtoken,
         tutorId: responseData.tutorId,
         isTutor: responseData.isTutor,
       };
 
-      // Store the object in local storage as a single item
       localStorage.setItem("userData", JSON.stringify(userData));
 
-      // Redirect to student dashboard
       navigate("/tutor/dashboard");
     } catch (error) {
       console.error("Error:", error);
       alert("Login failed: email or password not matched.");
-      // toastify not working
       toast.error("Login failed: email or password not matched.");
     }
   };
@@ -108,28 +102,6 @@ export default function TeacherLogin() {
                 {errors.password && (
                   <p className="text-red-600 mt-2">{errors.password.message}</p>
                 )}
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 border border-cyan-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                      {...register("rememberMe")}
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label htmlFor="remember" className="text-cyan-500">
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-cyan-600 hover:underline"
-                >
-                  Forgot password?
-                </a>
               </div>
               <button
                 type="submit"

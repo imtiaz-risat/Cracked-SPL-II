@@ -67,7 +67,7 @@ const TermsAndConditions = () => {
         <p>CrackEd Support</p>
         <p>Email: admin@cracked.com</p>
         <p>Phone: 01716234567</p>
-        <p>Address: IT, Boardbazar, Gazipur</p>
+        <p>Address: IUT, Boardbazar, Gazipur</p>
         <p>By using the CrackEd platform, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</p>
       </div>
     </div>

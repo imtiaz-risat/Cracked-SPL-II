@@ -109,28 +109,6 @@ export default function StudentLogin() {
                   <p className="text-red-600 mt-2">{errors.password.message}</p>
                 )}
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                      {...register("rememberMe")}
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label htmlFor="remember" className="text-gray-500 ">
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-primary-600 hover:underline "
-                >
-                  Forgot password?
-                </a>
-              </div>
               <button
                 type="submit"
                 className="w-full text-white bg-[#6b7280] hover:bg-[#374151] focus:ring-4 focus:outline-none focus:ring-[#d1d5db] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
@@ -138,7 +116,7 @@ export default function StudentLogin() {
                 Sign in
               </button>
               <p className="text-sm font-light text-gray-500 ">
-                Don’t have an account yet?{" "}
+                Don't have an account yet?{" "}
                 <a
                   href="/register"
                   className="font-medium text-primary-600 hover:underline "
