@@ -96,8 +96,8 @@ router.post("/login", async (req, res) => {
   });
   res.status(200).send({
     message: "Login successful",
-    tutorId: admin._id,
-    tutorName: admin.username,
+    adminId: admin._id,
+    adminName: admin.username,
     jwtoken: token,
     isAdmin: true,
   });
@@ -133,4 +133,39 @@ router.get("/tutor-list", async (req, res) => {
   res.send(results).status(200);
 });
 
+// route to fetch admin profile data
+router.get("/profile/:adminId", async (req, res) => {
+  const adminId = req.params.adminId;
+
+  try {
+    let collection = await db.collection("Admins");
+    const admin = await collection.findOne({ _id: new ObjectId(adminId) });
+
+    if (!admin) {
+      return res.status(404).send({ message: "Admin not found" });
+    }
+
+    res.status(200).send(admin);
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+// route to count number of students and number of tutors from Students and Tutors Collection
+router.get("/count-students-tutors", async (req, res) => {
+  try {
+    const studentsCollection = await db.collection("Students");
+    const tutorsCollection = await db.collection("Tutors");
+
+    const studentsCount = await studentsCollection.countDocuments();
+    const tutorsCount = await tutorsCollection.countDocuments();
+
+    res.status(200).send({
+      studentsCount: studentsCount,
+      tutorsCount: tutorsCount,
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
 export default router;
