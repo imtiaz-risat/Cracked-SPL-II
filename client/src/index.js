@@ -37,6 +37,7 @@ import CreateModelTest from "./components/TeacherSections/ModelTest/CreateModelT
 import DatabaseQuestionsList from "./components/TeacherSections/DatabaseElements/DatabaseQuestionsList";
 import EditQuestionPage from "./components/TeacherSections/DatabaseElements/EditQuestionPage";
 import EditModelTest from "./components/TeacherSections/ModelTest/EditModelTest";
+import YouAreBanned from "./Pages/YouAreBanned";
 
 const router = createBrowserRouter([
   {
@@ -187,6 +188,10 @@ const router = createBrowserRouter([
         element: <EditQuestionPage />,
       },
     ],
+  },
+  {
+    path: "/you-are-banned",
+    element: <YouAreBanned />,
   },
 ]);
 
