@@ -178,7 +178,16 @@ router.put("/profile/:studentId", async (req, res) => {
     return res.status(400).send({ message: "Invalid student ID format" });
   }
 
-  const { fullname, institute, batch, phone, email, username, date_of_birth, gender } = req.body;
+  const {
+    fullname,
+    institute,
+    batch,
+    phone,
+    email,
+    username,
+    date_of_birth,
+    gender,
+  } = req.body;
   let collection = await db.collection("Students");
 
   // Check if the username is already taken by another student
@@ -273,12 +282,83 @@ router.post("/update-password/:studentId", async (req, res) => {
   res.status(200).send({ message: "Password updated successfully" });
 });
 
-router.post('/update-profile', (req, res) => {
+// Post a doubt
+router.post("/doubts/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+  const { subject, doubt, username } = req.body;
+
+  if (!studentId || !doubt) {
+    return res.status(400).send({ message: "All fields are required" });
+  }
+
+  let collection = await db.collection("Doubts");
+
+  const newDoubt = {
+    studentId,
+    username,
+    subject,
+    doubt,
+    answered: false,
+    created_at: new Date(),
+  };
+
+  try {
+    const result = await collection.insertOne(newDoubt);
+    if (result.acknowledged) {
+      res.status(201).send({
+        message: "Doubt submitted successfully",
+        doubtId: result.insertedId,
+      });
+    } else {
+      throw new Error("Insert failed");
+    }
+  } catch (error) {
+    console.error("Error in submitting doubt:", error);
+    res
+      .status(500)
+      .send({ message: "Failed to submit doubt", error: error.message });
+  }
+});
+
+// Fetch doubts of a student that are answered
+// Fetch doubts of a specific student
+router.get("/doubts/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  // Validate the studentId
+  if (!ObjectId.isValid(studentId)) {
+    return res.status(400).send({ message: "Invalid student ID format" });
+  }
+
+  let collection = await db.collection("Doubts");
+
+  try {
+    // Find doubts for the specific studentId
+    const studentDoubts = await collection
+      .find({ studentId: studentId, answered: true })
+      .toArray();
+
+    if (studentDoubts.length === 0) {
+      return res
+        .status(404)
+        .send({ message: "No doubts found for this student" });
+    }
+
+    res.status(200).send(studentDoubts);
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.message });
+  }
+});
+
+router.post("/update-profile", (req, res) => {
   const { date_of_birth, gender } = req.body;
   // Logic to update the student profile
-  Student.updateOne({ _id: req.student._id }, { $set: { date_of_birth, gender } })
-    .then(() => res.status(200).send('Profile updated successfully'))
-    .catch(err => res.status(500).send('Error updating profile'));
+  Student.updateOne(
+    { _id: req.student._id },
+    { $set: { date_of_birth, gender } }
+  )
+    .then(() => res.status(200).send("Profile updated successfully"))
+    .catch((err) => res.status(500).send("Error updating profile"));
 });
 
 export default router;
