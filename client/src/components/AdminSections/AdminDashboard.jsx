@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import profileImage from "../../Assets/Tutors/sani.jpg";
 import avatar2 from "../../Assets/Avatars/2.jpg";
 import axios from "axios";
 

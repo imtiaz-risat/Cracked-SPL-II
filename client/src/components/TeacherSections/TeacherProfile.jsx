@@ -5,6 +5,7 @@ import avatar3 from "../../Assets/Avatars/3.jpg";
 import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
+import { ToastContainer, toast } from "react-toastify";
 
 const avatars = [
   { src: avatar1, id: 1 },
@@ -12,7 +13,7 @@ const avatars = [
   { src: avatar3, id: 3 },
   { src: avatar4, id: 4 },
   { src: avatar5, id: 5 },
-  { src: avatar6, id: 6 }
+  { src: avatar6, id: 6 },
 ];
 
 export default function StudentProfile() {
@@ -47,7 +48,7 @@ export default function StudentProfile() {
           setUsername(data.username);
           setAddress(data.address);
           setCvLink(data.cvLink);
-          setSelectedAvatar(data.avatar); 
+          setSelectedAvatar(data.avatar);
         } else {
           throw new Error(data.message || "Failed to fetch profile");
         }
@@ -84,7 +85,7 @@ export default function StudentProfile() {
       username,
       address,
       cvLink,
-      avatar: selectedAvatar
+      avatar: selectedAvatar,
     };
 
     try {
@@ -104,10 +105,10 @@ export default function StudentProfile() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to update profile");
       }
-      alert(data.message); // Displaying the backend response message
+      toast.success(data.message); // Displaying the backend response message
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert(error.message); // Displaying the error message from the catch block
+      toast.error(error.message); // Displaying the error message from the catch block
     }
   };
 
@@ -116,7 +117,7 @@ export default function StudentProfile() {
     const tutorId = JSON.parse(localStorage.getItem("userData")).tutorId;
 
     if (newPassword !== confirmNewPassword) {
-      alert("New passwords do not match");
+      toast.warning("New passwords do not match");
       return;
     }
 
@@ -143,20 +144,21 @@ export default function StudentProfile() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to change password");
       }
-      alert(data.message); // Displaying the backend response message
+      toast.success(data.message); // Displaying the backend response message
     } catch (error) {
       console.error("Error changing password:", error);
-      alert(error.message); // Displaying the error message from the catch block
+      toast.error(error.message); // Displaying the error message from the catch block
     }
   };
 
   const getAvatarSrc = (avatarId) => {
-    const avatar = avatars.find(avatar => avatar.id === avatarId);
+    const avatar = avatars.find((avatar) => avatar.id === avatarId);
     return avatar ? avatar.src : avatar1; // Default to avatar1 if not found
   };
 
   return (
     <div>
+      <ToastContainer />
       <div className="p-4 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="p-4 shadow-md rounded-lg grid grid-cols-1 md:grid-cols-1 gap-4">
           {/* Profile Information Section */}
@@ -198,7 +200,10 @@ export default function StudentProfile() {
                   alt="Profile Picture"
                   className="w-20 h-20 rounded-full object-cover mb-3"
                 />
-                <button onClick={openModal} className=" bg-white rounded-full p-1">
+                <button
+                  onClick={openModal}
+                  className=" bg-white rounded-full p-1"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

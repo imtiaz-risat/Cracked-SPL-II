@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import crackEdLogo from "../Assets/CrackEd-cyan-dark-logo.png";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function TeacherRegister() {
   const {
@@ -67,14 +68,13 @@ export default function TeacherRegister() {
         message: error.message,
       });
       if (error.message === "Email or username already exists") {
-        window.alert(
-          "You already have an account with this email or username."
-        );
+        toast.error("You already have an account with this email or username.");
       }
     }
   };
   return (
     <section className="bg-gray-50 ">
+      <ToastContainer />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="/"

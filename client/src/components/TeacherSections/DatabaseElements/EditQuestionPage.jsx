@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function EditQuestionPage() {
   const { subject, questionId } = useParams();
@@ -57,19 +58,20 @@ export default function EditQuestionPage() {
         updatedData
       );
       if (response.status === 200) {
-        alert("Question updated successfully!");
+        toast.success("Question updated successfully!");
         navigate(`/tutor/database/${subject}`);
       } else {
         throw new Error(response.data.message || "Failed to update question");
       }
     } catch (error) {
       console.error("Error updating question:", error);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
   return (
     <div className="min-w-full p-4">
+      <ToastContainer />
       <h1 className="text-2xl font-bold">Edit Question</h1>
       <hr className="my-2 h-0.5 border-t-0 bg-gray-200 opacity-100" />
       <form onSubmit={handleSubmit(onSubmit)}>

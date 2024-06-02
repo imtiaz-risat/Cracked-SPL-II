@@ -24,7 +24,6 @@ const AddNewQuestion = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        alert("Question added successfully!");
         toast.success("Question added successfully");
         reset(); // Reset the form here
       })
@@ -99,11 +98,13 @@ const AddNewQuestion = () => {
             rules={{
               validate: {
                 required: (value) =>
-                  value.every((option) => option.trim() !== "") || "Empty option is not allowed",
+                  value.every((option) => option.trim() !== "") ||
+                  "Empty option is not allowed",
                 minLength: (value) =>
                   value.length >= 2 || "At least two options are required",
                 unique: (value) =>
-                  new Set(value.map(option => option.trim())).size === value.length || "Options must be unique",
+                  new Set(value.map((option) => option.trim())).size ===
+                    value.length || "Options must be unique",
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -125,7 +126,8 @@ const AddNewQuestion = () => {
                       className="flex-shrink-0 bg-transparent border-transparent text-gray-400 hover:text-gray-600 focus:outline-none"
                       onClick={() => {
                         const newOptions = [...value];
-                        if (newOptions.length > 2) { // Prevent removing below two options
+                        if (newOptions.length > 2) {
+                          // Prevent removing below two options
                           newOptions.splice(index, 1);
                           onChange(newOptions);
                         }

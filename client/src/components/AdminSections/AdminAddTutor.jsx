@@ -45,7 +45,7 @@ export default function AdminAddTutor() {
         message: error.message,
       });
       if (error.message === "Email or username already exists") {
-        window.alert("A tutor with this email or username already exists.");
+        toast.error("A tutor with this email or username already exists.");
       }
     }
   };

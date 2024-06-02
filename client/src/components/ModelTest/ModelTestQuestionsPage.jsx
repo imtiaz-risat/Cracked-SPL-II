@@ -36,7 +36,10 @@ export default function ExamQuestionsPage() {
   return (
     <>
       <ModelTestNavBar modelTestId={modelTest ? modelTest._id : null} />
-      <div className="flex justify-center items-center min-h-screen" style={{ paddingTop: '50px' }}>
+      <div
+        className="flex justify-center items-center min-h-screen"
+        style={{ paddingTop: "50px" }}
+      >
         <ModelTestQuestionsSection modelTest={modelTest} />
       </div>
     </>

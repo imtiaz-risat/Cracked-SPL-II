@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function AdminStudentList() {
   const [students, setStudents] = useState([]);
@@ -40,6 +41,7 @@ export default function AdminStudentList() {
         (student) => student._id !== studentId
       );
       setStudents(updatedStudents);
+      toast.success("Student deleted!");
     } catch (error) {
       console.error("Error deleting student: ", error);
     }
@@ -63,6 +65,7 @@ export default function AdminStudentList() {
 
   return (
     <div className="w-[73rem] mx-auto p-6">
+      <ToastContainer />
       <div className="flex">
         <h1 className="text-2xl text-lime-900 font-bold mb-4 flex-1">
           List of Students

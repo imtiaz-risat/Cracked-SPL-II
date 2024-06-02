@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import crackEdLogo from "../Assets/CrackEDlogo-lime.png";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function AdminLogin() {
   const {
@@ -22,8 +22,6 @@ export default function AdminLogin() {
       });
 
       if (!response.ok) {
-        // toastify not working here
-        toast.error("Login failed");
         throw new Error("Login failed");
       }
 
@@ -44,14 +42,13 @@ export default function AdminLogin() {
       navigate("/admin/dashboard");
     } catch (error) {
       console.error("Error:", error);
-      alert("Login failed: email or password not matched.");
-      // toastify not working
       toast.error("Login failed: email or password not matched.");
     }
   };
 
   return (
     <section className="bg-lime-50 ">
+      <ToastContainer />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="/"

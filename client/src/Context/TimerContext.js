@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const TimerContext = createContext();
 
@@ -15,7 +16,7 @@ export const TimerProvider = ({ children }) => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-     alert("Time's up! The exam has finished.");
+      toast.info("Time's up! The exam has finished.");
       clearInterval(interval);
       setIsActive(false);
       // Handle exam finish here, e.g., navigate to results or show a message
@@ -35,7 +36,9 @@ export const TimerProvider = ({ children }) => {
   };
 
   return (
-    <TimerContext.Provider value={{ timeLeft, isActive, startTimer, stopTimer }}>
+    <TimerContext.Provider
+      value={{ timeLeft, isActive, startTimer, stopTimer }}
+    >
       {children}
     </TimerContext.Provider>
   );

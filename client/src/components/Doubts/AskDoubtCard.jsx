@@ -9,7 +9,6 @@ export default function AskDoubtCard() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  // const [successMessage, setSuccessMessage] = useState("");
   const [studentData, setStudentData] = useState();
 
   const fetchStudentData = async (studentId) => {

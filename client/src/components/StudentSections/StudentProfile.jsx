@@ -5,6 +5,7 @@ import avatar3 from "../../Assets/Avatars/3.jpg";
 import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
+import { ToastContainer, toast } from "react-toastify";
 
 const avatars = [
   { src: avatar1, id: 1 },
@@ -12,7 +13,7 @@ const avatars = [
   { src: avatar3, id: 3 },
   { src: avatar4, id: 4 },
   { src: avatar5, id: 5 },
-  { src: avatar6, id: 6 }
+  { src: avatar6, id: 6 },
 ];
 
 export default function StudentProfile() {
@@ -85,7 +86,7 @@ export default function StudentProfile() {
     }
 
     if (age < 16) {
-      alert("You must be at least 16 years old.");
+      toast.warning("You must be at least 16 years old.");
       return;
     }
 
@@ -98,7 +99,7 @@ export default function StudentProfile() {
       username,
       date_of_birth,
       gender,
-      avatar: selectedAvatar // Include selected avatar number
+      avatar: selectedAvatar, // Include selected avatar number
     };
 
     try {
@@ -118,10 +119,10 @@ export default function StudentProfile() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to update profile");
       }
-      alert(data.message);
+      toast.success(data.message);
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -130,7 +131,7 @@ export default function StudentProfile() {
     const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
 
     if (newPassword !== confirmNewPassword) {
-      alert("New passwords do not match");
+      toast.warning("New passwords do not match");
       return;
     }
 
@@ -157,20 +158,21 @@ export default function StudentProfile() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to change password");
       }
-      alert(data.message);
+      toast.success(data.message);
     } catch (error) {
       console.error("Error changing password:", error);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
   const getAvatarSrc = (avatarId) => {
-    const avatar = avatars.find(avatar => avatar.id === avatarId);
+    const avatar = avatars.find((avatar) => avatar.id === avatarId);
     return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
   };
 
   return (
     <div>
+      <ToastContainer />
       <div className="p-4 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="p-4 shadow-md rounded-lg grid grid-cols-1 md:grid-cols-1 gap-4">
           <div className="w-full mb-8">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function AdminTutorList() {
   const [tutors, setTutors] = useState([]);
@@ -36,6 +37,7 @@ export default function AdminTutorList() {
       await axios.delete(`http://localhost:5050/admin/delete-tutor/${tutorId}`);
       const updatedTutors = tutors.filter((tutor) => tutor._id !== tutorId);
       setTutors(updatedTutors);
+      toast.success("Tutor deleted!");
     } catch (error) {
       console.error("Error deleting tutor: ", error);
     }
@@ -57,6 +59,7 @@ export default function AdminTutorList() {
 
   return (
     <div className="w-[73rem] mx-auto p-6">
+      <ToastContainer />
       <div className="flex">
         <h1 className="text-2xl text-lime-900 font-bold mb-4 flex-1">
           List of Tutors
