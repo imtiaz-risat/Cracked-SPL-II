@@ -136,10 +136,16 @@ export default function StudentRegister() {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   {...register("password", {
-                    required: true,
+                    required: "Password is required",
                     minLength: {
-                      value: 6,
-                      message: "Password must be at least 5 characters long",
+                      value: 8,
+                      message: "Password must be at least 8 characters long",
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
+                      message:
+                        "Password must contain letters, numbers, and special characters",
                     },
                   })}
                 />

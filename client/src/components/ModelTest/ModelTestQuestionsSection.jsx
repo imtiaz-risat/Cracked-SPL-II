@@ -47,6 +47,8 @@ export default function ExamQuestionsSection({ modelTest }) {
     const handleOptionChange = (questionId, option) => {
         if (!submitted) {
             setSelectedOptions(prev => ({
+
+                
                 ...prev,
                 [questionId]: option || undefined
             }));
