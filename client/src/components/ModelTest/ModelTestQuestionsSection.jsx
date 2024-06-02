@@ -7,7 +7,14 @@ export default function ExamQuestionsSection({ modelTest }) {
   const [submitted, setSubmitted] = useState(false);
   const [questionStatus, setQuestionStatus] = useState({});
   const [score, setScore] = useState({});
+  const userData = localStorage.getItem("userData");
+  const jsonUserData = JSON.parse(userData);
+  const { studentId } = jsonUserData || {};
+  console.log(studentId);
 
+  const calculateScore = (correct, incorrect, totalMarks) => {
+    return ((correct - 0.25 * incorrect) / totalMarks).toFixed(2);
+  };
   useEffect(() => {
     const fetchQuestions = async () => {
       if (modelTest && modelTest.QuestionIds && modelTest.Subject) {
@@ -35,7 +42,10 @@ export default function ExamQuestionsSection({ modelTest }) {
 
   const handleOptionChange = (questionId, option) => {
     if (!submitted) {
-      setSelectedOptions((prev) => ({ ...prev, [questionId]: option || undefined }));
+      setSelectedOptions((prev) => ({
+        ...prev,
+        [questionId]: option || undefined,
+      }));
     }
   };
 
@@ -61,9 +71,45 @@ export default function ExamQuestionsSection({ modelTest }) {
         }
       });
 
+      const newScore = {
+        TotalQuestions: questions.length,
+        Correct: correct,
+        Incorrect: incorrect,
+        Skipped: skipped,
+      };
+
       setQuestionStatus(status);
-      setScore({ TotalQuestions: questions.length, Correct: correct, Incorrect: incorrect, Skipped: skipped });
+      setScore(newScore);
       setSubmitted(true);
+
+      const calculatedScore = calculateScore(
+        newScore.Correct,
+        newScore.Incorrect,
+        newScore.TotalQuestions
+      );
+
+      fetch("http://localhost:5050/score/store-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          studentId: studentId,
+          type: "ModelTest",
+          examId: modelTest._id,
+          score: parseFloat(calculatedScore),
+          correct: newScore.Correct,
+          incorrect: newScore.Incorrect,
+          skipped: newScore.Skipped,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Score stored successfully:", data);
+        })
+        .catch((error) => {
+          console.error("Failed to store score:", error);
+        });
 
       // Scroll to the top of the page after submitting
       window.scrollTo(0, 0);
@@ -80,7 +126,10 @@ export default function ExamQuestionsSection({ modelTest }) {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div style={{ minWidth: '48rem' }} className="w-full grid grid-cols-1 gap-4 m-4">
+      <div
+        style={{ minWidth: "48rem" }}
+        className="w-full grid grid-cols-1 gap-4 m-4"
+      >
         {submitted && (
           <div className="shadow-lg rounded-lg p-6 mb-4 bg-white flex justify-between">
             <h4 className="text-lg font-bold">Score Summary</h4>

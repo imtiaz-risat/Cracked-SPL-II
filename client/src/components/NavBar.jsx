@@ -1,7 +1,12 @@
 // Update NavBar.jsx to include isMenuOpen and toggleMenu props
 import crackEdLogo from "../Assets/CrackEd-logo.png";
+import { useState } from "react";
 
-export default function NavBar({ isMenuOpen, toggleMenu }) {
+export default function NavBar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toggleMenu = () => {
+    isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(true);
+  };
   return (
     <header>
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 ">
@@ -26,7 +31,7 @@ export default function NavBar({ isMenuOpen, toggleMenu }) {
             >
               Register
             </a>
-            <button
+            {/* <button
               onClick={toggleMenu}
               className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
             >
@@ -58,9 +63,9 @@ export default function NavBar({ isMenuOpen, toggleMenu }) {
                   ></path>
                 </svg>
               )}
-            </button>
+            </button> */}
           </div>
-          <div
+          {/* <div
             className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
             id="mobile-menu-2"
           >
@@ -98,7 +103,7 @@ export default function NavBar({ isMenuOpen, toggleMenu }) {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </nav>
     </header>
