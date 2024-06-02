@@ -1,6 +1,28 @@
 import crackEdLogo from "../Assets/CrackEd-logo.png";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const [isTutorLoggedIn, setIsTutorLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem('userData');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      if (parsedUser.isTutor) {
+        setIsTutorLoggedIn(true);
+      }
+    }
+  }, []);
+
+  const handleTutorLoginClick = () => {
+    if (isTutorLoggedIn) {
+      navigate('/tutor/dashboard');
+    } else {
+      navigate('/tutor-login');
+    }
+  };
   return (
     <footer class="p-4 bg-white sm:p-6">
       <div class="mx-auto max-w-screen-xl">
@@ -59,8 +81,8 @@ export default function Footer() {
             <div>
               <h2 class="mb-6 text-sm font-semibold text-gray-900">Career</h2>
               <ul class="text-gray-600 ">
-                <li class="mb-4">
-                  <a href="/tutor-login" class="hover:underline">
+              <li className="mb-4">
+                  <a href="#" onClick={handleTutorLoginClick} className="hover:underline">
                     Tutor Login
                   </a>
                 </li>

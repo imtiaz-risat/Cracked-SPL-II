@@ -10,7 +10,7 @@ export default function HeroSection() {
         <div class="mr-auto place-self-center lg:col-span-7">
           {/* Main Text */}
           <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl">
-            Prepare yourself for <span className="text-red-500">IUT </span>
+            Prepare yourself for <span className="text-red-500"><a href="https://www.iutoic-dhaka.edu/" className="text-red-500">IUT </a></span>
             Admission
           </h1>
 

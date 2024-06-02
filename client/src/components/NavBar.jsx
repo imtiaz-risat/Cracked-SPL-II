@@ -10,11 +10,16 @@ export default function NavBar() {
   };
 
   useEffect(() => {
-    const user = localStorage.getItem('userData'); // Change 'user' to the key you use to store user information
+    const user = localStorage.getItem('userData');
     if (user) {
-      setIsLoggedIn(true);
+      const parsedUser = JSON.parse(user);
+      console.log(parsedUser); // Assuming 'userData' contains the key 'isStudent'
+      if (parsedUser.isStudent) {
+        setIsLoggedIn(true);
+      }
     }
   }, []);
+  
 
   return (
     <header>
