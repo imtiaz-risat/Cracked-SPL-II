@@ -3,10 +3,13 @@ import profileImage from "../../Assets/Tutors/sani.jpg";
 import { PieChart } from "react-minimal-pie-chart";
 import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
+  const naviagte = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const { studentId } = userData;
+
+  const { studentId } = userData || {}; // Use empty object as default if userData is null
 
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [studentStats, setStudentStats] = useState({
@@ -41,7 +44,9 @@ export default function StudentDashboard() {
 
     const fetchStudentData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5050/student/profile/${studentId}`);
+        const response = await axios.get(
+          `http://localhost:5050/student/profile/${studentId}`
+        );
         setusername(response.data.username);
       } catch (error) {
         console.error("Error fetching student data: ", error);
