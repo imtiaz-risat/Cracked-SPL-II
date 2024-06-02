@@ -21,6 +21,7 @@ import AddNewQuestion from "./components/TeacherSections/DatabaseElements/AddNew
 import StudentLogin from "./Pages/StudentLogin";
 import StudentRegister from "./Pages/StudentRegister";
 import StudentSection from "./Pages/StudentSection";
+import TermsAndConditions from "./Pages/TermsAndConditions";
 import StudentDashboard from "./components/StudentSections/StudentDashboard";
 import StudentMockTest from "./components/StudentSections/StudentMockTest";
 import StudentModelTest from "./components/StudentSections/StudentModelTest";
@@ -37,6 +38,7 @@ import CreateModelTest from "./components/TeacherSections/ModelTest/CreateModelT
 import DatabaseQuestionsList from "./components/TeacherSections/DatabaseElements/DatabaseQuestionsList";
 import EditQuestionPage from "./components/TeacherSections/DatabaseElements/EditQuestionPage";
 import EditModelTest from "./components/TeacherSections/ModelTest/EditModelTest";
+
 import YouAreBanned from "./Pages/YouAreBanned";
 
 const router = createBrowserRouter([
@@ -71,12 +73,6 @@ const router = createBrowserRouter([
       {
         path: "mock-test",
         element: <StudentMockTest />,
-        // children: [
-        //   {
-        //     path: "start-exam",
-        //     element: <ExamStartPage />,
-        //   },
-        // ],
       },
       {
         path: "model-test",
@@ -192,6 +188,10 @@ const router = createBrowserRouter([
   {
     path: "/you-are-banned",
     element: <YouAreBanned />,
+  },
+  {
+    path: "/termsandconditions",
+    element: <TermsAndConditions />,
   },
 ]);
 
