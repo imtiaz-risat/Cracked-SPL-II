@@ -1,31 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useTimer } from "../../Context/TimerContext";
+import React, { useState, useEffect } from "react";
+import { useTimer } from "../../Context/TimerContext"; // Import useTimer instead of TimerContext
 
-export default function ExamQuestionsSection({ mockTest }) {
-  const [selectedOptionsState, setSelectedOptionsState] = useState({});
+export default function ExamQuestionsSection({ modelTest }) {
+  const { timeLeft, isActive } = useTimer(); // Use useTimer hook here
+  const [selectedOptions, setSelectedOptions] = useState({});
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submitted, setSubmitted] = useState(false); // State to track if the form has been submitted
-  const [questionStatus, setQuestionStatus] = useState({}); // state to track the status of each question
-  const [score, setScore] = useState({}); // state to store the score
-  const { timeLeft, isActive, stopTimer } = useTimer(); // Use the timer context
+  const [submitted, setSubmitted] = useState(false);
+  const [questionStatus, setQuestionStatus] = useState({});
+  const [score, setScore] = useState({});
 
+  // Fetch questions when the component mounts
   useEffect(() => {
     const fetchQuestions = async () => {
-      if (mockTest && mockTest.questions && mockTest.subject) {
+      if (modelTest && modelTest.QuestionIds && modelTest.Subject) {
         try {
           const response = await fetch(
-            `http://localhost:5050/mockTest/questions`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                subject: mockTest.subject,
-                questionIds: mockTest.questions,
-              }),
-            }
+            `http://localhost:5050/modelTest/${modelTest._id}/questions`
           );
           if (response.ok) {
             const data = await response.json();
@@ -43,35 +34,55 @@ export default function ExamQuestionsSection({ mockTest }) {
     };
 
     fetchQuestions();
-  }, [mockTest]);
+  }, [modelTest]);
+
+  // Effect to handle timer end
+  useEffect(() => {
+    if (timeLeft === 0 && isActive) {
+      handleSubmit();
+    }
+  }, [timeLeft, isActive]);
 
   const handleOptionChange = (questionId, option) => {
     if (!submitted) {
-      setSelectedOptionsState((prev) => ({
+      setSelectedOptions((prev) => ({
         ...prev,
-        [questionId]: option || undefined,
+        [questionId]: option,
       }));
     }
   };
 
-  const calculateScore = (correct, incorrect, totalMarks) => {
-    return ((correct - 0.25 * incorrect) / totalMarks).toFixed(2);
+  const calculateScore = () => {
+    let correct = 0;
+    let incorrect = 0;
+    questions.forEach((question) => {
+      const selectedOption = selectedOptions[question._id];
+      if (selectedOption) {
+        if (selectedOption === question.correctAnswer) {
+          correct++;
+          questionStatus[question._id] = "Correct";
+        } else {
+          incorrect++;
+          questionStatus[question._id] = "Incorrect";
+        }
+      }
+    });
+    return ((correct - 0.25 * incorrect) / questions.length).toFixed(2);
   };
 
-  const handleSubmit =useCallback( () => {
-    if (!submitted) {
-      console.log(selectedOptionsState);
 
+
+
+  const handleSubmit = () => {
+    if (!submitted) {
       let correct = 0;
       let incorrect = 0;
       let skipped = 0;
       let status = {};
 
       questions.forEach((question) => {
-        if (selectedOptionsState[question._id]) {
-          if (
-            selectedOptionsState[question._id] === question.correctAnswers[0]
-          ) {
+        if (selectedOptions[question._id]) {
+          if (selectedOptions[question._id] === question.correctAnswers[0]) {
             correct++;
             status[question._id] = "Correct";
           } else {
@@ -101,16 +112,15 @@ export default function ExamQuestionsSection({ mockTest }) {
         newScore.TotalQuestions
       );
 
-      // Store the score in the Scores Collection
       fetch("http://localhost:5050/score/store-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          studentId: mockTest.studentId,
-          type: "MockTest",
-          examId: mockTest._id,
+          studentId: studentId,
+          type: "ModelTest",
+          examId: modelTest._id,
           score: parseFloat(calculatedScore),
           correct: newScore.Correct,
           incorrect: newScore.Incorrect,
@@ -124,25 +134,15 @@ export default function ExamQuestionsSection({ mockTest }) {
         .catch((error) => {
           console.error("Failed to store score:", error);
         });
-       
-      stopTimer();
-      // Scroll to the top of the page
+
+      // Scroll to the top of the page after submitting
       window.scrollTo(0, 0);
     }
-  }, [selectedOptionsState, submitted, questions, mockTest]);
+  };
 
-  useEffect(() => {
-    if (timeLeft === 0 && isActive && !submitted) {
-      handleSubmit(); // Automatically submit when time runs out
-    }
-  }, [timeLeft, isActive, submitted, handleSubmit]);
 
   if (loading) {
     return <div>Loading questions...</div>;
-  }
-
-  if (!questions.length) {
-    return <div>No questions available.</div>;
   }
 
   return (
@@ -191,10 +191,10 @@ export default function ExamQuestionsSection({ mockTest }) {
                 key={option}
                 className={`bg-gray-100 ${
                   !submitted
-                    ? selectedOptionsState[question._id] === option
+                    ? selectedOptions[question._id] === option
                       ? "bg-yellow-200"
                       : "hover:bg-gray-200"
-                    : selectedOptionsState[question._id] === option
+                    : selectedOptions[question._id] === option
                     ? question.correctAnswers &&
                       question.correctAnswers.includes(option)
                       ? "bg-green-300"
@@ -222,15 +222,10 @@ export default function ExamQuestionsSection({ mockTest }) {
           )}
         </div>
       ))}
-      <button
-        onClick={handleSubmit}
-        disabled={submitted}
-        className={`mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-green-400 ${
-          submitted ? "opacity-50 cursor-not-allowed hover:bg-gray-500" : ""
-        }`}
-      >
+      <button onClick={handleSubmit} disabled={submitted}>
         Submit
       </button>
+      
     </div>
   );
 }

@@ -17,7 +17,34 @@ export default function ExamNavBar({ mockTestId }) {
       </div>
       <div className="flex-1 text-right flex items-center justify-end">
         {isActive && (
-          <h1>Timer: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
+          <div className="flex items-center justify-center w-full gap-1.5 count-down-main">
+            <h3 className="font-manrope font-semibold text-2xl text-gray-900">:</h3>
+            <div className="timer">
+              <div
+                className="rounded-xl border border-gray-50 py-1.5 min-w-[80px] max-w-[100px] flex items-center justify-center flex-col gap-0 aspect-square px-1.5"
+                style={{ height: '40px' }}  // Ensure the timer box is not taller than the navbar
+              >
+                <h3
+                  className="countdown-element minutes font-manrope font-semibold text-2xl text-gray-50 text-center"
+                >
+                </h3>
+                <p className="text-sm font-inter capitalize font-normal text-gray-50 text-center w-full">{minutes}</p>
+              </div>
+            </div>
+            <h3 className="font-manrope font-semibold text-2xl text-gray-900">:</h3>
+            <div className="timer">
+              <div
+                className="rounded-xl border border-gray-50 py-1.5 min-w-[80px] max-w-[100px] flex items-center justify-center flex-col gap-0 aspect-square px-1.5"
+                style={{ height: '40px' }}  // Ensure the timer box is not taller than the navbar
+              >
+                <h3
+                  className="countdown-element seconds sec font-manrope font-semibold text-2xl text-gray-50 text-center"
+                >
+                </h3>
+                <p className="text-sm font-inter capitalize font-normal text-gray-50 text-center w-full">{seconds}</p>
+              </div>
+            </div>
+          </div>
         )}
         <a href="/student/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
           Home
