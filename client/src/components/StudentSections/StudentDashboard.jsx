@@ -17,7 +17,7 @@ const avatars = [
   { src: avatar3, id: 3 },
   { src: avatar4, id: 4 },
   { src: avatar5, id: 5 },
-  { src: avatar6, id: 6 }
+  { src: avatar6, id: 6 },
 ];
 
 export default function StudentDashboard() {
@@ -76,7 +76,7 @@ export default function StudentDashboard() {
   }, [studentId]);
 
   const getAvatarSrc = (avatarId) => {
-    const avatar = avatars.find(avatar => avatar.id === avatarId);
+    const avatar = avatars.find((avatar) => avatar.id === avatarId);
     return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
   };
 
@@ -126,17 +126,17 @@ export default function StudentDashboard() {
                     {
                       title: "Correct",
                       value: studentStats.totalCorrect,
-                      color: "#4CBB17",
+                      color: "#90EE90",
                     },
                     {
                       title: "Skipped",
                       value: studentStats.totalSkipped || 0, // Add a default value of 0 if totalSkipped is null
-                      color: "#FFC300",
+                      color: "#FFE971",
                     },
                     {
                       title: "Incorrect",
                       value: studentStats.totalIncorrect || 0, // Add a default value of 0 if totalIncorrect is null
-                      color: "#D22B2B",
+                      color: "#D04F32",
                     },
                   ]}
                   radius={40}
