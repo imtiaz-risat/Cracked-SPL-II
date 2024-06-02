@@ -178,7 +178,16 @@ router.put("/profile/:studentId", async (req, res) => {
     return res.status(400).send({ message: "Invalid student ID format" });
   }
 
-  const { fullname, institute, batch, phone, email, username, date_of_birth, gender } = req.body;
+  const {
+    fullname,
+    institute,
+    batch,
+    phone,
+    email,
+    username,
+    date_of_birth,
+    gender,
+  } = req.body;
   let collection = await db.collection("Students");
 
   // Check if the username is already taken by another student
@@ -302,15 +311,22 @@ router.post("/doubts/:studentId", async (req, res) => {
       throw new Error("Insert failed");
     }
   } catch (error) {
-    console.error('Error in submitting doubt:', error);
-    res.status(500).send({ message: "Failed to submit doubt", error: error.message });
+    console.error("Error in submitting doubt:", error);
+    res
+      .status(500)
+      .send({ message: "Failed to submit doubt", error: error.message });
   }
-router.post('/update-profile', (req, res) => {
+});
+
+router.post("/update-profile", (req, res) => {
   const { date_of_birth, gender } = req.body;
   // Logic to update the student profile
-  Student.updateOne({ _id: req.student._id }, { $set: { date_of_birth, gender } })
-    .then(() => res.status(200).send('Profile updated successfully'))
-    .catch(err => res.status(500).send('Error updating profile'));
+  Student.updateOne(
+    { _id: req.student._id },
+    { $set: { date_of_birth, gender } }
+  )
+    .then(() => res.status(200).send("Profile updated successfully"))
+    .catch((err) => res.status(500).send("Error updating profile"));
 });
 
 export default router;

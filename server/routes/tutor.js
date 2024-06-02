@@ -263,21 +263,21 @@ router.get('/reviews', async (req, res) => {
   }
 });
 
-router.put('/reviews/:id', async (req, res) => {
-  const { id } = req.params;
-  const { answer } = req.body;
+// router.put('/reviews/:id', async (req, res) => {
+//   const { id } = req.params;
+//   const { answer } = req.body;
 
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).send({ message: "Invalid review ID" });
-  }
+//   if (!ObjectId.isValid(id)) {
+//     return res.status(400).send({ message: "Invalid review ID" });
+//   }
 
-  let objectId;
+//   let objectId;
 
-  try {
-    objectId = new ObjectId(id);
-  } catch (error) {
-    return res.status(400).send({ message: "Invalid review ID format" });
-  }
+//   try {
+//     objectId = new ObjectId(id);
+//   } catch (error) {
+//     return res.status(400).send({ message: "Invalid review ID format" });
+//   }
 
 //   try {
 //     //await client.connect();
