@@ -18,7 +18,7 @@ export default function TeacherSidebar() {
         localStorage.removeItem("userData");
 
         // Redirect to the login page or any other desired page
-        window.location.href = "/admin-login";
+        window.location.href = "/sys-admin-cracked";
       } else {
         console.error("Logout failed");
       }

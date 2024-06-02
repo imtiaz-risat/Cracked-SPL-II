@@ -11,7 +11,7 @@ export default function TeacherSection() {
   // we have use navigate inside useEffect
   useEffect(() => {
     if (!jsonUserData || !jsonUserData.isAdmin) {
-      navigate("/admin-login");
+      navigate("/sys-admin-cracked");
       console.log("Not logged in, userData missing");
     }
   }, [jsonUserData]);
