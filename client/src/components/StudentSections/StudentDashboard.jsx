@@ -126,21 +126,24 @@ export default function StudentDashboard() {
                     {
                       title: "Correct",
                       value: studentStats.totalCorrect,
-                      color: "#90EE90",
+                      color: "#66BB6A", // Soft Green
                     },
                     {
                       title: "Skipped",
                       value: studentStats.totalSkipped || 0, // Add a default value of 0 if totalSkipped is null
-                      color: "#FFE971",
+                      color: "#FFEE58", // Soft Yellow
                     },
                     {
                       title: "Incorrect",
                       value: studentStats.totalIncorrect || 0, // Add a default value of 0 if totalIncorrect is null
-                      color: "#D04F32",
+                      color: "#EF5350", // Soft Red
                     },
                   ]}
                   radius={40}
                 />
+
+
+
               )}
             </div>
             <div className="text-center mt-2 text-gray-500">

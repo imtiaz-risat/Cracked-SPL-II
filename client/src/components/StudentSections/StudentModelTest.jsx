@@ -111,8 +111,8 @@ export default function StudentModelTest() {
             <h2 className="text-2xl font-bold">{test.Name}</h2>
             <h2 className="text-xl font-semibold">{test.Subject}</h2>
             <p>{test.Marks} marks</p>
-            <p className="text-blue-500 text-left text-xs py-2">
-              <span className="font-bold">Available till: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+            <p className="text-blue-800 text-left text-xs py-2">
+              <span className="text-zinc-600 font-bold">Available till: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
             </p>
           </div>
         ))}
@@ -133,7 +133,7 @@ export default function StudentModelTest() {
             <h2 className="text-xl font-semibold">{test.Subject}</h2>
             <p>{test.Marks} marks</p>
             <p className="text-blue-500 text-left text-xs py-2">
-              <span className="font-bold">Scheduled for: </span>{dayjs(test.scheduleDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Scheduled for: </span>{dayjs(test.scheduleDateTime).format('MMMM Do YYYY, h:mm a')}
             </p>
           </div>
         ))}
@@ -155,7 +155,7 @@ export default function StudentModelTest() {
               {test.Subject}
             </h2>
             <p className="text-zinc-600">{test.Marks} marks</p>
-            <p className="text-blue-500 text-left text-xs py-2">
+            <p className="text-gray-100 text-left text-xs py-2">
               <span className="text-zinc-600 font-bold">Expired on: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
             </p>
           </a>
