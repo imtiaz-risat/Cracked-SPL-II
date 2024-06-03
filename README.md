@@ -59,6 +59,7 @@ To set up and run CrackEd locally, follow these steps:
 
 2. **Open the Application**: Once both servers are running, open your browser and navigate to `http://localhost:3000` to access the CrackEd platform.
 
+
 ## Features for Students
 
 ### 1. Student Dashboard
@@ -100,6 +101,9 @@ The Doubt Reviews feature enables tutors to review and answer student doubts. It
 
 ### 1. Admin Dashboard
 The Admin Dashboard offers a high-level overview of platform activity, showing counts for the total number of students and tutors. This feature helps admins monitor and manage the platform effectively.
+- **URL:** `http://localhost:3000/sys-admin-cracked`
+- **Credentials:** *Username:* admin, *Password:* CRACKed
+
 
 ### 2. Add Tutor
 Admins can register new tutors to the platform, ensuring that the platform has sufficient teaching resources to cater to the students' needs.

@@ -389,7 +389,7 @@ export default function StudentProfile() {
                 type="submit"
                 className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
               >
-                Save
+                Update
               </button>
             </form>
           </div>
@@ -509,7 +509,7 @@ export default function StudentProfile() {
               className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600"
               onClick={saveAvatar}
             >
-              Save
+              Select
             </button>
           </div>
         </div>

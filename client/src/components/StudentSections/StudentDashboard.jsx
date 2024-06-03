@@ -90,7 +90,7 @@ export default function StudentDashboard() {
             alt="Profile Avatar"
           />
           <div>
-            {/* Use the full name fetched from the database */}
+            {/* Use the username fetched from the database */}
             <h1 className="text-2xl font-semibold">Hello, {username}</h1>
             <div className="small">Welcome back!</div>
           </div>
