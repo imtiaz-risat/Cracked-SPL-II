@@ -57,7 +57,6 @@ router.post("/store-score", async (req, res) => {
 
 
 
-
 router.get("/leaderboard", async (req, res) => {
   try {
     const pipeline = [
@@ -70,9 +69,9 @@ router.get("/leaderboard", async (req, res) => {
           ModelTestScores: {
             $sum: {
               $cond: [
-                { $and: [{ $eq: ["$type", "ModelTest"] }, { $ne: ["$subtype", "archived"] }] }, // Check if type is ModelTest and subtype is not archived
-                "$score",  // If true, consider the score for summing
-                0           // Otherwise, score contributes 0
+                { $and: [{ $eq: ["$type", "ModelTest"] }, { $ne: ["$subtype", "archived"] }] },
+                "$score",
+                0
               ]
             }
           },
@@ -84,11 +83,11 @@ router.get("/leaderboard", async (req, res) => {
           studentId: "$_id",
           Point: {
             $add: [
-              { $multiply: ["$MockTestScores", 10] }, // MockTest scores multiplied by 10
+              { $multiply: ["$MockTestScores", 10] },
               {
                 $multiply: [
                   "$ModelTestScores",
-                  { $cond: [{ $eq: ["$subtype", "archived"] }, 0, 25] }  // ModelTest scores, 0 if archived, 25 if live or subtype is null
+                  { $cond: [{ $eq: ["$subtype", "archived"] }, 0, 25] }
                 ]
               },
             ],
@@ -103,23 +102,37 @@ router.get("/leaderboard", async (req, res) => {
       .aggregate(pipeline)
       .toArray();
 
-    // Fetch fullname from Students Collection using StudentId
-    const leaderboardWithFullname = await Promise.all(
+    // Fetch fullname and username from Students Collection using StudentId
+    const leaderboardWithNames = await Promise.all(
       leaderboard.map(async (student) => {
         const studentInfo = await db
           .collection("Students")
           .findOne({ _id: new ObjectId(student.studentId) });
-        const fullname = studentInfo ? studentInfo.fullname : "FullNameMissing";
-        return { studentId: student.studentId, fullname, Point: student.Point };
+        const fullname = studentInfo ? studentInfo.fullname : null;
+        const username = studentInfo ? studentInfo.username : null;
+
+        // Only include students who have a username
+        if (username) {
+          return {
+            studentId: student.studentId,
+            name: fullname ? `${fullname} (${username})` : username,
+            Point: student.Point,
+          };
+        } else {
+          return null;
+        }
       })
     );
 
+    // Filter out null values
+    const filteredLeaderboard = leaderboardWithNames.filter(student => student !== null);
+
     // Add slNo field to the returned data
-    const leaderboardWithSlNo = leaderboardWithFullname.map(
+    const leaderboardWithSlNo = filteredLeaderboard.map(
       (student, index) => ({
         slNo: index + 1,
         studentId: student.studentId,
-        fullname: student.fullname,
+        name: student.name,
         Point: student.Point,
       })
     );
@@ -129,6 +142,7 @@ router.get("/leaderboard", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 router.get("/student-stats/:studentId", async (req, res) => {
   const { studentId } = req.params;
