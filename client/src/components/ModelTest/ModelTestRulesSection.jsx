@@ -5,50 +5,27 @@ import { useNavigate } from "react-router-dom";
 export default function ExamRulesSection({ modelTest }) {
   const { startTimer } = useTimer();
   const navigate = useNavigate();
-  // const userData = localStorage.getItem("userData");
-  // const jsonStudent = JSON.parse(userData);
-  // const { studentId } = jsonStudent || {};
-
+  
   const handleStartExam = () => {
-  const userData = localStorage.getItem("userData");
-  const jsonStudent = JSON.parse(userData);
-  const { studentId } = jsonStudent || {};
-   // Assuming studentId is stored in localStorage
-
+    const userData = localStorage.getItem("userData");
+    const jsonStudent = JSON.parse(userData);
+    const { studentId } = jsonStudent || {};
+    
     if (!modelTest) {
       console.error("Model test data is not loaded.");
       alert("Model test data is not loaded. Please refresh the page or contact support if the issue persists.");
       return;
     }
-    console.log(modelTest.examId);
-    console.log(studentId);
-    fetch(`http://localhost:5050/score/has-participated?studentId=${studentId}&modelTestId=${modelTest._id}`,{
-      headers: {
-        'Cache-Control': 'no-cache'
+
+    if (modelTest.Time === undefined || typeof modelTest.Time !== 'number') {
+      console.error("Invalid or missing 'time' property on model test data:", modelTest.Time);
+      alert("There is an issue with the test configuration. Please contact support.");
+      return;
     }
-    })
 
-    .then(response => response.json())
-    .then(data => {
-        if (data.hasParticipated) {
-            alert("You have already taken this model test.");
-            return;
-        }
-
-        if (modelTest.Time === undefined || typeof modelTest.Time !== 'number') {
-          console.error("Invalid or missing 'time' property on model test data:", modelTest.Time);
-          alert("There is an issue with the test configuration. Please contact support.");
-          return;
-        }
-
-        startTimer(modelTest.Time * 60); // Start the timer, converting minutes to seconds
-        navigate(`/student/modeltest-questions/${modelTest._id}`); // Navigate to the exam questions page
-    })
-    .catch(error => {
-        console.error("Failed to check participation:", error);
-        alert("Failed to check if you have already taken this test. Please check your network connection and try again.");
-    });
-};
+    startTimer(modelTest.Time * 60); // Start the timer, converting minutes to seconds
+    navigate(`/student/modeltest-questions/${modelTest._id}`); // Navigate to the exam questions page
+  };
 
   return (
     <div className="grid grid-cols-2 gap-4 p-4">
