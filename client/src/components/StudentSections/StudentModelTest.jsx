@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 dayjs.extend(advancedFormat); // Use the plugin
 
-export default function TeacherModelTest() {
+export default function StudentModelTest() {
   const [modelTests, setModelTests] = useState([]);
   const [pastModelTests, setPastModelTests] = useState([]);
   const [upcomingModelTests, setUpcomingModelTests] = useState([]);

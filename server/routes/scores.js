@@ -1,32 +1,62 @@
 import express from "express";
 import db from "../db/connection.js";
 import { ObjectId } from "mongodb";
+import dayjs from "dayjs"; // ensure dayjs is imported if not already
 
 const router = express.Router();
 
+// Helper function to determine test status
+async function getTestStatus(examId) {
+  const testDetails = await db.collection("ModelTests").findOne({ _id: new ObjectId(examId) });
+  if (!testDetails) {
+    throw new Error("Test not found");
+  }
+  const currentDateTime = dayjs();
+  const scheduleDateTime = dayjs(`${testDetails.ScheduleDate} ${testDetails.ScheduleTime}`);
+  const expiryDateTime = scheduleDateTime.add(testDetails.ExpiryDays, 'day');
+
+  if (currentDateTime.isAfter(expiryDateTime)) {
+    return 'archived';
+  } else if (currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime)) {
+    return 'live';
+  }
+}
+
 router.post("/store-score", async (req, res) => {
-  const { studentId, type, examId, score, correct, incorrect, skipped } =
-    req.body;
+  const { studentId, type, examId, score, correct, incorrect, skipped } = req.body;
 
   try {
-    const result = await db
-      .collection("Scores")
-      .insertOne({
-        studentId,
-        type,
-        examId,
-        score,
-        correct,
-        incorrect,
-        skipped,
-      });
+    // Initialize subtype as null, it will only be assigned for ModelTests
+    let subtype = null;
+
+    // Determine subtype only if the test type is 'ModelTest'
+    if (type === 'ModelTest') {
+      subtype = await getTestStatus(examId);
+    }
+
+    const result = await db.collection("Scores").insertOne({
+      studentId,
+      type,
+      subtype, // Store the subtype determined by test status (null if not a ModelTest)
+      examId,
+      score,
+      correct,
+      incorrect,
+      skipped,
+    });
     res.status(200).json({
       message: "Score stored successfully",
+      subtype, // This will be null if not a ModelTest
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
+
+
 
 router.get("/leaderboard", async (req, res) => {
   try {
@@ -38,7 +68,13 @@ router.get("/leaderboard", async (req, res) => {
             $sum: { $cond: [{ $eq: ["$type", "MockTest"] }, "$score", 0] },
           },
           ModelTestScores: {
-            $sum: { $cond: [{ $eq: ["$type", "ModelTest"] }, "$score", 0] },
+            $sum: {
+              $cond: [
+                { $and: [{ $eq: ["$type", "ModelTest"] }, { $ne: ["$subtype", "archived"] }] }, // Check if type is ModelTest and subtype is not archived
+                "$score",  // If true, consider the score for summing
+                0           // Otherwise, score contributes 0
+              ]
+            }
           },
         },
       },
@@ -48,8 +84,13 @@ router.get("/leaderboard", async (req, res) => {
           studentId: "$_id",
           Point: {
             $add: [
-              { $multiply: ["$MockTestScores", 10] },
-              { $multiply: ["$ModelTestScores", 25] },
+              { $multiply: ["$MockTestScores", 10] }, // MockTest scores multiplied by 10
+              {
+                $multiply: [
+                  "$ModelTestScores",
+                  { $cond: [{ $eq: ["$subtype", "archived"] }, 0, 25] }  // ModelTest scores, 0 if archived, 25 if live or subtype is null
+                ]
+              },
             ],
           },
         },
