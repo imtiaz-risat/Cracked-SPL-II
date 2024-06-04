@@ -8,8 +8,8 @@ const router = express.Router();
 // Add a new question to the appropriate collection based on the subject
 router.post("/add-question", async (req, res) => {
   try {
-    const { question, subject, options, correctAnswer } = req.body;
-    if (!question || !subject || !options || !correctAnswer) {
+    const { question, subject, options, correctAnswers } = req.body;
+    if (!question || !subject || !options || !correctAnswers) {
       return res.status(400).send({ message: "All fields are required" });
     }
 
@@ -35,10 +35,8 @@ router.post("/add-question", async (req, res) => {
 
     const newQuestion = {
       question,
-      subject,
       options,
-      correctAnswer,
-      created_at: new Date(),
+      correctAnswers
     };
 
     const result = await collection.insertOne(newQuestion);
@@ -55,7 +53,6 @@ router.post("/add-question", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
-
 // Get all questions from a specific Subject
 router.get("/get-questions", async (req, res) => {
   const { subject } = req.query; // Get subject from query parameters
