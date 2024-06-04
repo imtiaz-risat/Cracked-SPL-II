@@ -29,6 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.3",
+    "nodemailer": "^6.9.13",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.3",
     "react-minimal-pie-chart": "^8.4.0",

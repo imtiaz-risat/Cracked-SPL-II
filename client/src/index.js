@@ -244,6 +244,9 @@ import EditQuestionPage from "./components/TeacherSections/DatabaseElements/Edit
 import EditModelTest from "./components/TeacherSections/ModelTest/EditModelTest";
 import YouAreBanned from "./Pages/YouAreBanned";
 import MistakeReview from "./components/StudentSections/MistakeReview";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
+import OtpVerification from "./Pages/OtpVerification";
 
 const router = createBrowserRouter([
   {
@@ -253,6 +256,18 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <StudentLogin />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/otp-verification",
+    element: <OtpVerification />,
   },
   {
     path: "/register",
