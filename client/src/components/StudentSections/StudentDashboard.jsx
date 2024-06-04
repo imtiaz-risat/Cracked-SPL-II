@@ -3,6 +3,7 @@ import { PieChart } from "react-minimal-pie-chart";
 import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import CustomLegend from "./StudentComponents/CustomLegend"; // Import the custom legend
 
 import avatar1 from "../../Assets/Avatars/1.jpg";
 import avatar2 from "../../Assets/Avatars/2.jpg";
@@ -80,6 +81,15 @@ export default function StudentDashboard() {
     return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
   };
 
+  const calculatePercentage = (value, total) => {
+    return total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+  };
+
+  const totalQuestions =
+    studentStats.totalCorrect +
+    studentStats.totalIncorrect +
+    studentStats.totalSkipped;
+
   return (
     <div className="content">
       <div className="flex justify-start items-center mb-4">
@@ -140,20 +150,20 @@ export default function StudentDashboard() {
                     },
                   ]}
                   radius={40}
+                  label={({ dataEntry }) =>
+                    `${Math.round(dataEntry.percentage)}%`
+                  }
+                  labelStyle={{
+                    fontSize: "6px",
+                    fontFamily: "sans-serif",
+                    fill: "#000",
+                    stroke: "#fff",
+                    strokeWidth: 0.05,
+                  }}
                 />
-
-
-
               )}
             </div>
-            <div className="text-center mt-2 text-gray-500">
-              <span className="text-green-500">•</span>
-              {studentStats.totalCorrect || 0} Correct{" "}
-              <span className="text-yellow-500">•</span>
-              {studentStats.totalSkipped || 0} Skipped
-              <span className="text-red-500">•</span>
-              {studentStats.totalIncorrect || 0} Incorrect
-            </div>
+            <CustomLegend stats={studentStats} />
           </div>
 
           <div className="bg-white shadow rounded-lg p-4">
