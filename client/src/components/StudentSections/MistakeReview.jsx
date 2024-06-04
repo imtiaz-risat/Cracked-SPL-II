@@ -17,6 +17,8 @@ export default function MistakeReview() {
   const [errorMarks, setErrorMarks] = useState(false);
   const [errorTime, setErrorTime] = useState(false);
 
+  const [isInfoHovered, setIsInfoHovered] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -146,11 +148,50 @@ export default function MistakeReview() {
         </div>
         <div>
           <dl className="grid grid-cols-1 gap-5 sm:grid-cols-4">
-            <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6 col-span-4">
+            <div className="relative px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6 col-span-4">
               <dt className="text-sm font-medium text-gray-500 truncate">
                 Total Incorrect Answers
               </dt>
               <dd className="mt-1 text-3xl font-semibold text-gray-900">{totalIncorrect}</dd>
+              <button
+                className="info-button"
+                style={{
+                  position: "absolute",
+                  top: "4px",
+                  right: "10px",
+                  backgroundColor: "#e2e8f0",
+                  borderRadius: "50%",
+                  padding: "6px 12px",
+                }}
+                onMouseEnter={() => setIsInfoHovered(true)}
+                onMouseLeave={() => setIsInfoHovered(false)}
+              >
+                i
+              </button>
+              {isInfoHovered && (
+                <div
+                  className="info-popup"
+                  style={{
+                    display: "block",
+                    position: "absolute",
+                    width: "200px",
+                    textAlign: "center",
+                    borderRadius: "6px",
+                    padding: "8px 6px",
+                    position: "absolute",
+                    top: "30px",
+                    right: "2px",
+                    backgroundColor: "#2d3748",
+                    color: "white",
+                    fontSize: "12px",
+                    borderRadius: "4px",
+                    padding: "8px",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                  }}
+                >
+                  Each incorrect answer is counted only once, regardless of the number of attempts made.
+                </div>
+              )}
             </div>
 
             <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">

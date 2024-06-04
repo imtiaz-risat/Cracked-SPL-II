@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
+// This route handler creates a new mock test by randomly selecting questions from a subject-specific collection.
 router.post("/generateMockTest", async (req, res) => {
   try {
     const { studentId, subject, marks, time } = req.body;
@@ -37,6 +38,7 @@ router.post("/generateMockTest", async (req, res) => {
   }
 });
 
+// This route handler retrieves a mock test by its ID.
 router.get("/:mockTestId", async (req, res) => {
   try {
     const { mockTestId } = req.params;
@@ -82,6 +84,7 @@ router.post("/questions", async (req, res) => {
   }
 });
 
+// This route handler creates a mistake quiz by selecting incorrect questions previously answered by the student.
 router.post("/generateMistakeQuiz/:studentId", async (req, res) => {
   const { studentId } = req.params;
   const { subject, marks, time } = req.body;
@@ -126,7 +129,7 @@ router.post("/generateMistakeQuiz/:studentId", async (req, res) => {
     // Ensure that the number of selected questions matches the marks value exactly
     if (subjectQuestionIds.length < marks) {
       return res.status(400).send({
-        message: "Not enough incorrect questions to generate the quiz. Practice more and come back again!",
+        message: "Not enough incorrect answers to generate the mock test. Practice more and come back again!",
       });
     }
 
