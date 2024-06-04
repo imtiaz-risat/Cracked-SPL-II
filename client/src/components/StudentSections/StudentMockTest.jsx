@@ -85,6 +85,8 @@ export default function StudentMockTest() {
     <div className="min-w-60x mx-auto p-6">
       <div className="mb-6">
         <h1 className="text-3xl text-black font-bold">Mock Test</h1>
+        <hr className="my-2 h-0.5 border-t-0 bg-gray-200 opacity-100" />
+
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-2"

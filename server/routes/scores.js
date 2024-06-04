@@ -1,32 +1,62 @@
 import express from "express";
 import db from "../db/connection.js";
 import { ObjectId } from "mongodb";
+import dayjs from "dayjs"; // ensure dayjs is imported if not already
 
 const router = express.Router();
 
+// Helper function to determine test status
+async function getTestStatus(examId) {
+  const testDetails = await db.collection("ModelTests").findOne({ _id: new ObjectId(examId) });
+  if (!testDetails) {
+    throw new Error("Test not found");
+  }
+  const currentDateTime = dayjs();
+  const scheduleDateTime = dayjs(`${testDetails.ScheduleDate} ${testDetails.ScheduleTime}`);
+  const expiryDateTime = scheduleDateTime.add(testDetails.ExpiryDays, 'day');
+
+  if (currentDateTime.isAfter(expiryDateTime)) {
+    return 'archived';
+  } else if (currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime)) {
+    return 'live';
+  }
+}
+
 router.post("/store-score", async (req, res) => {
-  const { studentId, type, examId, score, correct, incorrect, skipped } =
-    req.body;
+  const { studentId, type, examId, score, correct, incorrect, skipped, incorrectQuestions } = req.body;
 
   try {
-    const result = await db
-      .collection("Scores")
-      .insertOne({
-        studentId,
-        type,
-        examId,
-        score,
-        correct,
-        incorrect,
-        skipped,
-      });
+    // Initialize subtype as null, it will only be assigned for ModelTests
+    let subtype = null;
+
+    // Determine subtype only if the test type is 'ModelTest'
+    if (type === 'ModelTest') {
+      subtype = await getTestStatus(examId);
+    }
+
+    const result = await db.collection("Scores").insertOne({
+      studentId,
+      type,
+      subtype, // Store the subtype determined by test status (null if not a ModelTest)
+      examId,
+      score,
+      correct,
+      incorrect,
+      skipped,
+      incorrectQuestions, // Store the array of incorrect question IDs
+    });
     res.status(200).json({
       message: "Score stored successfully",
+      subtype, // This will be null if not a ModelTest
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
+
 
 router.get("/leaderboard", async (req, res) => {
   try {
@@ -38,7 +68,13 @@ router.get("/leaderboard", async (req, res) => {
             $sum: { $cond: [{ $eq: ["$type", "MockTest"] }, "$score", 0] },
           },
           ModelTestScores: {
-            $sum: { $cond: [{ $eq: ["$type", "ModelTest"] }, "$score", 0] },
+            $sum: {
+              $cond: [
+                { $and: [{ $eq: ["$type", "ModelTest"] }, { $ne: ["$subtype", "archived"] }] },
+                "$score",
+                0
+              ]
+            }
           },
         },
       },
@@ -49,7 +85,12 @@ router.get("/leaderboard", async (req, res) => {
           Point: {
             $add: [
               { $multiply: ["$MockTestScores", 10] },
-              { $multiply: ["$ModelTestScores", 25] },
+              {
+                $multiply: [
+                  "$ModelTestScores",
+                  { $cond: [{ $eq: ["$subtype", "archived"] }, 0, 25] }
+                ]
+              },
             ],
           },
         },
@@ -62,23 +103,37 @@ router.get("/leaderboard", async (req, res) => {
       .aggregate(pipeline)
       .toArray();
 
-    // Fetch fullname from Students Collection using StudentId
-    const leaderboardWithFullname = await Promise.all(
+    // Fetch fullname and username from Students Collection using StudentId
+    const leaderboardWithNames = await Promise.all(
       leaderboard.map(async (student) => {
         const studentInfo = await db
           .collection("Students")
           .findOne({ _id: new ObjectId(student.studentId) });
-        const fullname = studentInfo ? studentInfo.fullname : "FullNameMissing";
-        return { studentId: student.studentId, fullname, Point: student.Point };
+        const fullname = studentInfo ? studentInfo.fullname : null;
+        const username = studentInfo ? studentInfo.username : null;
+
+        // Only include students who have a username
+        if (username) {
+          return {
+            studentId: student.studentId,
+            name: fullname ? `${fullname} (${username})` : username,
+            Point: student.Point,
+          };
+        } else {
+          return null;
+        }
       })
     );
 
+    // Filter out null values
+    const filteredLeaderboard = leaderboardWithNames.filter(student => student !== null);
+
     // Add slNo field to the returned data
-    const leaderboardWithSlNo = leaderboardWithFullname.map(
+    const leaderboardWithSlNo = filteredLeaderboard.map(
       (student, index) => ({
         slNo: index + 1,
         studentId: student.studentId,
-        fullname: student.fullname,
+        name: student.name,
         Point: student.Point,
       })
     );
@@ -88,6 +143,7 @@ router.get("/leaderboard", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 router.get("/student-stats/:studentId", async (req, res) => {
   const { studentId } = req.params;
@@ -121,14 +177,12 @@ router.get("/student-stats/:studentId", async (req, res) => {
 
 router.get("/has-participated", async (req, res) => {
   const { studentId, modelTestId } = req.query;
-  console.log(studentId,modelTestId);
   try {
     const result = await db.collection("Scores").findOne({
       studentId: studentId,
       examId: modelTestId,
       type: "ModelTest" // Assuming you store the type of test
     });
-    console.log(result)
     if (result) {
       res.json({ hasParticipated: true });
     } else {
@@ -138,4 +192,50 @@ router.get("/has-participated", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+router.get("/student-mistakes/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    
+    // Fetch all incorrect questions for the given student ID
+    const scores = await db.collection("Scores").find({ studentId }).toArray();
+    
+    let incorrectQuestions = scores.reduce((acc, score) => {
+      return acc.concat(score.incorrectQuestions || []);
+    }, []);
+
+    // Remove duplicate question IDs
+    incorrectQuestions = [...new Set(incorrectQuestions)];
+
+    // Define an async function to fetch question IDs from a collection
+    const fetchQuestionIds = async (collectionName) => {
+      const questions = await db.collection(collectionName).find({ _id: { $in: incorrectQuestions.map(id => new ObjectId(id)) } }, { projection: { _id: 1 } }).toArray();
+      return questions.map(question => question._id);
+    };
+
+    // Fetch question IDs from each collection
+    const chemistryQuestionIds = await fetchQuestionIds("Questions_Chemistry");
+    const englishQuestionIds = await fetchQuestionIds("Questions_English");
+    const mathQuestionIds = await fetchQuestionIds("Questions_Math");
+    const physicsQuestionIds = await fetchQuestionIds("Questions_Physics");
+
+
+    // Prepare the response object, ensuring all subjects are represented
+    const response = {
+      chemistry: chemistryQuestionIds,
+      english: englishQuestionIds,
+      math: mathQuestionIds,
+      physics: physicsQuestionIds,
+    };
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error("Error fetching student mistakes:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 export default router;

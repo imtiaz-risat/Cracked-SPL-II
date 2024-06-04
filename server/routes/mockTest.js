@@ -82,4 +82,63 @@ router.post("/questions", async (req, res) => {
   }
 });
 
+router.post("/generateMistakeQuiz/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+  const { subject, marks, time } = req.body;
+
+  try {
+    // Fetch all incorrect questions for the given student ID
+    const scores = await db.collection("Scores").find({ studentId }).toArray();
+
+    let incorrectQuestions = scores.reduce((acc, score) => {
+      return acc.concat(score.incorrectQuestions || []);
+    }, []);
+
+    // Remove duplicate question IDs
+    incorrectQuestions = [...new Set(incorrectQuestions)];
+
+    // Define an async function to fetch question IDs from a collection
+    const fetchQuestionIds = async (collectionName) => {
+      const questions = await db.collection(collectionName).find({ _id: { $in: incorrectQuestions.map(id => new ObjectId(id)) } }, { projection: { _id: 1 } }).toArray();
+      return questions.map(question => question._id);
+    };
+
+    // Fetch question IDs from each collection
+    const chemistryQuestionIds = await fetchQuestionIds("Questions_Chemistry");
+    const englishQuestionIds = await fetchQuestionIds("Questions_English");
+    const mathQuestionIds = await fetchQuestionIds("Questions_Math");
+    const physicsQuestionIds = await fetchQuestionIds("Questions_Physics");
+
+    // Combine all incorrect question IDs from different subjects
+    const allIncorrectQuestions = [
+      ...chemistryQuestionIds,
+      ...englishQuestionIds,
+      ...mathQuestionIds,
+      ...physicsQuestionIds,
+    ];
+
+    // Select random questions from the incorrect questions list
+    const selectedQuestions = allIncorrectQuestions.sort(() => 0.5 - Math.random()).slice(0, marks);
+
+    const newMockTest = {
+      name: "Mistake Quiz",
+      studentId: studentId,
+      subject: subject,
+      marks: marks,
+      time: time,
+      questions: selectedQuestions,
+    };
+
+    const result = await db.collection("MockTests").insertOne(newMockTest);
+
+    res.status(201).send({
+      message: "Mistake quiz created successfully",
+      mockTestId: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Error creating mistake quiz:", error);
+    res.status(500).send({ message: "Failed to create mistake quiz", error: error.message });
+  }
+});
+
 export default router;

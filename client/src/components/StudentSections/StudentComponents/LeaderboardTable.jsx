@@ -11,10 +11,39 @@ export default function LeaderboardTable({ data = [] }) {
       },
       {
         Header: "Name",
-        accessor: "fullname",
-        Cell: ({ value }) => (
-          <div style={{ textAlign: "left", whiteSpace: "nowrap" }}>{value}</div>
-        ),
+        accessor: "name",
+        Cell: ({ value }) => {
+          const bracketIndex = value.indexOf("(");
+          if (bracketIndex === -1) {
+            // No bracket found, use the whole string as the username
+            
+            return (
+              <div style={{color: "gray", fontStyle: "italic", whiteSpace: "nowrap" }}>
+                <span>{value.trim()}</span>
+              </div>
+            );
+          } else {
+            // Bracket found, split the name and username
+            const [fullName, username] = value.split("(");
+            const cleanUsername = username ? username.replace(")", "") : "";
+            return (
+              <div style={{ textAlign: "left", whiteSpace: "nowrap" }}>
+                <span style={{ fontWeight: "bold" }}>{fullName.trim()}</span>
+                {cleanUsername && (
+                  <span
+                    style={{
+                      color: "gray",
+                      marginLeft: "5px",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    ({cleanUsername.trim()})
+                  </span>
+                )}
+              </div>
+            );
+          }
+        },
       },
       {
         Header: "Points",

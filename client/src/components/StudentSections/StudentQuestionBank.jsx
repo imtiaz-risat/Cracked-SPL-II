@@ -43,7 +43,7 @@ export default function StudentQuestionBank() {
             href={test.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center h-40 w-52"
+            className="bg-gray-200 rounded-lg shadow-xl p-6 flex flex-col items-center justify-center text-center"
           >
             <h2 className="text-2xl font-bold text-zinc-800">{test.year}</h2>
           </a>
