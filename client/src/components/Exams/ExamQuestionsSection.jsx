@@ -6,8 +6,8 @@ export default function ExamQuestionsSection({ mockTest }) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitted, setSubmitted] = useState(false); // State to track if the form has been submitted
-  const [questionStatus, setQuestionStatus] = useState({}); // state to track the status of each question
-  const [score, setScore] = useState({}); // state to store the score
+  const [questionStatus, setQuestionStatus] = useState({}); // State to track the status of each question
+  const [score, setScore] = useState({}); // State to store the score and incorrect question IDs
   const { timeLeft, isActive, stopTimer } = useTimer(); // Use the timer context
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function ExamQuestionsSection({ mockTest }) {
     return ((correct - 0.25 * incorrect) / totalMarks).toFixed(2);
   };
 
-  const handleSubmit =useCallback( () => {
+  const handleSubmit = useCallback(() => {
     if (!submitted) {
       console.log(selectedOptionsState);
 
@@ -66,6 +66,7 @@ export default function ExamQuestionsSection({ mockTest }) {
       let incorrect = 0;
       let skipped = 0;
       let status = {};
+      let incorrectQuestions = []; // Array to store the IDs of incorrect questions
 
       questions.forEach((question) => {
         if (selectedOptionsState[question._id]) {
@@ -77,6 +78,7 @@ export default function ExamQuestionsSection({ mockTest }) {
           } else {
             incorrect++;
             status[question._id] = "Incorrect";
+            incorrectQuestions.push(question._id); // Add incorrect question ID to array
           }
         } else {
           skipped++;
@@ -89,6 +91,7 @@ export default function ExamQuestionsSection({ mockTest }) {
         Correct: correct,
         Incorrect: incorrect,
         Skipped: skipped,
+        IncorrectQuestions: incorrectQuestions, // Store incorrect question IDs
       };
 
       setQuestionStatus(status);
@@ -115,6 +118,7 @@ export default function ExamQuestionsSection({ mockTest }) {
           correct: newScore.Correct,
           incorrect: newScore.Incorrect,
           skipped: newScore.Skipped,
+          incorrectQuestions: incorrectQuestions, // Send incorrect question IDs to the backend
         }),
       })
         .then((response) => response.json())
@@ -124,7 +128,7 @@ export default function ExamQuestionsSection({ mockTest }) {
         .catch((error) => {
           console.error("Failed to store score:", error);
         });
-       
+
       stopTimer();
       // Scroll to the top of the page
       window.scrollTo(0, 0);
@@ -203,7 +207,7 @@ export default function ExamQuestionsSection({ mockTest }) {
                       question.correctAnswers.includes(option)
                     ? "bg-green-300"
                     : "bg-gray-100"
-                } shadow-md rounded-lg p-4                } shadow-md rounded-lg p-4 cursor-pointer`}
+                } shadow-md rounded-lg p-4 cursor-pointer`}
                 onClick={() => handleOptionChange(question._id, option)}
               >
                 <p className="text-gray-800 font-semibold text-left">

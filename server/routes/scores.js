@@ -23,7 +23,7 @@ async function getTestStatus(examId) {
 }
 
 router.post("/store-score", async (req, res) => {
-  const { studentId, type, examId, score, correct, incorrect, skipped } = req.body;
+  const { studentId, type, examId, score, correct, incorrect, skipped, incorrectQuestions } = req.body;
 
   try {
     // Initialize subtype as null, it will only be assigned for ModelTests
@@ -43,6 +43,7 @@ router.post("/store-score", async (req, res) => {
       correct,
       incorrect,
       skipped,
+      incorrectQuestions, // Store the array of incorrect question IDs
     });
     res.status(200).json({
       message: "Score stored successfully",
@@ -176,14 +177,12 @@ router.get("/student-stats/:studentId", async (req, res) => {
 
 router.get("/has-participated", async (req, res) => {
   const { studentId, modelTestId } = req.query;
-  console.log(studentId,modelTestId);
   try {
     const result = await db.collection("Scores").findOne({
       studentId: studentId,
       examId: modelTestId,
       type: "ModelTest" // Assuming you store the type of test
     });
-    console.log(result)
     if (result) {
       res.json({ hasParticipated: true });
     } else {
