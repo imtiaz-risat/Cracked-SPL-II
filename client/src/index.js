@@ -243,6 +243,7 @@ import DatabaseQuestionsList from "./components/TeacherSections/DatabaseElements
 import EditQuestionPage from "./components/TeacherSections/DatabaseElements/EditQuestionPage";
 import EditModelTest from "./components/TeacherSections/ModelTest/EditModelTest";
 import YouAreBanned from "./Pages/YouAreBanned";
+import MistakeReview from "./components/StudentSections/MistakeReview";
 
 const router = createBrowserRouter([
   {
@@ -296,6 +297,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <StudentProfile />,
+      },
+      {
+        path: "mistake-review",
+        element: <MistakeReview />,
       },
     ],
   },

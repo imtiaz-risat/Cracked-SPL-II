@@ -176,6 +176,28 @@ export default function StudentSidebar() {
 
             <li>
               <Link
+                to="/student/mistake-review"
+                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              width={20}
+              height={20}
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            >
+               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+
+                <span className="ml-3">Mistake Review</span>
+              </Link>
+            </li>
+            
+            <li>
+              <Link
                 to="/student/profile"
                 className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
@@ -196,6 +218,7 @@ export default function StudentSidebar() {
                 <span className="ml-3">Profile</span>
               </Link>
             </li>
+
 
             <li>
               <Link

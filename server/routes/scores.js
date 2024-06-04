@@ -192,4 +192,50 @@ router.get("/has-participated", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+router.get("/student-mistakes/:studentId", async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    
+    // Fetch all incorrect questions for the given student ID
+    const scores = await db.collection("Scores").find({ studentId }).toArray();
+    
+    let incorrectQuestions = scores.reduce((acc, score) => {
+      return acc.concat(score.incorrectQuestions || []);
+    }, []);
+
+    // Remove duplicate question IDs
+    incorrectQuestions = [...new Set(incorrectQuestions)];
+
+    // Define an async function to fetch question IDs from a collection
+    const fetchQuestionIds = async (collectionName) => {
+      const questions = await db.collection(collectionName).find({ _id: { $in: incorrectQuestions.map(id => new ObjectId(id)) } }, { projection: { _id: 1 } }).toArray();
+      return questions.map(question => question._id);
+    };
+
+    // Fetch question IDs from each collection
+    const chemistryQuestionIds = await fetchQuestionIds("Questions_Chemistry");
+    const englishQuestionIds = await fetchQuestionIds("Questions_English");
+    const mathQuestionIds = await fetchQuestionIds("Questions_Math");
+    const physicsQuestionIds = await fetchQuestionIds("Questions_Physics");
+
+
+    // Prepare the response object, ensuring all subjects are represented
+    const response = {
+      chemistry: chemistryQuestionIds,
+      english: englishQuestionIds,
+      math: mathQuestionIds,
+      physics: physicsQuestionIds,
+    };
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error("Error fetching student mistakes:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 export default router;
