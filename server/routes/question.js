@@ -99,11 +99,11 @@ router.get("/get-question/:subject/:questionId", async (req, res) => {
   }
 });
 
-// Update a question in the database based on questionId and subject
+/// Update a question in the database based on questionId and subject
 router.put("/update-question/:questionId", async (req, res) => {
   try {
-    const { question, subject, options, correctAnswer } = req.body;
-    if (!question || !subject || !options || !correctAnswer) {
+    const { question, subject, options, correctAnswers } = req.body;
+    if (!question || !subject || !options || !correctAnswers) {
       return res.status(400).send({ message: "All fields are required" });
     }
 
@@ -114,7 +114,7 @@ router.put("/update-question/:questionId", async (req, res) => {
     const updatedQuestion = {
       question,
       options,
-      correctAnswer,
+      correctAnswers,
     };
 
     const result = await collection.updateOne(
@@ -131,6 +131,7 @@ router.put("/update-question/:questionId", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
+
 
 // Delete a question based on questionId and subject
 router.delete("/delete-question/:subject/:questionId", async (req, res) => {
