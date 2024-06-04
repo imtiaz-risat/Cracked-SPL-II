@@ -61,6 +61,7 @@ export default function MistakeReview() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let isValid = true;
+  
     if (!selectedSubject) {
       setErrorSubject(true);
       isValid = false;
@@ -73,24 +74,38 @@ export default function MistakeReview() {
       setErrorTime(true);
       isValid = false;
     }
-
+  
     let marksInt = Number.parseInt(selectedMarks);
     let timeInt = Number.parseInt(selectedTime);
-
+  
+    let studentId;
+    try {
+      const userData = localStorage.getItem("userData");
+      const jsonUserData = JSON.parse(userData);
+      studentId = jsonUserData?.studentId;
+  
+      if (!studentId) {
+        console.error("Student ID not found");
+        return;
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return;
+    }
+  
     if (isValid) {
-      const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
       const mockTestData = {
         studentId,
         subject: selectedSubject,
         marks: marksInt,
         time: timeInt,
       };
-
+  
       console.log(mockTestData);
-
+  
       try {
         const response = await fetch(
-          "http://localhost:5050/mockTest/generateMockTest",
+          `http://localhost:5050/mockTest/generateMistakeQuiz/${studentId}`,
           {
             method: "POST",
             headers: {
@@ -112,6 +127,7 @@ export default function MistakeReview() {
       }
     }
   };
+  
 
   const totalIncorrect = incorrectPhysics.length + incorrectChemistry.length + incorrectMath.length + incorrectEnglish.length;
 
