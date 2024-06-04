@@ -14,6 +14,10 @@ const AddNewQuestion = () => {
   const options = watch("options", []);
 
   const onSubmit = async (data) => {
+    // Convert correctAnswer to correctAnswers array
+    data.correctAnswers = [data.correctAnswer];
+    delete data.correctAnswer; // Remove the old correctAnswer field
+
     await fetch("http://localhost:5050/question/add-question", {
       method: "POST",
       headers: {
