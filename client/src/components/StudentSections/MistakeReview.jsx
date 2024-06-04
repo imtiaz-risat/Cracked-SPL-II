@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function MistakeReview() {
   const [incorrectPhysics, setIncorrectPhysics] = useState([]);
@@ -61,7 +63,7 @@ export default function MistakeReview() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let isValid = true;
-  
+
     if (!selectedSubject) {
       setErrorSubject(true);
       isValid = false;
@@ -74,16 +76,16 @@ export default function MistakeReview() {
       setErrorTime(true);
       isValid = false;
     }
-  
+
     let marksInt = Number.parseInt(selectedMarks);
     let timeInt = Number.parseInt(selectedTime);
-  
+
     let studentId;
     try {
       const userData = localStorage.getItem("userData");
       const jsonUserData = JSON.parse(userData);
       studentId = jsonUserData?.studentId;
-  
+
       if (!studentId) {
         console.error("Student ID not found");
         return;
@@ -92,7 +94,7 @@ export default function MistakeReview() {
       console.error("Error parsing user data:", error);
       return;
     }
-  
+
     if (isValid) {
       const mockTestData = {
         studentId,
@@ -100,9 +102,9 @@ export default function MistakeReview() {
         marks: marksInt,
         time: timeInt,
       };
-  
+
       console.log(mockTestData);
-  
+
       try {
         const response = await fetch(
           `http://localhost:5050/mockTest/generateMistakeQuiz/${studentId}`,
@@ -117,22 +119,23 @@ export default function MistakeReview() {
         const data = await response.json();
         if (response.ok) {
           console.log(data);
+          toast.success("Mistake quiz created successfully!");
           navigate(`/student/start-exam/${data.mockTestId}`);
         } else {
           throw new Error(data.message || "Failed to create mock test");
         }
       } catch (error) {
         console.error("Error creating mock test:", error);
-        alert(error.message);
+        toast.error(error.message);
       }
     }
   };
-  
 
   const totalIncorrect = incorrectPhysics.length + incorrectChemistry.length + incorrectMath.length + incorrectEnglish.length;
 
   return (
     <div className="flex flex-wrap h-screen">
+      <ToastContainer />
       <div className="p-4 w-full">
         <div className="flex justify-start items-center mb-4">
           <div className="flex justify-center items-center gap-4">

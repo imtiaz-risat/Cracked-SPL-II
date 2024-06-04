@@ -3,15 +3,16 @@ import axios from "axios";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 
+// Extend dayjs with advanced formatting options
 dayjs.extend(advancedFormat);
 
 export default function TeacherModelTest() {
   const [modelTests, setModelTests] = useState([]);
   const [pastModelTests, setPastModelTests] = useState([]);
   const [upcomingModelTests, setUpcomingModelTests] = useState([]);
-  const [liveModelTests, setLiveModelTests] = useState([]);
 
   useEffect(() => {
+    // Fetch model tests from the server
     const fetchModelTests = async () => {
       try {
         const response = await axios.get(
@@ -27,6 +28,7 @@ export default function TeacherModelTest() {
           const scheduleDateTime = dayjs(`${test.ScheduleDate} ${test.ScheduleTime}`);
           const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, "day");
 
+          // Categorize tests based on their schedule and expiry dates
           if (currentDateTime.isBefore(scheduleDateTime)) {
             upcomingTests.push({ ...test, scheduleDateTime });
           } else if (currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime)) {
@@ -46,7 +48,6 @@ export default function TeacherModelTest() {
 
     fetchModelTests();
   }, []);
-
 
   return (
     <div className="container min-w-full mx-auto px-4 py-8">
