@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
+dayjs.extend(advancedFormat);
 
 export default function TeacherModelTest() {
   const [modelTests, setModelTests] = useState([]);
+  const [pastModelTests, setPastModelTests] = useState([]);
+  const [upcomingModelTests, setUpcomingModelTests] = useState([]);
+  const [liveModelTests, setLiveModelTests] = useState([]);
 
   useEffect(() => {
     const fetchModelTests = async () => {
@@ -10,7 +17,28 @@ export default function TeacherModelTest() {
         const response = await axios.get(
           "http://localhost:5050/modelTest/allModelTests"
         );
-        setModelTests(response.data);
+        const currentDateTime = dayjs();
+
+        const liveTests = [];
+        const pastTests = [];
+        const upcomingTests = [];
+
+        response.data.forEach((test) => {
+          const scheduleDateTime = dayjs(`${test.ScheduleDate} ${test.ScheduleTime}`);
+          const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, "day");
+
+          if (currentDateTime.isBefore(scheduleDateTime)) {
+            upcomingTests.push({ ...test, scheduleDateTime });
+          } else if (currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime)) {
+            liveTests.push({ ...test, expiryDateTime });
+          } else if (currentDateTime.isAfter(expiryDateTime)) {
+            pastTests.push({ ...test, expiryDateTime });
+          }
+        });
+
+        setModelTests(liveTests);
+        setPastModelTests(pastTests);
+        setUpcomingModelTests(upcomingTests);
       } catch (error) {
         console.error("Failed to fetch Model Tests:", error);
       }
@@ -18,6 +46,7 @@ export default function TeacherModelTest() {
 
     fetchModelTests();
   }, []);
+
 
   return (
     <div className="container min-w-full mx-auto px-4 py-8">
@@ -44,32 +73,10 @@ export default function TeacherModelTest() {
         </a>
       </div>
       <hr className="my-2 h-0.5 border-t-0 bg-gray-200 opacity-100" />
-      <div className="flex justify-between items-center mb-6">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="border-2 border-zinc-300 bg-white w-full h-10 px-5 pr-16 mr-2 rounded-lg text-sm focus:outline-none"
-        />
-        <button
-          type="submit"
-          className="text-white bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded text-lg"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#000000"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </div>
+
+      <h1 className="text-3xl font-bold text-gray-800 mt-10 mb-2">
+        Live Model Tests
+      </h1>
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
         {modelTests.map((test) => (
           <a
@@ -77,11 +84,52 @@ export default function TeacherModelTest() {
             href={`edit-modeltest/${test._id}`}
             className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
           >
-            <h2 className="text-3xl font-bold text-zinc-800">{test.Name}</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">
-              {test.Subject}
-            </h2>
+            <h2 className="text-2xl font-bold text-zinc-800">{test.Name}</h2>
+            <h2 className="text-xl font-semibold text-zinc-800">{test.Subject}</h2>
             <p className="text-zinc-600">{test.Marks} marks</p>
+            <p className="text-blue-800 text-left text-xs py-2">
+              <span className="text-zinc-600 font-bold">Available till: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+            </p>
+          </a>
+        ))}
+      </div>
+
+      <h1 className="text-3xl font-bold text-gray-800 mt-10 mb-2">
+        Upcoming Model Tests
+      </h1>
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+        {upcomingModelTests.map((test) => (
+          <a
+            key={test._id}
+            href={`edit-modeltest/${test._id}`}
+            className="bg-green-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
+          >
+            <h2 className="text-2xl font-bold">{test.Name}</h2>
+            <h2 className="text-xl font-semibold">{test.Subject}</h2>
+            <p>{test.Marks} marks</p>
+            <p className="text-blue-500 text-left text-xs py-2">
+              <span className="text-zinc-600 font-bold">Scheduled for: </span>{dayjs(test.scheduleDateTime).format('MMMM Do YYYY, h:mm a')}
+            </p>
+          </a>
+        ))}
+      </div>
+
+      <h1 className="text-3xl font-bold text-gray-800 mt-10 mb-2">
+        Archived Model Tests
+      </h1>
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+        {pastModelTests.map((test) => (
+          <a
+            key={test._id}
+            href={`edit-modeltest/${test._id}`}
+            className="bg-blue-300 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
+          >
+            <h2 className="text-2xl font-bold text-zinc-800">{test.Name}</h2>
+            <h2 className="text-xl font-semibold text-zinc-800">{test.Subject}</h2>
+            <p className="text-zinc-600">{test.Marks} marks</p>
+            <p className="text-gray-100 text-left text-xs py-2">
+              <span className="text-zinc-600 font-bold">Expired on: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+            </p>
           </a>
         ))}
       </div>
