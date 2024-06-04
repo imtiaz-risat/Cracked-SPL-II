@@ -26,7 +26,7 @@ const styles = `
 }
 
 .info-button {
-  background-color: #f0f0f0;
+  background-color: #d9d9d9;
   border-radius: 50%;
   padding: 4px 14px;
   cursor: pointer;
