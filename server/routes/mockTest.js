@@ -97,28 +97,43 @@ router.post("/generateMistakeQuiz/:studentId", async (req, res) => {
     // Remove duplicate question IDs
     incorrectQuestions = [...new Set(incorrectQuestions)];
 
-    // Define an async function to fetch question IDs from a collection
+    // Define an async function to fetch question IDs from a collection based on the subject
     const fetchQuestionIds = async (collectionName) => {
-      const questions = await db.collection(collectionName).find({ _id: { $in: incorrectQuestions.map(id => new ObjectId(id)) } }, { projection: { _id: 1 } }).toArray();
+      const questions = await db.collection(collectionName).find(
+        { _id: { $in: incorrectQuestions.map(id => new ObjectId(id)) } },
+        { projection: { _id: 1 } }
+      ).toArray();
       return questions.map(question => question._id);
     };
 
-    // Fetch question IDs from each collection
-    const chemistryQuestionIds = await fetchQuestionIds("Questions_Chemistry");
-    const englishQuestionIds = await fetchQuestionIds("Questions_English");
-    const mathQuestionIds = await fetchQuestionIds("Questions_Math");
-    const physicsQuestionIds = await fetchQuestionIds("Questions_Physics");
+    // Map the subject to the corresponding collection name
+    const subjectCollectionMap = {
+      Chemistry: "Questions_Chemistry",
+      English: "Questions_English",
+      Math: "Questions_Math",
+      Physics: "Questions_Physics",
+    };
 
-    // Combine all incorrect question IDs from different subjects
-    const allIncorrectQuestions = [
-      ...chemistryQuestionIds,
-      ...englishQuestionIds,
-      ...mathQuestionIds,
-      ...physicsQuestionIds,
-    ];
+    const collectionName = subjectCollectionMap[subject];
 
-    // Select random questions from the incorrect questions list
-    const selectedQuestions = allIncorrectQuestions.sort(() => 0.5 - Math.random()).slice(0, marks);
+    if (!collectionName) {
+      return res.status(400).send({ message: "Invalid subject" });
+    }
+
+    // Fetch question IDs from the specific subject collection
+    const subjectQuestionIds = await fetchQuestionIds(collectionName);
+
+    // Ensure that the number of selected questions matches the marks value exactly
+    if (subjectQuestionIds.length < marks) {
+      return res.status(400).send({
+        message: "Not enough incorrect questions to generate the quiz. Practice more and come back again!",
+      });
+    }
+
+    // Select random questions from the subject-specific incorrect questions list
+    const selectedQuestions = subjectQuestionIds
+      .sort(() => 0.5 - Math.random())
+      .slice(0, marks);
 
     const newMockTest = {
       name: "Mistake Quiz",
@@ -140,5 +155,7 @@ router.post("/generateMistakeQuiz/:studentId", async (req, res) => {
     res.status(500).send({ message: "Failed to create mistake quiz", error: error.message });
   }
 });
+
+
 
 export default router;
