@@ -13,6 +13,7 @@ export default function EditQuestionPage() {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -21,6 +22,8 @@ export default function EditQuestionPage() {
     options: [],
     correctAnswers: [],
   });
+
+  const options = watch("options", questionData.options);
 
   useEffect(() => {
     const fetchQuestionData = async () => {
@@ -117,9 +120,16 @@ export default function EditQuestionPage() {
             control={control}
             defaultValue={questionData.options}
             rules={{
-              validate: (value) =>
-                value.every((option) => option.trim() !== "") ||
-                "Empty option is not allowed",
+              validate: {
+                required: (value) =>
+                  value.every((option) => option.trim() !== "") ||
+                  "Empty option is not allowed",
+                minLength: (value) =>
+                  value.length >= 2 || "At least two options are required",
+                unique: (value) =>
+                  new Set(value.map((option) => option.trim())).size ===
+                    value.length || "Options must be unique",
+              },
             }}
             render={({ field: { onChange, value } }) => (
               <div>
@@ -140,8 +150,10 @@ export default function EditQuestionPage() {
                       className="flex-shrink-0 bg-transparent border-transparent text-gray-400 hover:text-gray-600 focus:outline-none"
                       onClick={() => {
                         const newOptions = [...value];
-                        newOptions.splice(index, 1);
-                        onChange(newOptions);
+                        if (newOptions.length > 2) {
+                          newOptions.splice(index, 1);
+                          onChange(newOptions);
+                        }
                       }}
                     >
                       <svg
@@ -186,7 +198,7 @@ export default function EditQuestionPage() {
             defaultValue={questionData.correctAnswers[0]}
           >
             <option value="">Select Correct Answer</option>
-            {questionData.options.map((option, index) => (
+            {options.map((option, index) => (
               <option key={index} value={option}>
                 {option}
               </option>

@@ -113,10 +113,8 @@ router.put("/update-question/:questionId", async (req, res) => {
 
     const updatedQuestion = {
       question,
-      subject,
       options,
       correctAnswer,
-      updated_at: new Date(),
     };
 
     const result = await collection.updateOne(
