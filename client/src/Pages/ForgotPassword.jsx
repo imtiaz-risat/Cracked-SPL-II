@@ -20,8 +20,10 @@ export default function ForgotPassword() {
       return;
     }
 
+    const endpoint = "http://localhost:5050/auth/forgot-password";
+
     try {
-      const response = await fetch("http://localhost:5050/student/forgotPassword", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +37,7 @@ export default function ForgotPassword() {
       }
 
       toast.success("Password reset email sent");
-      navigate("/student/login");
+      navigate(`/${userType.toLowerCase()}/login`);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Password reset request failed. Please try again.");
