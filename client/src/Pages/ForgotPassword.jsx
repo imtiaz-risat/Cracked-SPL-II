@@ -6,6 +6,7 @@ import React, { useState } from "react";
 
 export default function ForgotPassword() {
   const [userType, setUserType] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -21,6 +22,7 @@ export default function ForgotPassword() {
     }
 
     const endpoint = "http://localhost:5050/auth/forgot-password";
+    setIsLoading(true);
 
     try {
       const response = await fetch(endpoint, {
@@ -37,10 +39,12 @@ export default function ForgotPassword() {
       }
 
       toast.success("Password reset email sent");
-      navigate(`/${userType.toLowerCase()}/login`);
+      navigate("/otp-verification");
     } catch (error) {
       console.error("Error:", error);
       toast.error("Password reset request failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,9 +109,33 @@ export default function ForgotPassword() {
 
               <button
                 type="submit"
-                className="w-full text-white bg-[#6b7280] hover:bg-[#374151] focus:ring-4 focus:outline-none focus:ring-[#d1d5db] font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                className="w-full text-white bg-[#6b7280] hover:bg-[#374151] focus:ring-4 focus:outline-none focus:ring-[#d1d5db] font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-center items-center"
+                disabled={isLoading}
               >
-                Send reset link
+                {isLoading ? (
+                  <svg
+                    className="animate-spin h-5 w-5 mr-3 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  "Send verification code"
+                )}
               </button>
               <p className="text-sm font-light text-gray-500">
                 Remember your password?{" "}
