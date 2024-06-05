@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import crackEdLogo from "../Assets/CrackEd-cyan-dark-logo.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function TeacherLogin() {
@@ -102,6 +102,28 @@ export default function TeacherLogin() {
                 {errors.password && (
                   <p className="text-red-600 mt-2">{errors.password.message}</p>
                 )}
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
+                      {...register("rememberMe")}
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="remember" className="text-gray-500">
+                      Remember me
+                    </label>
+                  </div>
+                </div>
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-medium text-primary-600 hover:underline text-cyan-800"
+                >
+                  Forgot password?
+                </Link>
               </div>
               <button
                 type="submit"

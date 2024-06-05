@@ -101,7 +101,7 @@ The Doubt Reviews feature enables tutors to review and answer student doubts. It
 
 ### 1. Admin Dashboard
 The Admin Dashboard offers a high-level overview of platform activity, showing counts for the total number of students and tutors. This feature helps admins monitor and manage the platform effectively.
-- **URL:** `http://localhost:3000/sys-admin-cracked`
+- **URL:** `/sys-admin-cracked`
 - **Credentials:** *Username:* admin, *Password:* CRACKed
 
 
@@ -131,3 +131,4 @@ The CrackEd project is developed and maintained by [@codenim34](https://github.c
 ## Conclusion
 
 CrackEd is designed to provide a comprehensive and efficient learning and teaching environment for students and tutors. With a range of features tailored to meet the needs of both parties, CrackEd ensures a seamless educational experience.
+

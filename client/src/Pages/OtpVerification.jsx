@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios"; // Make sure to import axios
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
 
 export default function OTPVerification() {
   const [timerCount, setTimer] = useState(60);
   const [OTPinput, setOTPinput] = useState(["", "", "", ""]);
   const [disable, setDisable] = useState(true);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, userType } = location.state;
+  const inputRefs = useRef([]);
+  
   useEffect(() => {
     let interval = setInterval(() => {
       setTimer((lastTimerCount) => {
@@ -17,29 +24,66 @@ export default function OTPVerification() {
         return lastTimerCount - 1;
       });
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (message) {
+      const timeout = setTimeout(() => {
+        setMessage("");
+      }, 10000);
+      return () => clearTimeout(timeout);
+    }
+  }, [message]);
+
   const resendOTP = () => {
     if (disable) return;
+    setIsLoading(true);
     axios
-      .post("http://localhost:5000/send_recovery_email", {
-        OTP: OTPinput.join(""),
-        recipient_email: "your_email@example.com", // Replace with actual email variable
+      .post("http://localhost:5050/auth/resend-otp", { email, userType })
+      .then(() => {
+        setOTPinput(["", "", "", ""]); // Clear inputs
+        setDisable(true);
+        setMessage("Resent Successfully. Enter the new code.");
+        setTimer(60);
+        let interval = setInterval(() => {
+          setTimer((lastTimerCount) => {
+            if (lastTimerCount <= 1) {
+              clearInterval(interval);
+              setDisable(false);
+            }
+            return lastTimerCount - 1;
+          });
+        }, 1000);
       })
-      .then(() => setDisable(true))
-      .then(() => alert("A new OTP has successfully been sent to your email."))
-      .then(() => setTimer(60))
-      .catch(console.log);
+      .catch((error) => {
+        setMessage("Failed to resend OTP. Please try again.");
+        console.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  const verifyOTP = () => {
-    if (parseInt(OTPinput.join("")) === 1234) { // Replace with actual OTP verification logic
-      alert("OTP Verified!");
-    } else {
-      alert("The code you have entered is not correct, try again or re-send the link");
+  const handleChange = (value, index) => {
+    const newOTP = [...OTPinput];
+    const newValue = value.replace(/[^0-9]/g, ''); // Ensure only numbers are input
+    newOTP[index] = newValue;
+    setOTPinput(newOTP);
+    
+    // Automatically move to the next input if the input is a number and not empty
+    if (newValue !== '' && newValue.match(/^[0-9]$/) && index < OTPinput.length - 1) {
+      inputRefs.current[index + 1].focus();
     }
+    // Automatically move to the previous input on backspace
+    if (newValue === '' && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+  
+
+  const verifyOTP = () => {
+    // Implement OTP verification logic here
   };
 
   return (
@@ -61,14 +105,11 @@ export default function OTPVerification() {
                 {OTPinput.map((value, index) => (
                   <div key={index} className="w-16 h-16">
                     <input
+                      ref={(el) => inputRefs.current[index] = el}
                       maxLength="1"
                       className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                       value={value}
-                      onChange={(e) => {
-                        const newOTP = [...OTPinput];
-                        newOTP[index] = e.target.value;
-                        setOTPinput(newOTP);
-                      }}
+                      onChange={(e) => handleChange(e.target.value, index)}
                     />
                   </div>
                 ))}
@@ -90,12 +131,42 @@ export default function OTPVerification() {
                     disable
                       ? "text-gray-400 cursor-not-allowed"
                       : "text-blue-600 hover:underline"
-                  }`}
+                  } flex justify-center items-center`}
                   onClick={resendOTP}
                   disabled={disable}
                 >
-                  {disable ? `Resend OTP in ${timerCount}s` : "Resend OTP"}
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : disable ? (
+                    `Resend code in ${timerCount}s`
+                  ) : (
+                    "Resend code"
+                  )}
                 </button>
+                {message && (
+                  <p className={`text-sm ${message.includes("successfully") ? "text-green-500" : "text-red-500"}`}>
+                    {message}
+                  </p>
+                )}
               </div>
             </form>
           </div>
