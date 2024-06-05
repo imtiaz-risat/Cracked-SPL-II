@@ -115,18 +115,44 @@ export default function StudentProfile() {
   const handlePasswordChange = async (event) => {
     event.preventDefault();
     const tutorId = JSON.parse(localStorage.getItem("userData")).tutorId;
-
+  
     if (newPassword !== confirmNewPassword) {
       toast.warning("New passwords do not match");
       return;
     }
-
+  
+    // Password validation
+    const passwordValidation = {
+      required: "Password is required",
+      minLength: {
+        value: 8,
+        message: "Password must be at least 8 characters long",
+      },
+      pattern: {
+        value:
+          /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}$/,
+        message:
+          "Password must contain letters, numbers, and special characters",
+      },
+    };
+  
+    // Validate new password against constraints
+    if (newPassword.length < passwordValidation.minLength.value) {
+      toast.warning(passwordValidation.minLength.message);
+      return;
+    }
+  
+    if (!passwordValidation.pattern.value.test(newPassword)) {
+      toast.warning(passwordValidation.pattern.message);
+      return;
+    }
+  
     const passwordData = {
       oldPassword: currentPassword,
       newPassword: newPassword,
       confirmNewPassword: confirmNewPassword,
     };
-
+  
     try {
       const response = await fetch(
         `http://localhost:5050/tutor/update-password/${tutorId}`,
@@ -138,18 +164,19 @@ export default function StudentProfile() {
           body: JSON.stringify(passwordData),
         }
       );
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Failed to change password");
       }
-      toast.success(data.message); // Displaying the backend response message
+      toast.success(data.message);
     } catch (error) {
       console.error("Error changing password:", error);
-      toast.error(error.message); // Displaying the error message from the catch block
+      toast.error(error.message);
     }
   };
+  
 
   const getAvatarSrc = (avatarId) => {
     const avatar = avatars.find((avatar) => avatar.id === avatarId);
