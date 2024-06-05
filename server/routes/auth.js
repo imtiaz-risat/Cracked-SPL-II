@@ -1,9 +1,55 @@
 import express from "express";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-import db from "../db/connection.js"; // make sure this path is correct for your setup
+import bcrypt from "bcrypt";
+import db from "../db/connection.js"; // Ensure the path is correct for your setup
+import { ObjectId } from "mongodb"; // Make sure you import ObjectId
 
 const router = express.Router();
+
+router.post("/reset-password", async (req, res) => {
+  const { email, userType, newPassword, confirmPassword } = req.body;
+
+
+  // Validate input
+  if (!email || !userType || !newPassword || !confirmPassword) {
+    console.log("Validation failed: missing fields");
+    return res.status(400).send({ message: "All fields are required" });
+  }
+
+  if (newPassword !== confirmPassword) {
+    console.log("Validation failed: passwords do not match");
+    return res.status(400).send({ message: "Passwords do not match" });
+  }
+
+  const collectionName = userType === "Student" ? "Students" : "Tutors";
+  const collection = await db.collection(collectionName);
+
+  const user = await collection.findOne({ email });
+  if (!user) {
+    console.log("Validation failed: invalid OTP or email");
+    return res.status(400).send({ message: "Invalid OTP or email" });
+  }
+
+  // Hash new password
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+  // Update password in the database
+  const result = await collection.updateOne(
+    { email },
+    { $set: { hashedPassword }, $unset: { otp: "" } }
+  );
+
+  if (result.modifiedCount === 0) {
+    console.log("Failed to update password in the database");
+    return res.status(500).send({ message: "Failed to update password" });
+  }
+
+  console.log("Password updated successfully for user:", email);
+  res.status(200).send({ message: "Password updated successfully" });
+});
+
 
 router.post("/forgot-password", async (req, res) => {
   const { email, userType } = req.body;
@@ -153,6 +199,30 @@ router.post("/resend-otp", async (req, res) => {
     res.status(500).send({ message: "Error sending email", error: error.message });
   }
 });
+
+
+router.post("/verify-otp", async (req, res) => {
+  const { email, userType, otp } = req.body;
+  if (!email || !userType || !otp) {
+    return res.status(400).send({ message: "Email, user type, and OTP are required" });
+  }
+
+  const collectionName = userType === "Student" ? "Students" : "Tutors";
+  const collection = await db.collection(collectionName);
+
+  const user = await collection.findOne({ email, otp });
+  if (!user) {
+    return res.status(400).send({ message: "Invalid OTP" });
+  }
+
+  // Optionally, you can clear the OTP after successful verification
+  await collection.updateOne({ email }, { $unset: { otp: "" } });
+
+  res.status(200).send({ message: "OTP verified successfully" });
+});
+
+
+
 
 export default router;
 

@@ -1,36 +1,49 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import crackEdLogo from "../Assets/CrackEd-logo.png";
-import { Link, useParams } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import crackEdLogo from "../Assets/CrackEd-logo.png";
 
 export default function ResetPassword() {
-  const { token } = useParams(); // Assumes the token is passed as a URL parameter
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { email, userType } = location.state;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [passwordMismatch, setPasswordMismatch] = useState(false);
 
   const onSubmit = async (data) => {
+    if (data.newPassword !== data.confirmPassword) {
+      setPasswordMismatch(true);
+      toast.error("Passwords do not match");
+      return;
+    }
+
     setIsSubmitting(true);
+    setPasswordMismatch(false);
+    console.log("Submitting form with data:", { ...data, email, userType });
     try {
-      const response = await fetch(`http://localhost:5050/passwordReset/resetPassword/${token}`, { // Updated endpoint
+      const response = await fetch(`http://localhost:5050/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, email, userType }),
       });
 
+      console.log("Server response:", response);
       if (!response.ok) {
-        toast.error("Failed to reset password");
+        const errorData = await response.json();
+        console.error("Error response data:", errorData);
+        toast.error("Failed to reset password: " + errorData.message);
         throw new Error("Failed to reset password");
       }
 
-      toast.success("Password reset successfully. Please log in.");
+      navigate(userType === "Student" ? "/login" : "/tutor-login");
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to reset password. Please try again.");
@@ -68,10 +81,24 @@ export default function ResetPassword() {
                   type="password"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="New Password"
-                  {...register("newPassword", { required: true })}
+                  {...register("newPassword", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters long",
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}$/,
+                      message:
+                        "Password must contain letters, numbers, and special characters",
+                    },
+                  })}
                 />
                 {errors.newPassword && (
-                  <p className="text-red-600 mt-2">New password is required</p>
+                  <p className="text-red-600 mt-2">
+                    {errors.newPassword.message}
+                  </p>
                 )}
               </div>
               <div>
@@ -85,23 +112,34 @@ export default function ResetPassword() {
                   type="password"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Confirm Password"
-                  {...register("confirmPassword", { required: true })}
+                  {...register("confirmPassword", {
+                    required: "Confirmation password is required",
+                  })}
                 />
                 {errors.confirmPassword && (
-                  <p className="text-red-600 mt-2">Confirmation password is required</p>
+                  <p className="text-red-600 mt-2">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+                {passwordMismatch && (
+                  <p className="text-red-600 mt-2">Passwords do not match</p>
                 )}
               </div>
               <button
                 type="submit"
-                className={`w-full text-white ${isSubmitting ? 'bg-gray-400' : 'bg-[#6b7280] hover:bg-[#374151]'} focus:ring-4 focus:outline-none focus:ring-[#d1d5db] font-medium rounded-lg text-sm px-5 py-2.5 text-center`}
+                className={`w-full text-white ${
+                  isSubmitting
+                    ? "bg-gray-400"
+                    : "bg-[#6b7280] hover:bg-[#374151]"
+                } focus:ring-4 focus:outline-none focus:ring-[#d1d5db] font-medium rounded-lg text-sm px-5 py-2.5 text-center`}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Resetting...' : 'Reset Password'}
+                {isSubmitting ? "Resetting..." : "Reset Password"}
               </button>
               <p className="text-sm font-light text-gray-500">
                 Remember your password?{" "}
                 <Link
-                  to="/login"
+                  to={userType === "Student" ? "/login" : "/tutor-login"}
                   className="font-medium text-primary-600 hover:underline"
                 >
                   Sign in

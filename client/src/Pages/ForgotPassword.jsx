@@ -38,7 +38,6 @@ export default function ForgotPassword() {
         throw new Error("Password reset request failed");
       }
 
-      toast.success("Password reset email sent");
       navigate("/otp-verification", { state: { email: data.email, userType } });
     } catch (error) {
       console.error("Error:", error);
