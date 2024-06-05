@@ -129,18 +129,44 @@ export default function StudentProfile() {
   const handlePasswordChange = async (event) => {
     event.preventDefault();
     const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
-
+  
     if (newPassword !== confirmNewPassword) {
       toast.warning("New passwords do not match");
       return;
     }
-
+  
+    // Password validation
+    const passwordValidation = {
+      required: "Password is required",
+      minLength: {
+        value: 8,
+        message: "Password must be at least 8 characters long",
+      },
+      pattern: {
+        value:
+          /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}$/,
+        message:
+          "Password must contain letters, numbers, and special characters",
+      },
+    };
+  
+    // Validate new password against constraints
+    if (newPassword.length < passwordValidation.minLength.value) {
+      toast.warning(passwordValidation.minLength.message);
+      return;
+    }
+  
+    if (!passwordValidation.pattern.value.test(newPassword)) {
+      toast.warning(passwordValidation.pattern.message);
+      return;
+    }
+  
     const passwordData = {
       oldPassword: currentPassword,
       newPassword: newPassword,
       confirmNewPassword: confirmNewPassword,
     };
-
+  
     try {
       const response = await fetch(
         `http://localhost:5050/student/update-password/${studentId}`,
@@ -152,9 +178,9 @@ export default function StudentProfile() {
           body: JSON.stringify(passwordData),
         }
       );
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Failed to change password");
       }
@@ -164,7 +190,7 @@ export default function StudentProfile() {
       toast.error(error.message);
     }
   };
-
+  
   const getAvatarSrc = (avatarId) => {
     const avatar = avatars.find((avatar) => avatar.id === avatarId);
     return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
