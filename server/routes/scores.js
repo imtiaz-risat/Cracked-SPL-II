@@ -241,7 +241,6 @@ router.get("/student-mistakes/:studentId", async (req, res) => {
 // Route to get exam history for a specific student
 router.get("/exam-history/:studentId", async (req, res) => {
   const studentId = req.params.studentId;
-  // console.log("Querying for studentId:", studentId);
 
   try {
       const history = await db.collection("Scores").find({
@@ -250,6 +249,7 @@ router.get("/exam-history/:studentId", async (req, res) => {
           _id: 0,
           examId: 1,
           type: 1,
+          subtype: 1, // Include subtype in the projection
           score: 1,
           correct: 1,
           incorrect: 1,
@@ -258,13 +258,12 @@ router.get("/exam-history/:studentId", async (req, res) => {
       }).sort({ examStartTime: -1 })  // Sorting by examStartTime in descending order
       .toArray();
 
-      // Process each item to extract only the date part from examStartTime
+      // Process each item to extract only the date part from examStartTime and append subtype to type if applicable
       const processedHistory = history.map(item => ({
           ...item,
+          type: item.type === 'ModelTest' && item.subtype ? `${item.type} (${item.subtype})` : item.type,
           examStartTime: item.examStartTime ? new Date(item.examStartTime).toISOString().split('T')[0] : null
       }));
-
-      //console.log("Processed History:", processedHistory);
 
       if (processedHistory.length === 0) {
           return res.status(404).json({ message: "No exam history found for the student." });
