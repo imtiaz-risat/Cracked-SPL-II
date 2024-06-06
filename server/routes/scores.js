@@ -33,6 +33,8 @@ router.post("/store-score", async (req, res) => {
     if (type === 'ModelTest') {
       subtype = await getTestStatus(examId);
     }
+    
+    const examStartTime=dayjs().format("YYYY-MM-DD HH:mm:ss");
 
     const result = await db.collection("Scores").insertOne({
       studentId,
@@ -44,10 +46,12 @@ router.post("/store-score", async (req, res) => {
       incorrect,
       skipped,
       incorrectQuestions, // Store the array of incorrect question IDs
+      examStartTime
     });
     res.status(200).json({
       message: "Score stored successfully",
       subtype, // This will be null if not a ModelTest
+      examStartTime
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
