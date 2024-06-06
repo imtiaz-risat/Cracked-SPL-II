@@ -45,6 +45,7 @@ import MistakeReview from "./components/StudentSections/MistakeReview";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 import OtpVerification from "./Pages/OtpVerification";
+import ExamHistory from "./components/StudentSections/Examhistory";
 
 const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ const router = createBrowserRouter([
       {
         path: "question-bank",
         element: <StudentQuestionBank />,
+      },
+      {
+        path: "exam-history",
+        element: <ExamHistory/>,
       },
       {
         path: "profile",
