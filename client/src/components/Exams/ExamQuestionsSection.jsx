@@ -170,12 +170,14 @@ export default function ExamQuestionsSection({ mockTest }) {
           </div>
         </div>
       )}
-      {questions.map((question) => (
+      {questions.map((question, index) => (
         <div
           key={question._id}
           className="flex flex-col shadow-lg rounded-lg p-6 relative"
         >
-          <h3 className="mb-2 text-xl font-bold">{question.question}</h3>
+          <h3 className="mb-2 text-xl font-bold">
+            {index + 1}. {question.question}
+          </h3>
           {submitted && (
             <div
               className={`absolute top-0 right-0 p-2 text-white font-bold rounded-bl-lg ${
