@@ -1,24 +1,17 @@
 import React from 'react';
 import { useTable } from 'react-table';
+import './ExamHistoryTable.css'; // Ensure the CSS file is correctly imported
 
 const ExamHistoryTable = ({ data }) => {
   const columns = React.useMemo(
     () => [
       {
         Header: 'Exam Date',
-        accessor: 'examDate', // accessor is the "key" in the data
+        accessor: 'examStartTime',
       },
       {
         Header: 'Exam Type',
         accessor: 'type',
-      },
-      {
-        Header: 'Subject',
-        accessor: 'subject',
-      },
-      {
-        Header: 'Obtained Scores',
-        accessor: 'score',
       },
       {
         Header: 'Correct Answers',
@@ -32,6 +25,10 @@ const ExamHistoryTable = ({ data }) => {
         Header: 'Skipped',
         accessor: 'skipped',
       },
+      {
+        Header: 'Obtained Scores',
+        accessor: 'score',
+      }
     ],
     []
   );
@@ -52,7 +49,7 @@ const ExamHistoryTable = ({ data }) => {
             {headerGroup.headers.map(column => (
               <th
                 {...column.getHeaderProps()}
-                className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hover:bg-gray-200"
+                className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
               >
                 {column.render('Header')}
               </th>
@@ -61,14 +58,14 @@ const ExamHistoryTable = ({ data }) => {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
+        {rows.map((row, index) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()} className="hover:bg-gray-100">
+            <tr {...row.getRowProps()} className={index % 2 === 0 ? 'exam-row-even' : 'exam-row-odd'}>
               {row.cells.map(cell => (
                 <td
                   {...cell.getCellProps()}
-                  className="px-5 py-5 border-b border-gray-200 bg-white text-sm hover:bg-gray-50"
+                  className="px-5 py-5 border-b border-gray-200 text-sm"
                 >
                   {cell.render('Cell')}
                 </td>
