@@ -6,12 +6,20 @@ const ExamHistoryTable = ({ data }) => {
   const columns = React.useMemo(
     () => [
       {
+        Header: 'SL NO',
+        accessor: (row, rowIndex) => rowIndex + 1, // Calculate serial number based on row index
+        id: 'serial', // Necessary to provide an id for accessor functions
+        Cell: ({ value }) => <div className="serial-cell">{value}</div> // Use a custom cell component for styling
+      },
+      {
         Header: 'Exam Date',
         accessor: 'examStartTime',
+        
       },
       {
         Header: 'Exam Type',
         accessor: 'type',
+        
       },
       {
         Header: 'Correct Answers',
@@ -49,7 +57,7 @@ const ExamHistoryTable = ({ data }) => {
             {headerGroup.headers.map(column => (
               <th
                 {...column.getHeaderProps()}
-                className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                className={column.id === 'serial' ? 'serial-header' : 'px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'}
               >
                 {column.render('Header')}
               </th>
@@ -65,7 +73,7 @@ const ExamHistoryTable = ({ data }) => {
               {row.cells.map(cell => (
                 <td
                   {...cell.getCellProps()}
-                  className="px-5 py-5 border-b border-gray-200 text-sm"
+                  className={cell.column.id === 'serial' ? 'serial-cell' : 'px-5 py-5 border-b border-gray-200 text-sm'}
                 >
                   {cell.render('Cell')}
                 </td>
