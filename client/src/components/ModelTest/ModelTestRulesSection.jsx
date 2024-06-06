@@ -1,12 +1,18 @@
 import React from "react";
 import { useTimer } from "../../Context/TimerContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function ExamRulesSection({ modelTest }) {
-  const { startTimer } = useTimer();
+  const { startTimer, isActive } = useTimer();
   const navigate = useNavigate();
   
   const handleStartExam = () => {
+
+    if(isActive){
+      alert("You can't start the exam while it's active. Please wait for it to finish.");
+      return;
+    }
     const userData = localStorage.getItem("userData");
     const jsonStudent = JSON.parse(userData);
     const { studentId } = jsonStudent || {};
