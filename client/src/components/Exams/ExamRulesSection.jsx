@@ -8,8 +8,17 @@ export default function ExamRulesSection({ mockTest }) {
   const navigate = useNavigate(); // Hook for navigation
 
   const handleStartExam = () => {
-    startTimer(mockTest.time * 60); // Start the timer
-    navigate(`/student/exam-questions/${mockTest._id}`); // Navigate to the exam questions page
+    const examStartedKey = `exam-${mockTest._id}-started`;
+    const examStarted = sessionStorage.getItem(examStartedKey);
+
+    if (examStarted) {
+      alert("You have already started this exam. You cannot restart it.");
+      return;
+    }
+
+    startTimer(mockTest.time * 60);
+    navigate(`/student/exam-questions/${mockTest._id}`);
+    sessionStorage.setItem(examStartedKey, true);
   };
 
   return (
