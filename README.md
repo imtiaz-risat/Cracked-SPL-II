@@ -63,7 +63,7 @@ To set up and run CrackEd locally, follow these steps:
 ## Features for Students
 
 ### 1. Student Dashboard
-The Student Dashboard serves as the central hub for students, providing quick access to various features such as model tests, mock tests, leaderboard, and performance statistics represented through a PieChart.
+The Student Dashboard serves as the central hub for students, providing quick access to various features such as ***model tests, mock tests, leaderboard, and performance statistics*** represented through a PieChart.
 
 ### 2. Student Doubts
 This feature allows students to post their doubts, manage existing doubts, and view answers provided by teachers. It ensures that students receive timely assistance and clarification on their queries.
@@ -79,6 +79,10 @@ Students can view and update their personal information, choose an avatar, and c
 
 ### 6. Student Question Bank
 Students have access to a repository of previous admission tests listed by year, which they can use for practice and preparation.
+
+### 7. Mistake Exam
+This feature enables students to take exams specifically based on the questions they have previously answered incorrectly, allowing them to focus on areas where they need improvement. Additionally, on the Mistake Exam page, students can view detailed statistics on the number of incorrect answers they have made, both for individual subjects and combined across all subjects. This functionality helps them identify weak points and track their progress in overcoming them.
+
 
 ## Features for Tutors
 
@@ -96,6 +100,7 @@ Tutors can view and update their profile information, choose an avatar, and chan
 
 ### 5. Doubt Reviews
 The Doubt Reviews feature enables tutors to review and answer student doubts. It provides a list of doubts and a submit answer button for resolving queries, ensuring that students receive prompt and accurate assistance.
+
 
 ## Features for Admin
 
