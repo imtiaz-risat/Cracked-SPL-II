@@ -1,24 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function StudentMockTest() {
-  const [selectedSubject, setSelectedSubject] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedMarks, setSelectedMarks] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [errorSubject, setErrorSubject] = useState(false);
   const [errorMarks, setErrorMarks] = useState(false);
   const [errorTime, setErrorTime] = useState(false);
-  const [isCombined, setIsCombined] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubjectChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      setSelectedSubject((prev) => [...prev, value]);
-    } else {
-      setSelectedSubject((prev) => prev.filter((subject) => subject !== value));
-    }
+    setSelectedSubject(event.target.value);
     setErrorSubject(false); // Reset error on change
   };
 
@@ -32,20 +26,10 @@ export default function StudentMockTest() {
     setErrorTime(false); // Reset error on change
   };
 
-  const handleCombinedChange = (event) => {
-    setIsCombined(event.target.checked);
-    if (event.target.checked) {
-      setSelectedSubject(["Physics", "Chemistry", "Math", "English"]);
-    } else {
-      setSelectedSubject([]);
-    }
-    setErrorSubject(false); // Reset error on change
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent form submission from reloading the page
     let isValid = true;
-    if (selectedSubject.length === 0) {
+    if (!selectedSubject) {
       setErrorSubject(true);
       isValid = false;
     }
@@ -65,7 +49,7 @@ export default function StudentMockTest() {
       const studentId = JSON.parse(localStorage.getItem("userData")).studentId; // Assuming studentId is stored in localStorage
       const mockTestData = {
         studentId,
-        subject: selectedSubject.join(", "),
+        subject: selectedSubject,
         marks: marksInt,
         time: timeInt,
       };
@@ -114,45 +98,73 @@ export default function StudentMockTest() {
             {/* Subject Selection Error Message */}
             {errorSubject && (
               <p className="text-red-500 col-span-2">
-                Please select at least one subject.
+                Please select a subject.
               </p>
             )}
             <label
               className={`bg-gray-100 ${
-                isCombined ? "bg-green-300" : "hover:bg-gray-200"
-              } shadow-md rounded-lg p-4 cursor-pointer flex justify-center col-span-2`}
+                selectedSubject === "Physics"
+                  ? "bg-green-300"
+                  : "hover:bg-gray-200"
+              } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
             >
               <input
-                type="checkbox"
-                name="combined"
-                value="Combined"
-                onChange={handleCombinedChange}
+                type="radio"
+                name="subject"
+                value="Physics"
+                onChange={handleSubjectChange}
                 className="hidden"
-                checked={isCombined}
               />
-              <p className="text-gray-800 font-semibold">Combined</p>
+              <p className="text-gray-800 font-semibold">Physics</p>
             </label>
-            {["Physics", "Chemistry", "Math", "English"].map((subject) => (
-              <label
-                key={subject}
-                className={`bg-gray-100 ${
-                  selectedSubject.includes(subject)
-                    ? "bg-green-300"
-                    : "hover:bg-gray-200"
-                } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
-              >
-                <input
-                  type="checkbox"
-                  name="subject"
-                  value={subject}
-                  onChange={handleSubjectChange}
-                  className="hidden"
-                  checked={selectedSubject.includes(subject)}
-                  disabled={isCombined}
-                />
-                <p className="text-gray-800 font-semibold">{subject}</p>
-              </label>
-            ))}
+            <label
+              className={`bg-gray-100 ${
+                selectedSubject === "Chemistry"
+                  ? "bg-green-300"
+                  : "hover:bg-gray-200"
+              } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
+            >
+              <input
+                type="radio"
+                name="subject"
+                value="Chemistry"
+                onChange={handleSubjectChange}
+                className="hidden"
+              />
+              <p className="text-gray-800 font-semibold">Chemistry</p>
+            </label>
+            <label
+              className={`bg-gray-100 ${
+                selectedSubject === "Math"
+                  ? "bg-green-300"
+                  : "hover:bg-gray-200"
+              } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
+            >
+              <input
+                type="radio"
+                name="subject"
+                value="Math"
+                onChange={handleSubjectChange}
+                className="hidden"
+              />
+              <p className="text-gray-800 font-semibold">Math</p>
+            </label>
+            <label
+              className={`bg-gray-100 ${
+                selectedSubject === "English"
+                  ? "bg-green-300"
+                  : "hover:bg-gray-200"
+              } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
+            >
+              <input
+                type="radio"
+                name="subject"
+                value="English"
+                onChange={handleSubjectChange}
+                className="hidden"
+              />
+              <p className="text-gray-800 font-semibold">English</p>
+            </label>
           </div>
 
           <div className="col-span-7 grid grid-cols-1 md:grid-cols-3 gap-2 shadow-lg rounded-lg p-6">
@@ -215,11 +227,11 @@ export default function StudentMockTest() {
             <button
               type="submit"
               className={`bg-gray-500 ${
-                selectedSubject.length === 0 || !selectedMarks || !selectedTime
+                !selectedSubject || !selectedMarks || !selectedTime
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-gray-700"
               } text-white font-bold py-2 px-4 rounded`}
-              disabled={selectedSubject.length === 0 || !selectedMarks || !selectedTime}
+              disabled={!selectedSubject || !selectedMarks || !selectedTime}
             >
               Start Exam
             </button>
