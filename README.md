@@ -81,7 +81,7 @@ Students can view and update their personal information, choose an avatar, and c
 Students have access to a repository of previous admission tests listed by year, which they can use for practice and preparation.
 
 ### 7. Mistake Exam
-This feature enables students to take exams specifically based on the questions they have previously answered incorrectly, allowing them to focus on areas where they need improvement. Additionally, on the Mistake Exam page, students can view detailed statistics on the number of incorrect answers they have made, both for individual subjects and combined across all subjects. This functionality helps them identify weak points and track their progress in overcoming them.
+This feature enables students to take exams specifically based on the questions they have previously answered incorrectly, allowing them to focus on areas where they need improvement. Additionally, on the Mistake Exam page, students can view detailed statistics on the number of incorrect answers they have made, both for individual subjects and combined across all subjects.
 
 
 ## Features for Tutors
