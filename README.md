@@ -3,6 +3,8 @@
 ## Introduction
 
 Welcome to CrackEd, an educational platform designed specifically for the Islamic University of Technology (IUT), Bangladesh, admission test. This documentation provides a comprehensive overview of the installation process, platform’s features and functionalities, categorized for students, tutors, and admins.
+<br><br>
+![image](https://github.com/takitajwar17/CrackEd-App/assets/111155827/d56d84f5-7815-4f7c-9182-02204b33860c)
 
 ## Project Context
 
@@ -50,7 +52,7 @@ To set up and run CrackEd locally, follow these steps:
    ```
 
 2. **Install Dependencies**:
-   Navigate to the `client` and `server` directories and install the required npm packages.
+   Navigate to the `client` directory and install the required npm packages.
    ```bash
    npm install
    cd client
@@ -73,6 +75,8 @@ To set up and run CrackEd locally, follow these steps:
 
 ### 1. Student Dashboard
 The Student Dashboard serves as the central hub for students, providing quick access to various features such as ***model tests, mock tests, leaderboard, and performance statistics*** represented through a PieChart.
+<br><br>
+![image](https://github.com/takitajwar17/CrackEd-App/assets/111155827/179e3c19-c022-44d1-96ce-dc734708c33a)
 
 ### 2. Student Doubts
 This feature allows students to post their doubts, manage existing doubts, and view answers provided by teachers. It ensures that students receive timely assistance and clarification on their queries.
@@ -91,11 +95,15 @@ Students have access to a repository of previous admission tests listed by year,
 
 ### 7. Mistake Exam
 This feature enables students to take exams specifically based on the questions they have previously answered incorrectly, allowing them to focus on areas where they need improvement. Additionally, on the Mistake Exam page, students can view detailed statistics on the number of incorrect answers they have made, both for individual subjects and combined across all subjects.
+<br><br>
+![image](https://github.com/takitajwar17/CrackEd-App/assets/111155827/80a4c2f6-5bab-469d-85f2-951706466ac5)
 
 ## Features for Tutors
 
 ### 1. Tutor Dashboard
 The Tutor Dashboard provides an overview of key metrics and resources, including the total number of questions, pending reviews, and live model tests. It helps tutors manage their tasks efficiently.
+<br><br>
+![image](https://github.com/takitajwar17/CrackEd-App/assets/111155827/0d2730d4-6349-4273-9c51-258f9aa2ec5f)
 
 ### 2. Questions Database
 This feature allows tutors to view, add, edit, and delete questions for various subjects. It also provides question counts per subject to help tutors keep track of their contributions.
@@ -115,6 +123,9 @@ The Doubt Reviews feature enables tutors to review and answer student doubts. It
 The Admin Dashboard offers a high-level overview of platform activity, showing counts for the total number of students and tutors. This feature helps admins monitor and manage the platform effectively.
 - **URL:** `/sys-admin-cracked`
 - **Credentials:** *Username:* admin, *Password:* CRACKed
+<br><br>
+![image](https://github.com/takitajwar17/CrackEd-App/assets/111155827/47c768ad-079d-4459-95da-d87db2b9a434)
+
 
 ### 2. Add Tutor
 Admins can register new tutors to the platform, ensuring that the platform has sufficient teaching resources to cater to the students' needs.
