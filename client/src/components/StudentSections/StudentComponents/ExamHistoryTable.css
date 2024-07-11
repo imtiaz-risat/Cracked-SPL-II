@@ -1,0 +1,30 @@
+/* ExamHistoryTable.css */
+.exam-row-odd {
+    background-color: #f9f9f9; /* Light gray background for odd rows */
+  }
+  
+  .exam-row-even {
+    background-color: #ffffff; /* White background for even rows */
+  }
+  
+  tr:hover {
+    background-color: #e2e8f0; /* Light blue background on hover */
+  }
+
+  th {
+    font-size: 1.1em; /* Larger font size */
+    font-weight: bold; /* Bolder font weight */
+    color: #3c4858; /* Darker text color for better readability */
+    background-color: #f0f4f8; /* Lighter background color */
+  }
+  .serial-header {
+    background-color: #f0f0f0; /* Light gray background for header */
+    color: #333; /* Dark text color */
+    font-weight: bold; /* Make the font bolder */
+    text-align: center; /* Center align text */
+  }
+  
+  .serial-cell {
+    background-color: #e9ecef; /* Slightly different gray for cells */
+    text-align: center; /* Center align text */
+  }

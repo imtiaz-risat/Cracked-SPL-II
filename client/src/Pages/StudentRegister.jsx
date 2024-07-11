@@ -143,7 +143,7 @@ export default function StudentRegister() {
                     },
                     pattern: {
                       value:
-                        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
+                        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}$/,
                       message:
                         "Password must contain letters, numbers, and special characters",
                     },

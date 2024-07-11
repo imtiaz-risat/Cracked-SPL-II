@@ -33,7 +33,8 @@ router.post("/store-score", async (req, res) => {
     if (type === 'ModelTest') {
       subtype = await getTestStatus(examId);
     }
-
+    
+    const examStartTime = dayjs().format();
     const result = await db.collection("Scores").insertOne({
       studentId,
       type,
@@ -43,7 +44,8 @@ router.post("/store-score", async (req, res) => {
       correct,
       incorrect,
       skipped,
-      incorrectQuestions, // Store the array of incorrect question IDs
+      incorrectQuestions,
+      examStartTime // Store the current date and time as the exam start time
     });
     res.status(200).json({
       message: "Score stored successfully",
@@ -233,6 +235,44 @@ router.get("/student-mistakes/:studentId", async (req, res) => {
   } catch (err) {
     console.error("Error fetching student mistakes:", err);
     res.status(500).json({ message: err.message });
+  }
+});
+
+// Route to get exam history for a specific student
+router.get("/exam-history/:studentId", async (req, res) => {
+  const studentId = req.params.studentId;
+
+  try {
+      const history = await db.collection("Scores").find({
+          studentId: studentId
+      }).project({
+          _id: 0,
+          examId: 1,
+          type: 1,
+          subtype: 1, // Include subtype in the projection
+          score: 1,
+          correct: 1,
+          incorrect: 1,
+          skipped: 1,
+          examStartTime: 1
+      }).sort({ examStartTime: -1 })  // Sorting by examStartTime in descending order
+      .toArray();
+
+      // Process each item to extract only the date part from examStartTime and append subtype to type if applicable
+      const processedHistory = history.map(item => ({
+          ...item,
+          type: item.type === 'ModelTest' && item.subtype ? `${item.type} (${item.subtype})` : item.type,
+          examStartTime: item.examStartTime ? new Date(item.examStartTime).toISOString().split('T')[0] : null
+      }));
+
+      if (processedHistory.length === 0) {
+          return res.status(404).json({ message: "No exam history found for the student." });
+      }
+
+      res.json(processedHistory);
+  } catch (error) {
+      console.error("Failed to fetch exam history:", error);
+      res.status(500).json({ message: "Error fetching exam history" });
   }
 });
 

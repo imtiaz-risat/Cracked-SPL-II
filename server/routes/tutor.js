@@ -142,7 +142,7 @@ router.get("/profile/:tutorId", async (req, res) => {
 router.put("/profile/:tutorId", async (req, res) => {
   const { tutorId } = req.params;
 
-  // Check if the studentId is a valid ObjectId
+  // Check if the tutorId is a valid ObjectId
   if (!ObjectId.isValid(tutorId)) {
     return res.status(400).send({ message: "Invalid tutor ID" });
   }
@@ -159,7 +159,7 @@ router.put("/profile/:tutorId", async (req, res) => {
     req.body;
   let collection = await db.collection("Tutors");
 
-  // Check if the username is already taken by another student
+  // Check if the username is already taken by another tutor
   if (username) {
     const existingUser = await collection.findOne({
       username: username,
@@ -199,7 +199,7 @@ router.post("/update-password/:tutorId", async (req, res) => {
   const { tutorId } = req.params;
   const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
-  // Validate student ID
+  // Validate tutor ID
   if (!ObjectId.isValid(tutorId)) {
     return res.status(400).send({ message: "Invalid tutor ID" });
   }
@@ -228,7 +228,7 @@ router.post("/update-password/:tutorId", async (req, res) => {
   // Verify old password
   const isOldPasswordValid = await bcrypt.compare(
     oldPassword,
-    student.hashedPassword
+    tutor.hashedPassword
   );
   if (!isOldPasswordValid) {
     return res.status(401).send({ message: "Invalid old password" });
