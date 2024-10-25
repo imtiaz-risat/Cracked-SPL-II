@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function AdminStudentList() {
@@ -11,7 +11,7 @@ export default function AdminStudentList() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/admin/student-list"
+          "https://crack-ed-app-server.vercel.app/admin/student-list"
         );
         setStudents(response.data);
         setAllStudents(response.data);
@@ -35,7 +35,7 @@ export default function AdminStudentList() {
   const handleDeleteStudent = async (studentId) => {
     try {
       await axios.delete(
-        `http://localhost:5050/admin/delete-student/${studentId}`
+        `https://crack-ed-app-server.vercel.app/admin/delete-student/${studentId}`
       );
       const updatedStudents = students.filter(
         (student) => student._id !== studentId
@@ -50,7 +50,7 @@ export default function AdminStudentList() {
   const handleBanToggle = async (studentId) => {
     try {
       await axios.put(
-        `http://localhost:5050/admin/ban-toggle-student/${studentId}`
+        `https://crack-ed-app-server.vercel.app/admin/ban-toggle-student/${studentId}`
       );
       const updatedStudents = students.map((student) =>
         student._id === studentId

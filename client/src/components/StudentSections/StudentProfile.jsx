@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import avatar1 from "../../Assets/Avatars/1.jpg";
 import avatar2 from "../../Assets/Avatars/2.jpg";
 import avatar3 from "../../Assets/Avatars/3.jpg";
 import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
-import { ToastContainer, toast } from "react-toastify";
 
 const avatars = [
   { src: avatar1, id: 1 },
@@ -36,7 +36,7 @@ export default function StudentProfile() {
       const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
       try {
         const response = await fetch(
-          `http://localhost:5050/student/profile/${studentId}`
+          `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
         );
         const data = await response.json();
         if (response.ok) {
@@ -104,7 +104,7 @@ export default function StudentProfile() {
 
     try {
       const response = await fetch(
-        `http://localhost:5050/student/profile/${studentId}`,
+        `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`,
         {
           method: "PUT",
           headers: {
@@ -129,12 +129,12 @@ export default function StudentProfile() {
   const handlePasswordChange = async (event) => {
     event.preventDefault();
     const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
-  
+
     if (newPassword !== confirmNewPassword) {
       toast.warning("New passwords do not match");
       return;
     }
-  
+
     // Password validation
     const passwordValidation = {
       required: "Password is required",
@@ -149,27 +149,27 @@ export default function StudentProfile() {
           "Password must contain letters, numbers, and special characters",
       },
     };
-  
+
     // Validate new password against constraints
     if (newPassword.length < passwordValidation.minLength.value) {
       toast.warning(passwordValidation.minLength.message);
       return;
     }
-  
+
     if (!passwordValidation.pattern.value.test(newPassword)) {
       toast.warning(passwordValidation.pattern.message);
       return;
     }
-  
+
     const passwordData = {
       oldPassword: currentPassword,
       newPassword: newPassword,
       confirmNewPassword: confirmNewPassword,
     };
-  
+
     try {
       const response = await fetch(
-        `http://localhost:5050/student/update-password/${studentId}`,
+        `https://crack-ed-app-server.vercel.app/student/update-password/${studentId}`,
         {
           method: "POST",
           headers: {
@@ -178,9 +178,9 @@ export default function StudentProfile() {
           body: JSON.stringify(passwordData),
         }
       );
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.message || "Failed to change password");
       }
@@ -190,7 +190,7 @@ export default function StudentProfile() {
       toast.error(error.message);
     }
   };
-  
+
   const getAvatarSrc = (avatarId) => {
     const avatar = avatars.find((avatar) => avatar.id === avatarId);
     return avatar ? avatar.src : avatar4; // Default to avatar4 if not found

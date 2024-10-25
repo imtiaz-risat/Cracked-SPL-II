@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ModelTestNavBar from "./ModelTestNavBar";
 import ModelTestRulesSection from "./ModelTestRulesSection";
-import { useParams } from "react-router-dom";
 
 export default function ExamStartPage() {
   const { id } = useParams();
@@ -10,12 +10,15 @@ export default function ExamStartPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5050/modelTest/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `https://crack-ed-app-server.vercel.app/modelTest/${id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();

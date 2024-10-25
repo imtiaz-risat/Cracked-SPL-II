@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
 
 export default function OTPVerification() {
@@ -40,7 +40,10 @@ export default function OTPVerification() {
     if (disable) return;
     setIsLoading(true);
     axios
-      .post("http://localhost:5050/auth/resend-otp", { email, userType })
+      .post("https://crack-ed-app-server.vercel.app/auth/resend-otp", {
+        email,
+        userType,
+      })
       .then(() => {
         setOTPinput(["", "", "", ""]); // Clear inputs
         setDisable(true);
@@ -67,16 +70,20 @@ export default function OTPVerification() {
 
   const handleChange = (value, index) => {
     const newOTP = [...OTPinput];
-    const newValue = value.replace(/[^0-9]/g, ''); // Ensure only numbers are input
+    const newValue = value.replace(/[^0-9]/g, ""); // Ensure only numbers are input
     newOTP[index] = newValue;
     setOTPinput(newOTP);
-    
+
     // Automatically move to the next input if the input is a number and not empty
-    if (newValue !== '' && newValue.match(/^[0-9]$/) && index < OTPinput.length - 1) {
+    if (
+      newValue !== "" &&
+      newValue.match(/^[0-9]$/) &&
+      index < OTPinput.length - 1
+    ) {
       inputRefs.current[index + 1].focus();
     }
     // Automatically move to the previous input on backspace
-    if (newValue === '' && index > 0) {
+    if (newValue === "" && index > 0) {
       inputRefs.current[index - 1].focus();
     }
   };
@@ -86,7 +93,10 @@ export default function OTPVerification() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5050/auth/verify-otp", { email, userType, otp });
+      const response = await axios.post(
+        "https://crack-ed-app-server.vercel.app/auth/verify-otp",
+        { email, userType, otp }
+      );
       if (response.status === 200) {
         navigate("/reset-password", { state: { email, userType } });
       } else {
@@ -103,7 +113,10 @@ export default function OTPVerification() {
   return (
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
+        <a
+          href="/"
+          className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+        >
           <img className="w-auto h-12 mr-2" src={crackEdLogo} alt="logo" />
         </a>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
@@ -119,7 +132,7 @@ export default function OTPVerification() {
                 {OTPinput.map((value, index) => (
                   <div key={index} className="w-16 h-16">
                     <input
-                      ref={(el) => inputRefs.current[index] = el}
+                      ref={(el) => (inputRefs.current[index] = el)}
                       maxLength="1"
                       className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                       value={value}
@@ -200,7 +213,13 @@ export default function OTPVerification() {
                   )}
                 </button>
                 {message && (
-                  <p className={`text-sm ${message.includes("successfully") ? "text-green-500" : "text-red-500"}`}>
+                  <p
+                    className={`text-sm ${
+                      message.includes("successfully")
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
                     {message}
                   </p>
                 )}

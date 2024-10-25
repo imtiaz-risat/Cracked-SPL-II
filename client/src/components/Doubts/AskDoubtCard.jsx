@@ -14,7 +14,7 @@ export default function AskDoubtCard() {
   const fetchStudentData = async (studentId) => {
     try {
       const response = await fetch(
-        `http://localhost:5050/student/profile/${studentId}`
+        `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
       );
       const responseData = await response.json();
 
@@ -51,7 +51,7 @@ export default function AskDoubtCard() {
 
     try {
       const response = await fetch(
-        `http://localhost:5050/student/doubts/${studentId}`,
+        `https://crack-ed-app-server.vercel.app/student/doubts/${studentId}`,
         {
           method: "POST",
           headers: {

@@ -58,7 +58,7 @@ export default function StudentMockTest() {
 
       try {
         const response = await fetch(
-          "http://localhost:5050/mockTest/generateMockTest",
+          "https://crack-ed-app-server.vercel.app/mockTest/generateMockTest",
           {
             method: "POST",
             headers: {

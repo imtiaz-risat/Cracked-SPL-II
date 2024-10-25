@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 // Import avatar images
 import avatar1 from "../../Assets/Avatars/1.jpg";
@@ -25,7 +25,9 @@ export default function TutorDashboard() {
   useEffect(() => {
     const fetchTutorData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5050/tutor/profile/${tutorId}`);
+        const response = await axios.get(
+          `https://crack-ed-app-server.vercel.app/tutor/profile/${tutorId}`
+        );
         setUsername(response.data.username);
         console.log("Tutor data:", response.data);
       } catch (error) {
@@ -35,8 +37,10 @@ export default function TutorDashboard() {
 
     const fetchTutorAvatar = async () => {
       try {
-        const response = await axios.get(`http://localhost:5050/tutor/avatar/${tutorId}`);
-        setAvatarIndex(response.data.avatar);  // Assuming this is an index 1-6
+        const response = await axios.get(
+          `https://crack-ed-app-server.vercel.app/tutor/avatar/${tutorId}`
+        );
+        setAvatarIndex(response.data.avatar); // Assuming this is an index 1-6
         console.log("Tutor avatar index:", response.data.avatar);
       } catch (error) {
         console.error("Error fetching tutor avatar: ", error);
@@ -46,7 +50,9 @@ export default function TutorDashboard() {
 
     const fetchTotalQuestions = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/tutor/total-questions");
+        const response = await axios.get(
+          "https://crack-ed-app-server.vercel.app/tutor/total-questions"
+        );
         setTotalQuestions(response.data.totalQuestions);
       } catch (error) {
         console.error("Error fetching total questions: ", error);
@@ -55,7 +61,9 @@ export default function TutorDashboard() {
 
     const fetchPendingReviews = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/tutor/pending-reviews");
+        const response = await axios.get(
+          "https://crack-ed-app-server.vercel.app/tutor/pending-reviews"
+        );
         setPendingReviews(response.data.pendingReviews);
       } catch (error) {
         console.error("Error fetching pending reviews: ", error);
@@ -64,7 +72,9 @@ export default function TutorDashboard() {
 
     const fetchLiveModelTests = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/tutor/live-model-tests");
+        const response = await axios.get(
+          "https://crack-ed-app-server.vercel.app/tutor/live-model-tests"
+        );
         setLiveModelTests(response.data.liveModelTests);
       } catch (error) {
         console.error("Error fetching live model tests: ", error);
@@ -90,7 +100,7 @@ export default function TutorDashboard() {
       <div className="flex justify-start items-center mb-4">
         <div className="flex justify-center items-center gap-4">
           <img
-            src={avatars[avatarIndex - 1]}  // Use the avatar index minus 1 to pick the image
+            src={avatars[avatarIndex - 1]} // Use the avatar index minus 1 to pick the image
             className="inline-block h-14 w-14 rounded-full shadow"
             alt={`Avatar for ${username}`}
           />
@@ -106,21 +116,27 @@ export default function TutorDashboard() {
             <dt className="text-sm font-medium text-gray-500 truncate">
               Total Questions
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">{totalQuestions}</dd>
+            <dd className="mt-1 text-3xl font-semibold text-gray-900">
+              {totalQuestions}
+            </dd>
           </div>
 
           <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
             <dt className="text-sm font-medium text-gray-500 truncate">
               Pending Reviews
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">{pendingReviews}</dd>
+            <dd className="mt-1 text-3xl font-semibold text-gray-900">
+              {pendingReviews}
+            </dd>
           </div>
 
           <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
             <dt className="text-sm font-medium text-gray-500 truncate">
               Live Model Tests
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">{liveModelTests}</dd>
+            <dd className="mt-1 text-3xl font-semibold text-gray-900">
+              {liveModelTests}
+            </dd>
           </div>
         </dl>
       </div>

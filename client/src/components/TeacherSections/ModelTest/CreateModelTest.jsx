@@ -1,7 +1,7 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 
 export default function CreateModelTest() {
   const [activeSection, setActiveSection] = useState("form");
@@ -26,8 +26,8 @@ export default function CreateModelTest() {
     try {
       const url =
         subject === "Combined"
-          ? "http://localhost:5050/modelTest/allQuestions"
-          : `http://localhost:5050/modelTest/questions?subject=${subject}`;
+          ? "https://crack-ed-app-server.vercel.app/modelTest/allQuestions"
+          : `https://crack-ed-app-server.vercel.app/modelTest/questions?subject=${subject}`;
       const response = await axios.get(url);
       setQuestions(response.data);
     } catch (error) {
@@ -128,7 +128,7 @@ export default function CreateModelTest() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5050/modelTest/storeModelTest",
+        "https://crack-ed-app-server.vercel.app/modelTest/storeModelTest",
         {
           Name: testName,
           Marks: parseInt(marks),

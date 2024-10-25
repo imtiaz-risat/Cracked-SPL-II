@@ -1,8 +1,8 @@
-import { useForm } from "react-hook-form";
-import crackEdLogo from "../Assets/CrackEd-logo.png";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import crackEdLogo from "../Assets/CrackEd-logo.png";
 
 export default function ForgotPassword() {
   const [userType, setUserType] = useState("");
@@ -17,11 +17,15 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     if (!userType) {
-      setError("userType", { type: "required", message: "User type is required" });
+      setError("userType", {
+        type: "required",
+        message: "User type is required",
+      });
       return;
     }
 
-    const endpoint = "http://localhost:5050/auth/forgot-password";
+    const endpoint =
+      "https://crack-ed-app-server.vercel.app/auth/forgot-password";
     setIsLoading(true);
 
     try {
@@ -50,7 +54,10 @@ export default function ForgotPassword() {
   return (
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
+        <a
+          href="/"
+          className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+        >
           <img className="w-auto h-12 mr-2" src={crackEdLogo} alt="logo" />
         </a>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
@@ -58,11 +65,16 @@ export default function ForgotPassword() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Forgot your password?
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <form
+              className="space-y-4 md:space-y-6"
+              onSubmit={handleSubmit(onSubmit)}
+            >
               <div className="flex justify-around">
                 <label
                   className={`${
-                    userType === "Student" ? "bg-teal-400 text-white" : "bg-gray-100 hover:bg-gray-200"
+                    userType === "Student"
+                      ? "bg-teal-400 text-white"
+                      : "bg-gray-100 hover:bg-gray-200"
                   } shadow-md rounded-lg p-2 cursor-pointer flex justify-center w-1/2 mx-2`}
                 >
                   <input
@@ -77,7 +89,9 @@ export default function ForgotPassword() {
                 </label>
                 <label
                   className={`${
-                    userType === "Tutor" ? "bg-teal-400 text-white" : "bg-gray-100 hover:bg-gray-200"
+                    userType === "Tutor"
+                      ? "bg-teal-400 text-white"
+                      : "bg-gray-100 hover:bg-gray-200"
                   } shadow-md rounded-lg p-2 cursor-pointer flex justify-center w-1/2 mx-2`}
                 >
                   <input
@@ -91,10 +105,15 @@ export default function ForgotPassword() {
                   <p className="font-semibold">Tutor</p>
                 </label>
               </div>
-              {errors.userType && <p className="text-red-600 mt-2">User type is required</p>}
+              {errors.userType && (
+                <p className="text-red-600 mt-2">User type is required</p>
+              )}
 
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
                   Your email
                 </label>
                 <input
@@ -103,7 +122,9 @@ export default function ForgotPassword() {
                   placeholder="name@company.com"
                   {...register("email", { required: true })}
                 />
-                {errors.email && <p className="text-red-600 mt-2">Email is required</p>}
+                {errors.email && (
+                  <p className="text-red-600 mt-2">Email is required</p>
+                )}
               </div>
 
               <button
@@ -138,7 +159,10 @@ export default function ForgotPassword() {
               </button>
               <p className="text-sm font-light text-gray-500">
                 Remember your password?{" "}
-                <Link to="/login" className="font-medium text-primary-600 hover:underline">
+                <Link
+                  to="/login"
+                  className="font-medium text-primary-600 hover:underline"
+                >
                   Sign in
                 </Link>
               </p>

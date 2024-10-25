@@ -1,9 +1,9 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { PieChart } from "react-minimal-pie-chart";
-import LeaderboardTable from "./StudentComponents/LeaderboardTable";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CustomLegend from "./StudentComponents/CustomLegend"; // Import the custom legend
+import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 
 import avatar1 from "../../Assets/Avatars/1.jpg";
 import avatar2 from "../../Assets/Avatars/2.jpg";
@@ -40,7 +40,7 @@ export default function StudentDashboard() {
     const fetchLeaderboardData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/score/leaderboard"
+          "https://crack-ed-app-server.vercel.app/score/leaderboard"
         ); // Fetch data using the /leaderboard route
         setLeaderboardData(response.data.slice(0, 5));
       } catch (error) {
@@ -51,7 +51,7 @@ export default function StudentDashboard() {
     const fetchStudentStats = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/score/student-stats/${studentId}`
+          `https://crack-ed-app-server.vercel.app/score/student-stats/${studentId}`
         );
         setStudentStats(response.data);
       } catch (error) {
@@ -62,7 +62,7 @@ export default function StudentDashboard() {
     const fetchStudentData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/student/profile/${studentId}`
+          `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
         );
         setUsername(response.data.username);
         setAvatar(response.data.avatar);

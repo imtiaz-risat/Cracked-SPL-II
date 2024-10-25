@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTimer } from "../../Context/TimerContext";
 
 export default function ExamQuestionsSection({ mockTest }) {
@@ -15,7 +15,7 @@ export default function ExamQuestionsSection({ mockTest }) {
       if (mockTest && mockTest.questions && mockTest.subject) {
         try {
           const response = await fetch(
-            `http://localhost:5050/mockTest/questions`,
+            `https://crack-ed-app-server.vercel.app/mockTest/questions`,
             {
               method: "POST",
               headers: {
@@ -105,7 +105,7 @@ export default function ExamQuestionsSection({ mockTest }) {
       );
 
       // Store the score in the Scores Collection
-      fetch("http://localhost:5050/score/store-score", {
+      fetch("https://crack-ed-app-server.vercel.app/score/store-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

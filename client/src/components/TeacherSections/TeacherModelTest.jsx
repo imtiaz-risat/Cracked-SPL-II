@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import React, { useEffect, useState } from "react";
 
 // Extend dayjs with advanced formatting options
 dayjs.extend(advancedFormat);
@@ -16,7 +16,7 @@ export default function TeacherModelTest() {
     const fetchModelTests = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/modelTest/allModelTests"
+          "https://crack-ed-app-server.vercel.app/modelTest/allModelTests"
         );
         const currentDateTime = dayjs();
 
@@ -25,13 +25,18 @@ export default function TeacherModelTest() {
         const upcomingTests = [];
 
         response.data.forEach((test) => {
-          const scheduleDateTime = dayjs(`${test.ScheduleDate} ${test.ScheduleTime}`);
+          const scheduleDateTime = dayjs(
+            `${test.ScheduleDate} ${test.ScheduleTime}`
+          );
           const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, "day");
 
           // Categorize tests based on their schedule and expiry dates
           if (currentDateTime.isBefore(scheduleDateTime)) {
             upcomingTests.push({ ...test, scheduleDateTime });
-          } else if (currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime)) {
+          } else if (
+            currentDateTime.isAfter(scheduleDateTime) &&
+            currentDateTime.isBefore(expiryDateTime)
+          ) {
             liveTests.push({ ...test, expiryDateTime });
           } else if (currentDateTime.isAfter(expiryDateTime)) {
             pastTests.push({ ...test, expiryDateTime });
@@ -86,10 +91,13 @@ export default function TeacherModelTest() {
             className="bg-gray-200 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
           >
             <h2 className="text-2xl font-bold text-zinc-800">{test.Name}</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">{test.Subject}</h2>
+            <h2 className="text-xl font-semibold text-zinc-800">
+              {test.Subject}
+            </h2>
             <p className="text-zinc-600">{test.Marks} marks</p>
             <p className="text-blue-800 text-left text-xs py-2">
-              <span className="text-zinc-600 font-bold">Available till: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Available till: </span>
+              {dayjs(test.expiryDateTime).format("MMMM Do YYYY, h:mm a")}
             </p>
           </a>
         ))}
@@ -109,7 +117,8 @@ export default function TeacherModelTest() {
             <h2 className="text-xl font-semibold">{test.Subject}</h2>
             <p>{test.Marks} marks</p>
             <p className="text-blue-500 text-left text-xs py-2">
-              <span className="text-zinc-600 font-bold">Scheduled for: </span>{dayjs(test.scheduleDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Scheduled for: </span>
+              {dayjs(test.scheduleDateTime).format("MMMM Do YYYY, h:mm a")}
             </p>
           </a>
         ))}
@@ -126,10 +135,13 @@ export default function TeacherModelTest() {
             className="bg-blue-300 rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center"
           >
             <h2 className="text-2xl font-bold text-zinc-800">{test.Name}</h2>
-            <h2 className="text-xl font-semibold text-zinc-800">{test.Subject}</h2>
+            <h2 className="text-xl font-semibold text-zinc-800">
+              {test.Subject}
+            </h2>
             <p className="text-zinc-600">{test.Marks} marks</p>
             <p className="text-gray-100 text-left text-xs py-2">
-              <span className="text-zinc-600 font-bold">Expired on: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Expired on: </span>
+              {dayjs(test.expiryDateTime).format("MMMM Do YYYY, h:mm a")}
             </p>
           </a>
         ))}
