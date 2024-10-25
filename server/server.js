@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://crack-ed-app-server.vercel.app/"],
+    origin: ["https://crack-ed-app.vercel.app/"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
