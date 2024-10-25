@@ -1,9 +1,9 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import db from "../db/connection.js";
-import { ObjectId } from "mongodb";
-import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import cookieParser from "cookie-parser";
+import express from "express";
+import jwt from "jsonwebtoken";
+import { ObjectId } from "mongodb";
+import db from "../db/connection.js";
 
 const router = express.Router();
 
@@ -188,7 +188,7 @@ router.put("/profile/:studentId", async (req, res) => {
     username,
     date_of_birth,
     gender,
-    avatar  // Include avatar in destructuring
+    avatar, // Include avatar in destructuring
   } = req.body;
   let collection = await db.collection("Students");
 
@@ -213,7 +213,7 @@ router.put("/profile/:studentId", async (req, res) => {
       ...(username && { username }),
       ...(date_of_birth && { date_of_birth }),
       ...(gender && { gender }),
-      ...(avatar && { avatar })  // Include avatar in update data
+      ...(avatar && { avatar }), // Include avatar in update data
     };
     const result = await collection.updateOne(
       { _id: objectId },
@@ -227,7 +227,6 @@ router.put("/profile/:studentId", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
-
 
 // Update student password
 router.post("/update-password/:studentId", async (req, res) => {
@@ -388,7 +387,6 @@ router.post("/update-profile", (req, res) => {
     .catch((err) => res.status(500).send("Error updating profile"));
 });
 
-
 // Fetch student's avatar by student ID
 router.get("/avatar/:studentId", async (req, res) => {
   const { studentId } = req.params;
@@ -402,7 +400,10 @@ router.get("/avatar/:studentId", async (req, res) => {
   let collection = await db.collection("Students");
 
   try {
-    const studentData = await collection.findOne({ _id: objectId }, { projection: { avatar: 1 } });
+    const studentData = await collection.findOne(
+      { _id: objectId },
+      { projection: { avatar: 1 } }
+    );
     if (!studentData) {
       return res.status(404).send({ message: "Student not found" });
     }
@@ -411,6 +412,5 @@ router.get("/avatar/:studentId", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
-
 
 export default router;

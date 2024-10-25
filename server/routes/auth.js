@@ -1,15 +1,14 @@
-import express from "express";
-import nodemailer from "nodemailer";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import bcrypt from "bcrypt";
-import db from "../db/connection.js"; // Ensure the path is correct for your setup
+import express from "express";
 import { ObjectId } from "mongodb"; // Make sure you import ObjectId
+import nodemailer from "nodemailer";
+import db from "../db/connection.js"; // Ensure the path is correct for your setup
 
 const router = express.Router();
 
 router.post("/reset-password", async (req, res) => {
   const { email, userType, newPassword, confirmPassword } = req.body;
-
 
   // Validate input
   if (!email || !userType || !newPassword || !confirmPassword) {
@@ -50,11 +49,12 @@ router.post("/reset-password", async (req, res) => {
   res.status(200).send({ message: "Password updated successfully" });
 });
 
-
 router.post("/forgot-password", async (req, res) => {
   const { email, userType } = req.body;
   if (!email || !userType) {
-    return res.status(400).send({ message: "Email and user type are required" });
+    return res
+      .status(400)
+      .send({ message: "Email and user type are required" });
   }
 
   const collectionName = userType === "Student" ? "Students" : "Tutors";
@@ -75,8 +75,8 @@ router.post("/forgot-password", async (req, res) => {
     port: 587,
     auth: {
       user: "api",
-      pass: "57e43ac2cad3a91daa89eb943ffdb406"
-    }
+      pass: "57e43ac2cad3a91daa89eb943ffdb406",
+    },
   });
 
   const mailOptions = {
@@ -115,21 +115,24 @@ router.post("/forgot-password", async (req, res) => {
       </div>
     `,
   };
-  
 
   try {
     await transporter.sendMail(mailOptions);
     res.status(200).send({ message: "OTP sent to email" });
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).send({ message: "Error sending email", error: error.message });
+    res
+      .status(500)
+      .send({ message: "Error sending email", error: error.message });
   }
 });
 
 router.post("/resend-otp", async (req, res) => {
   const { email, userType } = req.body;
   if (!email || !userType) {
-    return res.status(400).send({ message: "Email and user type are required" });
+    return res
+      .status(400)
+      .send({ message: "Email and user type are required" });
   }
 
   const collectionName = userType === "Student" ? "Students" : "Tutors";
@@ -150,8 +153,8 @@ router.post("/resend-otp", async (req, res) => {
     port: 587,
     auth: {
       user: "api",
-      pass: "57e43ac2cad3a91daa89eb943ffdb406"
-    }
+      pass: "57e43ac2cad3a91daa89eb943ffdb406",
+    },
   });
 
   const mailOptions = {
@@ -196,15 +199,18 @@ router.post("/resend-otp", async (req, res) => {
     res.status(200).send({ message: "OTP sent to email" });
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).send({ message: "Error sending email", error: error.message });
+    res
+      .status(500)
+      .send({ message: "Error sending email", error: error.message });
   }
 });
-
 
 router.post("/verify-otp", async (req, res) => {
   const { email, userType, otp } = req.body;
   if (!email || !userType || !otp) {
-    return res.status(400).send({ message: "Email, user type, and OTP are required" });
+    return res
+      .status(400)
+      .send({ message: "Email, user type, and OTP are required" });
   }
 
   const collectionName = userType === "Student" ? "Students" : "Tutors";
@@ -221,8 +227,4 @@ router.post("/verify-otp", async (req, res) => {
   res.status(200).send({ message: "OTP verified successfully" });
 });
 
-
-
-
 export default router;
-

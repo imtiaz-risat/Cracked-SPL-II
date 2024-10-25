@@ -1,9 +1,9 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import db from "../db/connection.js";
-import { ObjectId } from "mongodb";
-import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import dayjs from "dayjs";
+import express from "express";
+import jwt from "jsonwebtoken";
+import { ObjectId } from "mongodb";
+import db from "../db/connection.js";
 
 const router = express.Router();
 
@@ -155,8 +155,16 @@ router.put("/profile/:tutorId", async (req, res) => {
     return res.status(400).send({ message: "Invalid tutor ID format" });
   }
 
-  const { fullname, institute, phone, email, address, username, cvLink, avatar } =
-    req.body;
+  const {
+    fullname,
+    institute,
+    phone,
+    email,
+    address,
+    username,
+    cvLink,
+    avatar,
+  } = req.body;
   let collection = await db.collection("Tutors");
 
   // Check if the username is already taken by another tutor
@@ -291,25 +299,46 @@ router.post("/answer/:doubtId", async (req, res) => {
 // Route to fetch total questions
 router.get("/total-questions", async (req, res) => {
   try {
-    const questionsChemistry = await db.collection("Questions_Chemistry").countDocuments();
-    const questionsEnglish = await db.collection("Questions_English").countDocuments();
-    const questionsMath = await db.collection("Questions_Math").countDocuments();
-    const questionsPhysics = await db.collection("Questions_Physics").countDocuments();
+    const questionsChemistry = await db
+      .collection("Questions_Chemistry")
+      .countDocuments();
+    const questionsEnglish = await db
+      .collection("Questions_English")
+      .countDocuments();
+    const questionsMath = await db
+      .collection("Questions_Math")
+      .countDocuments();
+    const questionsPhysics = await db
+      .collection("Questions_Physics")
+      .countDocuments();
 
-    const totalQuestions = questionsChemistry + questionsEnglish + questionsMath + questionsPhysics;
+    const totalQuestions =
+      questionsChemistry + questionsEnglish + questionsMath + questionsPhysics;
     res.status(200).send({ totalQuestions });
   } catch (error) {
-    res.status(500).send({ message: "Error fetching total questions", error: error.message });
+    res
+      .status(500)
+      .send({
+        message: "Error fetching total questions",
+        error: error.message,
+      });
   }
 });
 
 // Route to fetch pending reviews
 router.get("/pending-reviews", async (req, res) => {
   try {
-    const pendingReviews = await db.collection("Doubts").countDocuments({ answered: false });
+    const pendingReviews = await db
+      .collection("Doubts")
+      .countDocuments({ answered: false });
     res.status(200).send({ pendingReviews });
   } catch (error) {
-    res.status(500).send({ message: "Error fetching pending reviews", error: error.message });
+    res
+      .status(500)
+      .send({
+        message: "Error fetching pending reviews",
+        error: error.message,
+      });
   }
 });
 
@@ -321,16 +350,26 @@ router.get("/live-model-tests", async (req, res) => {
 
     const modelTests = await db.collection("ModelTests").find({}).toArray();
 
-    const liveModelTests = modelTests.filter(test => {
-      const scheduleDateTime = dayjs(`${test.ScheduleDate} ${test.ScheduleTime}`);
-      const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, 'day');
+    const liveModelTests = modelTests.filter((test) => {
+      const scheduleDateTime = dayjs(
+        `${test.ScheduleDate} ${test.ScheduleTime}`
+      );
+      const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, "day");
 
-      return currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime);
+      return (
+        currentDateTime.isAfter(scheduleDateTime) &&
+        currentDateTime.isBefore(expiryDateTime)
+      );
     });
 
     res.status(200).send({ liveModelTests: liveModelTests.length });
   } catch (error) {
-    res.status(500).send({ message: "Error fetching live model tests", error: error.message });
+    res
+      .status(500)
+      .send({
+        message: "Error fetching live model tests",
+        error: error.message,
+      });
   }
 });
 
@@ -347,7 +386,10 @@ router.get("/avatar/:tutorId", async (req, res) => {
   let collection = await db.collection("Tutors");
 
   try {
-    const tutorData = await collection.findOne({ _id: objectId }, { projection: { avatar: 1 } });
+    const tutorData = await collection.findOne(
+      { _id: objectId },
+      { projection: { avatar: 1 } }
+    );
     if (!tutorData) {
       return res.status(404).send({ message: "Tutor not found" });
     }
@@ -356,6 +398,5 @@ router.get("/avatar/:tutorId", async (req, res) => {
     res.status(500).send({ message: "Server error", error: error.message });
   }
 });
-
 
 export default router;
