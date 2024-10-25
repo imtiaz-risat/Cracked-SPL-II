@@ -1,8 +1,8 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
 
 export default function CreateModelTest() {
   const { modelTestId } = useParams();
@@ -38,7 +38,7 @@ export default function CreateModelTest() {
     const fetchModelTestData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/modelTest/${modelTestId}`
+          `https://crack-ed-app-server.vercel.app/modelTest/${modelTestId}`
         );
         const modelTestData = response.data;
 
@@ -72,8 +72,8 @@ export default function CreateModelTest() {
     try {
       const url =
         subject === "Combined"
-          ? "http://localhost:5050/modelTest/allQuestions"
-          : `http://localhost:5050/modelTest/questions?subject=${subject}`;
+          ? "https://crack-ed-app-server.vercel.app/modelTest/allQuestions"
+          : `https://crack-ed-app-server.vercel.app/modelTest/questions?subject=${subject}`;
       const response = await axios.get(url);
       setQuestions(response.data);
     } catch (error) {
@@ -160,7 +160,7 @@ export default function CreateModelTest() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5050/modelTest/updateModelTest/${modelTestId}`,
+        `https://crack-ed-app-server.vercel.app/modelTest/updateModelTest/${modelTestId}`,
         {
           Name: testName,
           Marks: parseInt(marks),
@@ -184,7 +184,7 @@ export default function CreateModelTest() {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:5050/modelTest/deleteModelTest/${modelTestId}`
+        `https://crack-ed-app-server.vercel.app/modelTest/deleteModelTest/${modelTestId}`
       );
       console.log("Model Test deleted successfully");
       toast.success("Model Test deleted successfully");

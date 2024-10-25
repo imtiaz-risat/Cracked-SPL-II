@@ -6,12 +6,15 @@ export default function TeacherSidebar() {
   // Logout method
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5050/admin/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://crack-ed-app-server.vercel.app/admin/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         // Clear user data from local storage

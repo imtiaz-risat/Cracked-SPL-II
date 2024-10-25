@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import ExamHistoryTable from "./StudentComponents/ExamHistoryTable"; // Assuming you create a new component
 
 export default function ExamHistory() {
@@ -18,7 +18,7 @@ export default function ExamHistory() {
         }
 
         const response = await axios.get(
-          `http://localhost:5050/score/exam-history/${studentId}`
+          `https://crack-ed-app-server.vercel.app/score/exam-history/${studentId}`
         ); // Adjust the endpoint as needed
         setExamHistory(response.data);
         console.log(response.data);

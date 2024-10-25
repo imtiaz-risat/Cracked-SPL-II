@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs"; // Using dayjs for easier date manipulation
 import advancedFormat from "dayjs/plugin/advancedFormat"; // Import this for more formatting options
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 dayjs.extend(advancedFormat); // Use the plugin
 
@@ -18,20 +18,27 @@ export default function StudentModelTest() {
   useEffect(() => {
     const fetchModelTests = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/modelTest/allModelTests");
+        const response = await axios.get(
+          "https://crack-ed-app-server.vercel.app/modelTest/allModelTests"
+        );
         const currentDateTime = dayjs();
 
         const availableTests = [];
         const pastTests = [];
         const upcomingTests = [];
 
-        response.data.forEach(test => {
-          const scheduleDateTime = dayjs(`${test.ScheduleDate} ${test.ScheduleTime}`);
-          const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, 'day');
+        response.data.forEach((test) => {
+          const scheduleDateTime = dayjs(
+            `${test.ScheduleDate} ${test.ScheduleTime}`
+          );
+          const expiryDateTime = scheduleDateTime.add(test.ExpiryDays, "day");
 
           if (currentDateTime.isBefore(scheduleDateTime)) {
             upcomingTests.push({ ...test, scheduleDateTime }); // Add scheduleDateTime to the test object
-          } else if (currentDateTime.isAfter(scheduleDateTime) && currentDateTime.isBefore(expiryDateTime)) {
+          } else if (
+            currentDateTime.isAfter(scheduleDateTime) &&
+            currentDateTime.isBefore(expiryDateTime)
+          ) {
             availableTests.push({ ...test, expiryDateTime }); // Add expiryDateTime to the test object
           } else if (currentDateTime.isAfter(expiryDateTime)) {
             pastTests.push({ ...test, expiryDateTime });
@@ -61,9 +68,13 @@ export default function StudentModelTest() {
     }
 
     try {
-      const responses = await Promise.all(tests.map(test =>
-        axios.get(`http://localhost:5050/score/has-participated?studentId=${studentId}&modelTestId=${test._id}`)
-      ));
+      const responses = await Promise.all(
+        tests.map((test) =>
+          axios.get(
+            `https://crack-ed-app-server.vercel.app/score/has-participated?studentId=${studentId}&modelTestId=${test._id}`
+          )
+        )
+      );
 
       const status = {};
       responses.forEach((response, index) => {
@@ -81,7 +92,7 @@ export default function StudentModelTest() {
       toast.error("You have already taken this model test.");
       return;
     }
-    navigate(`/student/start-modeltest/${test._id}` );
+    navigate(`/student/start-modeltest/${test._id}`);
   };
 
   const handleUpcomingTestClick = (event) => {
@@ -101,10 +112,14 @@ export default function StudentModelTest() {
           <div
             key={test._id}
             onClick={() => handleStartExam(test)}
-            className={`box rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer ${participationStatus[test._id] ? '' : ''}`}
+            className={`box rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer ${
+              participationStatus[test._id] ? "" : ""
+            }`}
             style={{
-              backgroundColor: participationStatus[test._id] ? '#d1d5db' : '#e5e7eb',
-              color: participationStatus[test._id] ? '#6b7280' : '#111827',
+              backgroundColor: participationStatus[test._id]
+                ? "#d1d5db"
+                : "#e5e7eb",
+              color: participationStatus[test._id] ? "#6b7280" : "#111827",
               opacity: participationStatus[test._id] ? 0.5 : 1,
             }}
           >
@@ -112,7 +127,8 @@ export default function StudentModelTest() {
             <h2 className="text-xl font-semibold">{test.Subject}</h2>
             <p>{test.Marks} marks</p>
             <p className="text-blue-800 text-left text-xs py-2">
-              <span className="text-zinc-600 font-bold">Available till: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Available till: </span>
+              {dayjs(test.expiryDateTime).format("MMMM Do YYYY, h:mm a")}
             </p>
           </div>
         ))}
@@ -133,7 +149,8 @@ export default function StudentModelTest() {
             <h2 className="text-xl font-semibold">{test.Subject}</h2>
             <p>{test.Marks} marks</p>
             <p className="text-blue-500 text-left text-xs py-2">
-              <span className="text-zinc-600 font-bold">Scheduled for: </span>{dayjs(test.scheduleDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Scheduled for: </span>
+              {dayjs(test.scheduleDateTime).format("MMMM Do YYYY, h:mm a")}
             </p>
           </div>
         ))}
@@ -156,7 +173,8 @@ export default function StudentModelTest() {
             </h2>
             <p className="text-zinc-600">{test.Marks} marks</p>
             <p className="text-gray-100 text-left text-xs py-2">
-              <span className="text-zinc-600 font-bold">Expired on: </span>{dayjs(test.expiryDateTime).format('MMMM Do YYYY, h:mm a')}
+              <span className="text-zinc-600 font-bold">Expired on: </span>
+              {dayjs(test.expiryDateTime).format("MMMM Do YYYY, h:mm a")}
             </p>
           </a>
         ))}

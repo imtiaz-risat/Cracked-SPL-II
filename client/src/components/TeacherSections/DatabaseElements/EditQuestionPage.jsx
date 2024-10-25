@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function EditQuestionPage() {
@@ -29,7 +29,7 @@ export default function EditQuestionPage() {
     const fetchQuestionData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/question/get-question/${subject}/${questionId}`
+          `https://crack-ed-app-server.vercel.app/question/get-question/${subject}/${questionId}`
         );
         if (response.status === 200) {
           const data = response.data;
@@ -57,7 +57,7 @@ export default function EditQuestionPage() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5050/question/update-question/${questionId}`,
+        `https://crack-ed-app-server.vercel.app/question/update-question/${questionId}`,
         updatedData
       );
       if (response.status === 200) {

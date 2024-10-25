@@ -1,6 +1,6 @@
-import AskDoubtCard from "../Doubts/AskDoubtCard";
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import AskDoubtCard from "../Doubts/AskDoubtCard";
 
 export default function StudentDoubts() {
   const [doubts, setDoubts] = useState([]);
@@ -12,7 +12,7 @@ export default function StudentDoubts() {
     const fetchDoubts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/student/doubts/${studentId}`
+          `https://crack-ed-app-server.vercel.app/student/doubts/${studentId}`
         );
         setDoubts(response.data);
       } catch (error) {
@@ -26,7 +26,7 @@ export default function StudentDoubts() {
   const handleDeleteDoubt = async (doubtId) => {
     try {
       await axios.delete(
-        `http://localhost:5050/student/delete-doubt/${doubtId}`
+        `https://crack-ed-app-server.vercel.app/student/delete-doubt/${doubtId}`
       );
       setDoubts(doubts.filter((doubt) => doubt._id !== doubtId));
     } catch (error) {

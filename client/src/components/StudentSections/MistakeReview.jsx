@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,7 +33,9 @@ export default function MistakeReview() {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5050/score/student-mistakes/${studentId}`);
+        const response = await axios.get(
+          `https://crack-ed-app-server.vercel.app/score/student-mistakes/${studentId}`
+        );
         const data = response.data;
         setIncorrectPhysics(data.physics);
         setIncorrectChemistry(data.chemistry);
@@ -109,7 +111,7 @@ export default function MistakeReview() {
 
       try {
         const response = await fetch(
-          `http://localhost:5050/mockTest/generateMistakeQuiz/${studentId}`,
+          `https://crack-ed-app-server.vercel.app/mockTest/generateMistakeQuiz/${studentId}`,
           {
             method: "POST",
             headers: {
@@ -133,7 +135,11 @@ export default function MistakeReview() {
     }
   };
 
-  const totalIncorrect = incorrectPhysics.length + incorrectChemistry.length + incorrectMath.length + incorrectEnglish.length;
+  const totalIncorrect =
+    incorrectPhysics.length +
+    incorrectChemistry.length +
+    incorrectMath.length +
+    incorrectEnglish.length;
 
   return (
     <div className="flex flex-wrap h-screen">
@@ -142,7 +148,9 @@ export default function MistakeReview() {
         <div className="flex justify-start items-center mb-4">
           <div className="flex justify-center items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">Mistake Review</h1>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                Mistake Review
+              </h1>
             </div>
           </div>
         </div>
@@ -152,7 +160,9 @@ export default function MistakeReview() {
               <dt className="text-sm font-medium text-gray-500 truncate">
                 Total Incorrect Answers
               </dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">{totalIncorrect}</dd>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                {totalIncorrect}
+              </dd>
               <button
                 className="info-button"
                 style={{
@@ -189,7 +199,8 @@ export default function MistakeReview() {
                     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
                   }}
                 >
-                  Each incorrect answer is counted only once, regardless of the number of attempts made.
+                  Each incorrect answer is counted only once, regardless of the
+                  number of attempts made.
                 </div>
               )}
             </div>
@@ -198,28 +209,36 @@ export default function MistakeReview() {
               <dt className="text-sm font-medium text-gray-500 truncate">
                 Physics
               </dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">{incorrectPhysics.length}</dd>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                {incorrectPhysics.length}
+              </dd>
             </div>
 
             <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
               <dt className="text-sm font-medium text-gray-500 truncate">
                 Chemistry
               </dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">{incorrectChemistry.length}</dd>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                {incorrectChemistry.length}
+              </dd>
             </div>
 
             <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
               <dt className="text-sm font-medium text-gray-500 truncate">
                 Mathematics
               </dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">{incorrectMath.length}</dd>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                {incorrectMath.length}
+              </dd>
             </div>
 
             <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
               <dt className="text-sm font-medium text-gray-500 truncate">
                 English
               </dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">{incorrectEnglish.length}</dd>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                {incorrectEnglish.length}
+              </dd>
             </div>
           </dl>
         </div>
@@ -317,7 +336,9 @@ export default function MistakeReview() {
                 <label
                   key={mark}
                   className={`bg-gray-100 ${
-                    selectedMarks === mark ? "bg-green-300" : "hover:bg-gray-200"
+                    selectedMarks === mark
+                      ? "bg-green-300"
+                      : "hover:bg-gray-200"
                   } shadow-md rounded-lg p-4 cursor-pointer flex justify-center`}
                 >
                   <input

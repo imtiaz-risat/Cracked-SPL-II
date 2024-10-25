@@ -1,7 +1,7 @@
+import axios from "axios"; // Import axios
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/TeacherSidebar";
-import { useEffect, useState } from "react";
-import axios from "axios"; // Import axios
 
 export default function TeacherSection() {
   const userData = localStorage.getItem("userData");
@@ -16,7 +16,7 @@ export default function TeacherSection() {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/tutor/profile/${tutorId}`
+          `https://crack-ed-app-server.vercel.app/tutor/profile/${tutorId}`
         );
         setTutorData(response.data);
         console.log(response.data.isBanned); // Log isBanned from response data

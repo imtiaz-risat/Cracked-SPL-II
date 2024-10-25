@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 
 export default function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -9,7 +9,7 @@ export default function Leaderboard() {
     const fetchLeaderboardData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/score/leaderboard"
+          "https://crack-ed-app-server.vercel.app/score/leaderboard"
         ); // Fetch data using the /leaderboard route
         setLeaderboardData(response.data);
       } catch (error) {
@@ -25,7 +25,7 @@ export default function Leaderboard() {
       <h1 className="text-3xl font-bold mb-4 flex flex-col justify-center items-center">
         Leaderboard
       </h1>
-      
+
       <div className="w-[60rem]">
         <LeaderboardTable data={leaderboardData} />
       </div>

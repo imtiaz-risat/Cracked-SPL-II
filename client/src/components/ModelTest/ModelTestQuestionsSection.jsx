@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTimer } from "../../Context/TimerContext";
 
 export default function ExamQuestionsSection({ modelTest }) {
@@ -18,7 +18,7 @@ export default function ExamQuestionsSection({ modelTest }) {
       if (modelTest && modelTest.QuestionIds && modelTest.Subject) {
         try {
           const response = await fetch(
-            `http://localhost:5050/modelTest/${modelTest._id}/questions`
+            `https://crack-ed-app-server.vercel.app/modelTest/${modelTest._id}/questions`
           );
           if (response.ok) {
             const data = await response.json();
@@ -94,7 +94,7 @@ export default function ExamQuestionsSection({ modelTest }) {
       stopTimer();
 
       // Store the score in the Scores Collection
-      fetch("http://localhost:5050/score/store-score", {
+      fetch("https://crack-ed-app-server.vercel.app/score/store-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,13 +156,14 @@ export default function ExamQuestionsSection({ modelTest }) {
             </div>
           </div>
         )}
-        {questions.map((question,index) => (
+        {questions.map((question, index) => (
           <div
             key={question._id}
             className="flex flex-col shadow-lg rounded-lg p-6 relative"
           >
             <h3 className="mb-2 text-xl font-bold mr-5">
-              {index+1}. {question.question}</h3>
+              {index + 1}. {question.question}
+            </h3>
             {submitted && (
               <div
                 className={`absolute top-0 right-0 p-2 text-white font-bold rounded-bl-lg ${

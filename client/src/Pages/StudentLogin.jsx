@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
-import crackEdLogo from "../Assets/CrackEd-logo.png";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import crackEdLogo from "../Assets/CrackEd-logo.png";
 
 export default function StudentLogin() {
   const {
@@ -13,13 +13,16 @@ export default function StudentLogin() {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:5050/student/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://crack-ed-app-server.vercel.app/student/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         toast.error("Login failed");

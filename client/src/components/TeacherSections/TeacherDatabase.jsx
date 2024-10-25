@@ -7,7 +7,7 @@ export default function TeacherDatabase() {
     const fetchQuestionCounts = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5050/question/count-questions"
+          "https://crack-ed-app-server.vercel.app/question/count-questions"
         );
         const data = await response.json();
         setQuestionCounts(data);

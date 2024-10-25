@@ -1,6 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import avatar2 from "../../Assets/Avatars/2.jpg";
-import axios from "axios";
 
 export default function AdminDashboard() {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -14,7 +14,7 @@ export default function AdminDashboard() {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5050/admin/profile/${adminId}`
+          `https://crack-ed-app-server.vercel.app/admin/profile/${adminId}`
         );
         setUsername(response.data.username);
       } catch (error) {
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
     const fetchCounts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/admin/count-students-tutors"
+          "https://crack-ed-app-server.vercel.app/admin/count-students-tutors"
         );
         setStudentCount(response.data.studentsCount);
         setTutorCount(response.data.tutorsCount);

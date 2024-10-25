@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function AdminTutorList() {
@@ -11,7 +11,7 @@ export default function AdminTutorList() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5050/admin/tutor-list"
+          "https://crack-ed-app-server.vercel.app/admin/tutor-list"
         );
         setTutors(response.data);
         setAllTutors(response.data);
@@ -34,7 +34,9 @@ export default function AdminTutorList() {
 
   const handleDeleteTutor = async (tutorId) => {
     try {
-      await axios.delete(`http://localhost:5050/admin/delete-tutor/${tutorId}`);
+      await axios.delete(
+        `https://crack-ed-app-server.vercel.app/admin/delete-tutor/${tutorId}`
+      );
       const updatedTutors = tutors.filter((tutor) => tutor._id !== tutorId);
       setTutors(updatedTutors);
       toast.success("Tutor deleted!");
@@ -46,7 +48,7 @@ export default function AdminTutorList() {
   const handleBanToggle = async (tutorId) => {
     try {
       await axios.put(
-        `http://localhost:5050/admin/ban-toggle-tutor/${tutorId}`
+        `https://crack-ed-app-server.vercel.app/admin/ban-toggle-tutor/${tutorId}`
       );
       const updatedTutors = tutors.map((tutor) =>
         tutor._id === tutorId ? { ...tutor, isBanned: !tutor.isBanned } : tutor

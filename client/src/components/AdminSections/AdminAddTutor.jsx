@@ -21,13 +21,16 @@ export default function AdminAddTutor() {
         return;
       }
 
-      const response = await fetch("http://localhost:5050/tutor/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://crack-ed-app-server.vercel.app/tutor/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Email or username already exists");
@@ -108,16 +111,16 @@ export default function AdminAddTutor() {
               className="bg-gray-50 border border-lime-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               {...register("password", {
                 required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters long",
-                    },
-                    pattern: {
-                      value:
-                        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}$/,
-                      message:
-                        "Password must contain letters, numbers, and special characters",
-                    },
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long",
+                },
+                pattern: {
+                  value:
+                    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}$/,
+                  message:
+                    "Password must contain letters, numbers, and special characters",
+                },
               })}
             />
             {errors.password && (

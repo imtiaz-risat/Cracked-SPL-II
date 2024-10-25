@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTimer } from "../../Context/TimerContext"; // Import useTimer instead of TimerContext
 
 export default function ExamQuestionsSection({ modelTest }) {
@@ -16,7 +16,7 @@ export default function ExamQuestionsSection({ modelTest }) {
       if (modelTest && modelTest.QuestionIds && modelTest.Subject) {
         try {
           const response = await fetch(
-            `http://localhost:5050/modelTest/${modelTest._id}/questions`
+            `https://crack-ed-app-server.vercel.app/modelTest/${modelTest._id}/questions`
           );
           if (response.ok) {
             const data = await response.json();
@@ -70,9 +70,6 @@ export default function ExamQuestionsSection({ modelTest }) {
     return ((correct - 0.25 * incorrect) / questions.length).toFixed(2);
   };
 
-
-
-
   const handleSubmit = () => {
     if (!submitted) {
       let correct = 0;
@@ -112,7 +109,7 @@ export default function ExamQuestionsSection({ modelTest }) {
         newScore.TotalQuestions
       );
 
-      fetch("http://localhost:5050/score/store-score", {
+      fetch("https://crack-ed-app-server.vercel.app/score/store-score", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +136,6 @@ export default function ExamQuestionsSection({ modelTest }) {
       window.scrollTo(0, 0);
     }
   };
-
 
   if (loading) {
     return <div>Loading questions...</div>;
@@ -225,7 +221,6 @@ export default function ExamQuestionsSection({ modelTest }) {
       <button onClick={handleSubmit} disabled={submitted}>
         Submit
       </button>
-      
     </div>
   );
 }
