@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function StudentRegister() {
   const {
     register,
@@ -30,16 +30,13 @@ export default function StudentRegister() {
         return;
       }
 
-      const response = await fetch(
-        "https://crack-ed-app-server.vercel.app/student/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${backendURL}/student/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         throw new Error("Email or username already exists");

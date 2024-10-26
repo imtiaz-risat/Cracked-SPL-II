@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import avatar2 from "../../Assets/Avatars/2.jpg";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function AdminDashboard() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const { adminId } = userData || {};
@@ -14,7 +14,7 @@ export default function AdminDashboard() {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/admin/profile/${adminId}`
+          `${backendURL}/admin/profile/${adminId}`
         );
         setUsername(response.data.username);
       } catch (error) {
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
     const fetchCounts = async () => {
       try {
         const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/admin/count-students-tutors"
+          `${backendURL}/admin/count-students-tutors`
         );
         setStudentCount(response.data.studentsCount);
         setTutorCount(response.data.tutorsCount);
@@ -73,13 +73,6 @@ export default function AdminDashboard() {
               {tutorCount}
             </dd>
           </div>
-
-          {/* <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-            <dt className="text-sm font-medium text-gray-500 truncate">
-              Unsolved Doubts
-            </dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">0</dd>
-          </div> */}
         </dl>
       </div>
     </div>

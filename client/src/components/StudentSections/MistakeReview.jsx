@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function MistakeReview() {
   const [incorrectPhysics, setIncorrectPhysics] = useState([]);
   const [incorrectChemistry, setIncorrectChemistry] = useState([]);
@@ -34,7 +35,7 @@ export default function MistakeReview() {
         }
 
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/score/student-mistakes/${studentId}`
+          `${backendURL}/score/student-mistakes/${studentId}`
         );
         const data = response.data;
         setIncorrectPhysics(data.physics);
@@ -111,7 +112,7 @@ export default function MistakeReview() {
 
       try {
         const response = await fetch(
-          `https://crack-ed-app-server.vercel.app/mockTest/generateMistakeQuiz/${studentId}`,
+          `${backendURL}/mockTest/generateMistakeQuiz/${studentId}`,
           {
             method: "POST",
             headers: {

@@ -7,6 +7,7 @@ import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 const avatars = [
   { src: avatar1, id: 1 },
   { src: avatar2, id: 2 },
@@ -36,7 +37,7 @@ export default function StudentProfile() {
       const studentId = JSON.parse(localStorage.getItem("userData")).studentId;
       try {
         const response = await fetch(
-          `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
+          `${backendURL}/student/profile/${studentId}`
         );
         const data = await response.json();
         if (response.ok) {
@@ -104,7 +105,7 @@ export default function StudentProfile() {
 
     try {
       const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`,
+        `${backendURL}/student/profile/${studentId}`,
         {
           method: "PUT",
           headers: {
@@ -169,7 +170,7 @@ export default function StudentProfile() {
 
     try {
       const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/student/update-password/${studentId}`,
+        `${backendURL}/student/update-password/${studentId}`,
         {
           method: "POST",
           headers: {

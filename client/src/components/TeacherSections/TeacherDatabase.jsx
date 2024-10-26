@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function TeacherDatabase() {
   const [questionCounts, setQuestionCounts] = useState({});
 
   useEffect(() => {
     const fetchQuestionCounts = async () => {
       try {
-        const response = await fetch(
-          "https://crack-ed-app-server.vercel.app/question/count-questions"
-        );
+        const response = await fetch(`${backendURL}/question/count-questions`);
         const data = await response.json();
         setQuestionCounts(data);
       } catch (error) {

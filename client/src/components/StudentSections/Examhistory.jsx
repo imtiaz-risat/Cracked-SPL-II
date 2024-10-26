@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ExamHistoryTable from "./StudentComponents/ExamHistoryTable"; // Assuming you create a new component
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function ExamHistory() {
   const [examHistory, setExamHistory] = useState([]);
 
@@ -18,7 +19,7 @@ export default function ExamHistory() {
         }
 
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/score/exam-history/${studentId}`
+          `${backendURL}/score/exam-history/${studentId}`
         ); // Adjust the endpoint as needed
         setExamHistory(response.data);
         console.log(response.data);

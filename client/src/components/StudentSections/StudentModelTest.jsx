@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 dayjs.extend(advancedFormat); // Use the plugin
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function StudentModelTest() {
   const [modelTests, setModelTests] = useState([]);
   const [pastModelTests, setPastModelTests] = useState([]);
@@ -19,7 +20,7 @@ export default function StudentModelTest() {
     const fetchModelTests = async () => {
       try {
         const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/modelTest/allModelTests"
+          `${backendURL}/modelTest/allModelTests`
         );
         const currentDateTime = dayjs();
 
@@ -71,7 +72,7 @@ export default function StudentModelTest() {
       const responses = await Promise.all(
         tests.map((test) =>
           axios.get(
-            `https://crack-ed-app-server.vercel.app/score/has-participated?studentId=${studentId}&modelTestId=${test._id}`
+            `${backendURL}/score/has-participated?studentId=${studentId}&modelTestId=${test._id}`
           )
         )
       );

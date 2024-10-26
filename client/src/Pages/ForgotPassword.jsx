@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function ForgotPassword() {
   const [userType, setUserType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,8 +24,7 @@ export default function ForgotPassword() {
       return;
     }
 
-    const endpoint =
-      "https://crack-ed-app-server.vercel.app/auth/forgot-password";
+    const endpoint = `${backendURL}/auth/forgot-password`;
     setIsLoading(true);
 
     try {

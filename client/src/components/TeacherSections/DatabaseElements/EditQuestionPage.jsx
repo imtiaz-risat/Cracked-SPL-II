@@ -4,6 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function EditQuestionPage() {
   const { subject, questionId } = useParams();
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function EditQuestionPage() {
     const fetchQuestionData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/question/get-question/${subject}/${questionId}`
+          `${backendURL}/question/get-question/${subject}/${questionId}`
         );
         if (response.status === 200) {
           const data = response.data;
@@ -57,7 +58,7 @@ export default function EditQuestionPage() {
 
     try {
       const response = await axios.put(
-        `https://crack-ed-app-server.vercel.app/question/update-question/${questionId}`,
+        `${backendURL}/question/update-question/${questionId}`,
         updatedData
       );
       if (response.status === 200) {

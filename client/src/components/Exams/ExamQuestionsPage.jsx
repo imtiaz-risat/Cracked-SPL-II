@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import ExamNavBar from "./ExamNavBar";
 import ExamQuestionsSection from "./ExamQuestionsSection";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function ExamQuestionsPage() {
   const { id } = useParams();
   const [mockTest, setMockTest] = useState(null); // Use useState to manage mockTest
@@ -10,15 +11,12 @@ export default function ExamQuestionsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://crack-ed-app-server.vercel.app/mockTest/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${backendURL}/mockTest/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();

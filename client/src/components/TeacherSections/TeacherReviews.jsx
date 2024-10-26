@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function TeacherReviews() {
   const [doubts, setDoubts] = useState([]);
   const [answers, setAnswers] = useState({});
@@ -9,9 +9,7 @@ export default function TeacherReviews() {
   useEffect(() => {
     const fetchDoubts = async () => {
       try {
-        const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/tutor/reviews"
-        );
+        const response = await axios.get(`${backendURL}/tutor/reviews`);
         setDoubts(response.data);
       } catch (error) {
         console.error("Failed to fetch doubts:", error);
@@ -27,16 +25,13 @@ export default function TeacherReviews() {
 
   const handleAnswerSubmit = async (id) => {
     try {
-      const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/tutor/answer/${id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ answer: answers[id] }),
-        }
-      );
+      const response = await fetch(`${backendURL}/tutor/answer/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ answer: answers[id] }),
+      });
       const data = await response.json();
       console.log(data.message);
 

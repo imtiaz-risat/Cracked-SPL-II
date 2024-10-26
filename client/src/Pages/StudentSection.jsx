@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/StudentSidebar";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
+
 export default function StudentSection() {
   const userData = localStorage.getItem("userData");
   const jsonUserData = JSON.parse(userData);
@@ -16,7 +18,7 @@ export default function StudentSection() {
     const fetchStudentData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
+          `${backendURL}/student/profile/${studentId}`
         );
         setStudentData(response.data);
         console.log(studentData.isBanned);

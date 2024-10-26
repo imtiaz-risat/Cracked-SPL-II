@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTimer } from "../../Context/TimerContext";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function ExamQuestionsSection({ modelTest }) {
   const { timeLeft, isActive, stopTimer } = useTimer();
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -18,7 +18,7 @@ export default function ExamQuestionsSection({ modelTest }) {
       if (modelTest && modelTest.QuestionIds && modelTest.Subject) {
         try {
           const response = await fetch(
-            `https://crack-ed-app-server.vercel.app/modelTest/${modelTest._id}/questions`
+            `${backendURL}/modelTest/${modelTest._id}/questions`
           );
           if (response.ok) {
             const data = await response.json();
@@ -94,7 +94,7 @@ export default function ExamQuestionsSection({ modelTest }) {
       stopTimer();
 
       // Store the score in the Scores Collection
-      fetch("https://crack-ed-app-server.vercel.app/score/store-score", {
+      fetch(`${backendURL}/score/store-score`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

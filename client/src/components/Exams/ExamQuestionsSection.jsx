@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTimer } from "../../Context/TimerContext";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function ExamQuestionsSection({ mockTest }) {
   const [selectedOptionsState, setSelectedOptionsState] = useState({});
   const [questions, setQuestions] = useState([]);
@@ -14,19 +15,16 @@ export default function ExamQuestionsSection({ mockTest }) {
     const fetchQuestions = async () => {
       if (mockTest && mockTest.questions && mockTest.subject) {
         try {
-          const response = await fetch(
-            `https://crack-ed-app-server.vercel.app/mockTest/questions`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                subject: mockTest.subject,
-                questionIds: mockTest.questions,
-              }),
-            }
-          );
+          const response = await fetch(`${backendURL}/mockTest/questions`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              subject: mockTest.subject,
+              questionIds: mockTest.questions,
+            }),
+          });
           if (response.ok) {
             const data = await response.json();
             setQuestions(data);
@@ -105,7 +103,7 @@ export default function ExamQuestionsSection({ mockTest }) {
       );
 
       // Store the score in the Scores Collection
-      fetch("https://crack-ed-app-server.vercel.app/score/store-score", {
+      fetch(`${backendURL}/score/store-score`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +131,7 @@ export default function ExamQuestionsSection({ mockTest }) {
       // Scroll to the top of the page
       window.scrollTo(0, 0);
     }
-  }, [selectedOptionsState, submitted, questions, mockTest]);
+  }, [selectedOptionsState, submitted, questions, mockTest, stopTimer]);
 
   useEffect(() => {
     if (timeLeft === 0 && isActive && !submitted) {

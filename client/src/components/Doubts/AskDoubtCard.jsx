@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function AskDoubtCard() {
   const {
     register,
@@ -9,12 +9,11 @@ export default function AskDoubtCard() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [studentData, setStudentData] = useState();
 
   const fetchStudentData = async (studentId) => {
     try {
       const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
+        `${backendURL}/student/profile/${studentId}`
       );
       const responseData = await response.json();
 
@@ -51,7 +50,7 @@ export default function AskDoubtCard() {
 
     try {
       const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/student/doubts/${studentId}`,
+        `${backendURL}/student/doubts/${studentId}`,
         {
           method: "POST",
           headers: {

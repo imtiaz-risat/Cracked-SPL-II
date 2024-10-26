@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function OTPVerification() {
   const [timerCount, setTimer] = useState(60);
   const [OTPinput, setOTPinput] = useState(["", "", "", ""]);
@@ -40,7 +41,7 @@ export default function OTPVerification() {
     if (disable) return;
     setIsLoading(true);
     axios
-      .post("https://crack-ed-app-server.vercel.app/auth/resend-otp", {
+      .post(`${backendURL}/auth/resend-otp`, {
         email,
         userType,
       })
@@ -93,10 +94,11 @@ export default function OTPVerification() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://crack-ed-app-server.vercel.app/auth/verify-otp",
-        { email, userType, otp }
-      );
+      const response = await axios.post(`${backendURL}/auth/verify-otp`, {
+        email,
+        userType,
+        otp,
+      });
       if (response.status === 200) {
         navigate("/reset-password", { state: { email, userType } });
       } else {

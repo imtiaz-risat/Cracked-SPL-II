@@ -1,20 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import crackEdWhiteLogo from "../Assets/CrackEd-white-logo.png";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function TeacherSidebar() {
   // Logout method
   const handleLogout = async () => {
     try {
-      const response = await fetch(
-        "https://crack-ed-app-server.vercel.app/tutor/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${backendURL}/tutor/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         // Clear user data from local storage

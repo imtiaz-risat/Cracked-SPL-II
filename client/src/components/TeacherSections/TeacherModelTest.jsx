@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import React, { useEffect, useState } from "react";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 // Extend dayjs with advanced formatting options
 dayjs.extend(advancedFormat);
 
@@ -16,7 +17,7 @@ export default function TeacherModelTest() {
     const fetchModelTests = async () => {
       try {
         const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/modelTest/allModelTests"
+          `${backendURL}/modelTest/allModelTests`
         );
         const currentDateTime = dayjs();
 

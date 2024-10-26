@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function StudentMockTest() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedMarks, setSelectedMarks] = useState("");
@@ -58,7 +59,7 @@ export default function StudentMockTest() {
 
       try {
         const response = await fetch(
-          "https://crack-ed-app-server.vercel.app/mockTest/generateMockTest",
+          `${backendURL}/mockTest/generateMockTest`,
           {
             method: "POST",
             headers: {
