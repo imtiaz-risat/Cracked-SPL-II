@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import crackEdLogo from "../Assets/CrackEd-cyan-dark-logo.png";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function TeacherLogin() {
   const {
     register,
@@ -13,16 +14,13 @@ export default function TeacherLogin() {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(
-        "https://crack-ed-app-server.vercel.app/tutor/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${backendURL}/tutor/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         toast.error("Login failed");

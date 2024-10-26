@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function CreateModelTest() {
   const { modelTestId } = useParams();
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ export default function CreateModelTest() {
     const fetchModelTestData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/modelTest/${modelTestId}`
+          `${backendURL}/modelTest/${modelTestId}`
         );
         const modelTestData = response.data;
 
@@ -72,8 +73,8 @@ export default function CreateModelTest() {
     try {
       const url =
         subject === "Combined"
-          ? "https://crack-ed-app-server.vercel.app/modelTest/allQuestions"
-          : `https://crack-ed-app-server.vercel.app/modelTest/questions?subject=${subject}`;
+          ? `${backendURL}/modelTest/allQuestions`
+          : `${backendURL}/modelTest/questions?subject=${subject}`;
       const response = await axios.get(url);
       setQuestions(response.data);
     } catch (error) {
@@ -160,7 +161,7 @@ export default function CreateModelTest() {
 
     try {
       const response = await axios.put(
-        `https://crack-ed-app-server.vercel.app/modelTest/updateModelTest/${modelTestId}`,
+        `${backendURL}/modelTest/updateModelTest/${modelTestId}`,
         {
           Name: testName,
           Marks: parseInt(marks),
@@ -184,7 +185,7 @@ export default function CreateModelTest() {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `https://crack-ed-app-server.vercel.app/modelTest/deleteModelTest/${modelTestId}`
+        `${backendURL}/modelTest/deleteModelTest/${modelTestId}`
       );
       console.log("Model Test deleted successfully");
       toast.success("Model Test deleted successfully");

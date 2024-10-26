@@ -1,6 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 const AddNewQuestion = () => {
   const {
     control,
@@ -18,16 +19,13 @@ const AddNewQuestion = () => {
     data.correctAnswers = [data.correctAnswer];
     delete data.correctAnswer; // Remove the old correctAnswer field
 
-    await fetch(
-      "https://crack-ed-app-server.vercel.app/question/add-question",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    )
+    await fetch(`${backendURL}/question/add-question`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);

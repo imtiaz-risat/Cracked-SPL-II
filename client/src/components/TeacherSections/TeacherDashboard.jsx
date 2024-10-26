@@ -9,6 +9,8 @@ import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
+
 export default function TutorDashboard() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const { tutorId } = userData || {};
@@ -26,7 +28,7 @@ export default function TutorDashboard() {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/tutor/profile/${tutorId}`
+          `${backendURL}/tutor/profile/${tutorId}`
         );
         setUsername(response.data.username);
         console.log("Tutor data:", response.data);
@@ -38,7 +40,7 @@ export default function TutorDashboard() {
     const fetchTutorAvatar = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/tutor/avatar/${tutorId}`
+          `${backendURL}/tutor/avatar/${tutorId}`
         );
         setAvatarIndex(response.data.avatar); // Assuming this is an index 1-6
         console.log("Tutor avatar index:", response.data.avatar);
@@ -50,9 +52,7 @@ export default function TutorDashboard() {
 
     const fetchTotalQuestions = async () => {
       try {
-        const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/tutor/total-questions"
-        );
+        const response = await axios.get(`${backendURL}/tutor/total-questions`);
         setTotalQuestions(response.data.totalQuestions);
       } catch (error) {
         console.error("Error fetching total questions: ", error);
@@ -61,9 +61,7 @@ export default function TutorDashboard() {
 
     const fetchPendingReviews = async () => {
       try {
-        const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/tutor/pending-reviews"
-        );
+        const response = await axios.get(`${backendURL}/tutor/pending-reviews`);
         setPendingReviews(response.data.pendingReviews);
       } catch (error) {
         console.error("Error fetching pending reviews: ", error);
@@ -73,7 +71,7 @@ export default function TutorDashboard() {
     const fetchLiveModelTests = async () => {
       try {
         const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/tutor/live-model-tests"
+          `${backendURL}/tutor/live-model-tests`
         );
         setLiveModelTests(response.data.liveModelTests);
       } catch (error) {

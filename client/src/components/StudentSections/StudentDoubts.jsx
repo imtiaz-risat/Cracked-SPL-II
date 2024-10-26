@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AskDoubtCard from "../Doubts/AskDoubtCard";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
+
 export default function StudentDoubts() {
   const [doubts, setDoubts] = useState([]);
   const userData = localStorage.getItem("userData");
@@ -12,7 +14,7 @@ export default function StudentDoubts() {
     const fetchDoubts = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/student/doubts/${studentId}`
+          `${backendURL}/student/doubts/${studentId}`
         );
         setDoubts(response.data);
       } catch (error) {
@@ -25,9 +27,7 @@ export default function StudentDoubts() {
 
   const handleDeleteDoubt = async (doubtId) => {
     try {
-      await axios.delete(
-        `https://crack-ed-app-server.vercel.app/student/delete-doubt/${doubtId}`
-      );
+      await axios.delete(`${backendURL}/student/delete-doubt/${doubtId}`);
       setDoubts(doubts.filter((doubt) => doubt._id !== doubtId));
     } catch (error) {
       console.error("Failed to delete doubt:", error);

@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import crackEdLogo from "../Assets/CrackEd-logo.png";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function ResetPassword() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -27,16 +28,13 @@ export default function ResetPassword() {
     setPasswordMismatch(false);
     console.log("Submitting form with data:", { ...data, email, userType });
     try {
-      const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/auth/reset-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...data, email, userType }),
-        }
-      );
+      const response = await fetch(`${backendURL}/auth/reset-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data, email, userType }),
+      });
 
       console.log("Server response:", response);
       if (!response.ok) {

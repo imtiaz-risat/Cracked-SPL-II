@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/TeacherSidebar";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function TeacherSection() {
   const userData = localStorage.getItem("userData");
   const jsonUserData = JSON.parse(userData);
@@ -16,7 +17,7 @@ export default function TeacherSection() {
     const fetchTutorData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/tutor/profile/${tutorId}`
+          `${backendURL}/tutor/profile/${tutorId}`
         );
         setTutorData(response.data);
         console.log(response.data.isBanned); // Log isBanned from response data

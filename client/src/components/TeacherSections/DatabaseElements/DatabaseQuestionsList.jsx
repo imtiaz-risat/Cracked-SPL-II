@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function DatabaseQuestionsList() {
   const { subject } = useParams();
   const [questions, setQuestions] = useState([]);
@@ -15,7 +15,7 @@ export default function DatabaseQuestionsList() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/question/get-questions?subject=${subject}`
+          `${backendURL}/question/get-questions?subject=${subject}`
         );
         setQuestions(response.data);
       } catch (error) {
@@ -42,7 +42,7 @@ export default function DatabaseQuestionsList() {
   const deleteQuestion = async (subject, questionId) => {
     try {
       const response = await axios.delete(
-        `https://crack-ed-app-server.vercel.app/question/delete-question/${subject}/${questionId}`
+        `${backendURL}/question/delete-question/${subject}/${questionId}`
       );
       console.log(response.data.message); // Log the deletion message
       toast.warning("Question deleted!");

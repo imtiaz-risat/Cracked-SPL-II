@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function AdminAddTutor() {
   const {
     register,
@@ -21,16 +21,13 @@ export default function AdminAddTutor() {
         return;
       }
 
-      const response = await fetch(
-        "https://crack-ed-app-server.vercel.app/tutor/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${backendURL}/tutor/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         throw new Error("Email or username already exists");

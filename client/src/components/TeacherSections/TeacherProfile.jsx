@@ -7,6 +7,8 @@ import avatar4 from "../../Assets/Avatars/4.jpg";
 import avatar5 from "../../Assets/Avatars/5.jpg";
 import avatar6 from "../../Assets/Avatars/6.jpg";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
+
 const avatars = [
   { src: avatar1, id: 1 },
   { src: avatar2, id: 2 },
@@ -35,9 +37,7 @@ export default function StudentProfile() {
     const fetchProfileData = async () => {
       const tutorId = JSON.parse(localStorage.getItem("userData")).tutorId;
       try {
-        const response = await fetch(
-          `https://crack-ed-app-server.vercel.app/tutor/profile/${tutorId}`
-        );
+        const response = await fetch(`${backendURL}/tutor/profile/${tutorId}`);
         const data = await response.json();
         if (response.ok) {
           setFullname(data.fullname);
@@ -89,16 +89,13 @@ export default function StudentProfile() {
     };
 
     try {
-      const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/tutor/profile/${tutorId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profileData),
-        }
-      );
+      const response = await fetch(`${backendURL}/tutor/profile/${tutorId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+      });
 
       const data = await response.json();
 
@@ -155,7 +152,7 @@ export default function StudentProfile() {
 
     try {
       const response = await fetch(
-        `https://crack-ed-app-server.vercel.app/tutor/update-password/${tutorId}`,
+        `${backendURL}/tutor/update-password/${tutorId}`,
         {
           method: "POST",
           headers: {

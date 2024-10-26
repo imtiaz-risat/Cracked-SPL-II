@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function AdminStudentList() {
   const [students, setStudents] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
@@ -10,9 +10,7 @@ export default function AdminStudentList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/admin/student-list"
-        );
+        const response = await axios.get(`${backendURL}/admin/student-list`);
         setStudents(response.data);
         setAllStudents(response.data);
       } catch (error) {
@@ -34,9 +32,7 @@ export default function AdminStudentList() {
 
   const handleDeleteStudent = async (studentId) => {
     try {
-      await axios.delete(
-        `https://crack-ed-app-server.vercel.app/admin/delete-student/${studentId}`
-      );
+      await axios.delete(`${backendURL}/admin/delete-student/${studentId}`);
       const updatedStudents = students.filter(
         (student) => student._id !== studentId
       );
@@ -49,9 +45,7 @@ export default function AdminStudentList() {
 
   const handleBanToggle = async (studentId) => {
     try {
-      await axios.put(
-        `https://crack-ed-app-server.vercel.app/admin/ban-toggle-student/${studentId}`
-      );
+      await axios.put(`${backendURL}/admin/ban-toggle-student/${studentId}`);
       const updatedStudents = students.map((student) =>
         student._id === studentId
           ? { ...student, isBanned: !student.isBanned }

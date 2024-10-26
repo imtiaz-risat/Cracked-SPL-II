@@ -10,15 +10,21 @@ import scoreRouter from "./routes/scores.js";
 import studentRouter from "./routes/student.js";
 import tutorRouter from "./routes/tutor.js";
 
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT;
 
 const app = express();
 
-// Allowed origins for CORS
-const allowedOrigins = [
-  "http://localhost:3000", // Local development
-  "https://crack-ed-app.vercel.app", // Production
-];
+// Parse the ALLOWED_ORIGINS environment variable
+const allowedOriginsEnv = process.env.ALLOWED_ORIGINS;
+
+// Validate and parse the allowed origins
+let allowedOrigins = [];
+
+if (allowedOriginsEnv) {
+  allowedOrigins = allowedOriginsEnv.split(",").map((origin) => origin.trim());
+} else {
+  console.warn("ALLOWED_ORIGINS is not defined in the environment variables.");
+}
 
 // CORS configuration
 const corsOptions = {

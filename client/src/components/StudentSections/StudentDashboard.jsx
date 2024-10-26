@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { PieChart } from "react-minimal-pie-chart";
-import { useNavigate } from "react-router-dom";
 import CustomLegend from "./StudentComponents/CustomLegend"; // Import the custom legend
 import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 
@@ -21,8 +20,8 @@ const avatars = [
   { src: avatar6, id: 6 },
 ];
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function StudentDashboard() {
-  const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("userData"));
 
   const { studentId } = userData || {}; // Use empty object as default if userData is null
@@ -39,9 +38,7 @@ export default function StudentDashboard() {
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/score/leaderboard"
-        ); // Fetch data using the /leaderboard route
+        const response = await axios.get(`${backendURL}/score/leaderboard`); // Fetch data using the /leaderboard route
         setLeaderboardData(response.data.slice(0, 5));
       } catch (error) {
         console.error("Error fetching leaderboard data: ", error);
@@ -51,7 +48,7 @@ export default function StudentDashboard() {
     const fetchStudentStats = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/score/student-stats/${studentId}`
+          `${backendURL}/score/student-stats/${studentId}`
         );
         setStudentStats(response.data);
       } catch (error) {
@@ -62,7 +59,7 @@ export default function StudentDashboard() {
     const fetchStudentData = async () => {
       try {
         const response = await axios.get(
-          `https://crack-ed-app-server.vercel.app/student/profile/${studentId}`
+          `${backendURL}/student/profile/${studentId}`
         );
         setUsername(response.data.username);
         setAvatar(response.data.avatar);
@@ -80,15 +77,6 @@ export default function StudentDashboard() {
     const avatar = avatars.find((avatar) => avatar.id === avatarId);
     return avatar ? avatar.src : avatar4; // Default to avatar4 if not found
   };
-
-  const calculatePercentage = (value, total) => {
-    return total > 0 ? ((value / total) * 100).toFixed(2) : 0;
-  };
-
-  const totalQuestions =
-    studentStats.totalCorrect +
-    studentStats.totalIncorrect +
-    studentStats.totalSkipped;
 
   return (
     <div className="content">

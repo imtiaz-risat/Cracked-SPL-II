@@ -2,15 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import LeaderboardTable from "./StudentComponents/LeaderboardTable";
 
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 export default function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await axios.get(
-          "https://crack-ed-app-server.vercel.app/score/leaderboard"
-        ); // Fetch data using the /leaderboard route
+        const response = await axios.get(`${backendURL}/score/leaderboard`); // Fetch data using the /leaderboard route
         setLeaderboardData(response.data);
       } catch (error) {
         console.error("Error fetching leaderboard data: ", error);
